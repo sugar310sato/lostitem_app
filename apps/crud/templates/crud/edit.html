@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ユーザー編集</title>
+        <link rel="stylesheet" href="{{ url_for('crud.static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <h2>ユーザー編集</h2>
+
+        <form action="{{ url_for('crud.edit_user', user_id=user.id) }}" method="post" novalidate="novalidate">
+            {{ form.csrf_token }}
+            <p>
+                {{ form.username.label }} {{ form.username(placeholder="ユーザー名", value=user.username) }}
+            </p>
+            {% for error in form.username.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+            <p>
+                {{ form.password.label }} {{ form.password(placeholder="パスワード") }}
+            </p>
+            {% for error in form.username.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+            <p><input type="submit" value="更新"></p>
+        </form>
+    </body>
+
+</html>
