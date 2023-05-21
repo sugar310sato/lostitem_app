@@ -1,0 +1,25 @@
+{% extends "auth/base.html" %}
+{% block title %}ログイン{% endblock %}
+{% block content %}
+<h2>ログイン</h2>
+
+<form action="{{ url_for('auth.login') }}" method="post" novalidate="novalidate">
+    {% for message in get_flashed_messages() %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+    {{ form.csrf_token }}
+    <p>
+        {{ form.username.label }} {{ form.username(placeholder="ユーザー名") }}
+    </p>
+    {% for error in form.username.erroes %}
+    <p style="color: red;">{{ error }}</p>
+    {% endfor %}
+    <p>
+        {{ form.password.label }} {{ form.password(placeholder="パスワード") }}
+    </p>
+    {% for error in form.password.erroes %}
+    <p style="color: red;">{{ error }}</p>
+    {% endfor %}
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
