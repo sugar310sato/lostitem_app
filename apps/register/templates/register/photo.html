@@ -1,63 +1,59 @@
-<!DOCTYPE html>
-<html>
+{% extends "register/base.html" %}
+{% block title %}拾得物撮影{% endblock %}
+{% block content %}
 
-    <head>
-        <title>Camera Capture</title>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    </head>
+<body>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="capture">撮影</button>
+    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
 
-    <body>
-        <video id="video" width="640" height="480" autoplay></video>
-        <button id="capture">撮影</button>
-        <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-
-        <script>
-            // カメラのストリームを取得
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    var videoElement = document.getElementById('video');
-                    videoElement.srcObject = stream;
-                })
-                .catch(function (error) {
-                    console.error('カメラの起動に失敗しました:', error);
-                });
-
-            // 撮影ボタンがクリックされたら画像をキャプチャして保存
-            document.getElementById('capture').addEventListener('click', function () {
+    <script>
+        // カメラのストリームを取得
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
                 var videoElement = document.getElementById('video');
-                var canvasElement = document.getElementById('canvas');
-                var context = canvasElement.getContext('2d');
-                context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-                var image = canvasElement.toDataURL('image/jpeg');
-
-                // CSRFトークンを取得
-                var csrfToken = "{{ csrf_token() }}";
-
-                // AjaxリクエストにCSRFトークンを含めるための設定
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-
-                // 画像をサーバーに送信
-                $.ajax({
-                    url: '{{ url_for("register.upload") }}',
-                    type: 'POST',
-                    data: JSON.stringify({ image: image }),
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken  // CSRFトークンを含める
-                    },
-                    success: function (response) {
-                        console.log('画像を保存しました:', response);
-                    },
-                    error: function (error) {
-                        console.error('画像の保存に失敗しました:', error);
-                    }
-                });
+                videoElement.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.error('カメラの起動に失敗しました:', error);
             });
-        </script>
-    </body>
 
-</html>
+        // 撮影ボタンがクリックされたら画像をキャプチャして保存
+        document.getElementById('capture').addEventListener('click', function () {
+            var videoElement = document.getElementById('video');
+            var canvasElement = document.getElementById('canvas');
+            var context = canvasElement.getContext('2d');
+            context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+            var image = canvasElement.toDataURL('image/jpeg');
+
+            // CSRFトークンを取得
+            var csrfToken = "{{ csrf_token() }}";
+
+            // AjaxリクエストにCSRFトークンを含めるための設定
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            // 画像をサーバーに送信
+            $.ajax({
+                url: '{{ url_for("register.upload") }}',
+                type: 'POST',
+                data: JSON.stringify({ image: image }),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken  // CSRFトークンを含める
+                },
+                success: function (response) {
+                    console.log('画像を保存しました:', response);
+                },
+                error: function (error) {
+                    console.error('画像の保存に失敗しました:', error);
+                }
+            });
+        });
+    </script>
+</body>
+
+{% endblock %}

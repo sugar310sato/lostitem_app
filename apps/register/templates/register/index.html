@@ -1,0 +1,45 @@
+{% extends "register/base.html" %}
+{% block title %}拾得物管理アプリトップ{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    {% if current_user.is_authenticated %}
+    <p>ようこそ。現在<strong>{{ current_user.username }}</strong>さんがログインしています。</p>
+    <p>メニューから操作を選択し、業務を行ってください。</p>
+
+    <!-- 各種業務内容へ飛ぶメニュー -->
+    <div class="card-deck">
+
+        <div class="card" style="width: 15rem;">
+            <img src="{{ url_for('register.image_file', filename='register_item.png') }}" class="card-img-top"
+                alt="拾得物の届出" width="30%" height="30%">
+            <div class="card-body">
+                <h5 class="card-title">拾得物登録</h5>
+                <p class="card-text">拾得物の登録を行います。拾得物を受け付けたら、こちらから登録してください。</p>
+                <a href="#" class="btn btn-primary">拾得物登録</a>
+            </div>
+        </div>
+        <div class="card" style="width: 15rem;">
+            <img src="..." class="card-img-top" alt="拾得物検索">
+            <div class="card-body">
+                <h5 class="card-title">拾得物検索</h5>
+                <p class="card-text">拾得物の検索を行います。お客様からの問い合わせがあった場合、こちらを利用してください。</p>
+                <a href="#" class="btn btn-primary">拾得物検索</a>
+            </div>
+        </div>
+        <div class="card" style="width: 15rem;">
+            <img src="..." class="card-img-top" alt="警察への届出">
+            <div class="card-body">
+                <h5 class="card-title">警察届出</h5>
+                <p class="card-text">警察への届出の書類の印刷等を行います。</p>
+                <a href="#" class="btn btn-primary">警察届出</a>
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <p>拾得物の管理を行うアプリです。下記のボタンからログインしてください。</p>
+    <a class="btn btn-primary mx-auto" href="{{ url_for('auth.login') }}">ログイン</a>
+    {% endif %}
+</div>
+{% endblock %}
