@@ -1,0 +1,28 @@
+from pathlib import Path
+
+basedir = Path(__file__).parent.parent
+
+
+class BaseConfig:
+    SECRET_KEY = "シークレットキー"
+    WTF_CSRF_SECRET_KEY = "CSRFのシークレットキー"
+    UPLOAD_FOLDER = str(Path(basedir, "apps", "images"))
+    CARD_IMAGE_FOLDER = str(Path(basedir, "apps", "register", "card_image"))
+
+
+class LocalConfig(BaseConfig):
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{basedir / 'local.sqlite'}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = True
+
+
+class TestingConfig(BaseConfig):
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{basedir / 'local.sqlite'}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    WTF_CSRF_ENABLED = False
+
+
+config = {
+    "testing": TestingConfig,
+    "local": LocalConfig,
+}
