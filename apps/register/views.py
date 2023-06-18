@@ -2,8 +2,13 @@ import base64
 import os
 from pathlib import Path
 
-from flask import (Blueprint, current_app, render_template, request,
-                   send_from_directory)
+from flask import (Blueprint, current_app, redirect, render_template, request,
+                   send_from_directory, url_for)
+
+from apps.app import db
+from apps.register.forms import (ChoicesFinderForm, OwnerLostItemForm,
+                                 ThirdPartyLostItemForm)
+from apps.register.models import OwnerLostItem, ThirdPartyLostItem
 
 basedir = Path(__file__).parent.parent
 UPLOAD_FOLDER = str(Path(basedir, "images"))
@@ -27,8 +32,8 @@ def photo():
     return render_template("register/photo.html")
 
 
-# 実際の保存処理
-@register.route("/upload", methods=['POST'])
+# 画像の保存
+@register.route("/upload", methods=["POST"])
 def upload():
     image_data = request.json['image']
     image_data = image_data.replace("data:image/jpeg;base64,", "")
@@ -39,13 +44,117 @@ def upload():
     with open(save_path, 'wb') as f:
         f.write(base64.b64decode(image_data))
 
-    return {'message': '画像を保存しました'}
+    return redirect(url_for("register.choices_finder"))
+
+
+# 占有者拾得か第三者拾得か
+@register.route("/choices_finder", methods=["POST", "GET"])
+def choices_finder():
+    form = ChoicesFinderForm()
+
+    if form.validate_on_submit():
+        choice_finder = form.choice_finder.data
+        return redirect(url_for("register.register_item", choice_finder=choice_finder))
+    return render_template("register/choices_finder.html", form=form)
 
 
 # 拾得物の情報登録
-@register.route("/register_item", methods=["POST", "GET"])
-def register_item():
-    return render_template("register/register_item.html")
+@register.route("/register_item/<choice_finder>", methods=["POST", "GET"])
+def register_item(choice_finder):
+    if choice_finder == "占有者拾得":
+        form = OwnerLostItemForm()
+        if form.validate_on_submit():
+            ownerlostitem = OwnerLostItem(
+                choice_finder=choice_finder,
+                track_num=form.track_num.data,
+                notify=form.notify.data,
+                get_item=form.get_item.data,
+                get_item_hour=form.get_item_hour.data,
+                get_item_minute=form.get_item_minute.data,
+                recep_item=form.recep_item.data,
+                recep_item_hour=form.recep_item_hour.data,
+                recep_item_minute=form.recep_item_minute.data,
+                recep_manager=form.recep_manager.data,
+                find_area=form.find_area.data,
+                find_area_police=form.find_area_police.data,
+                own_waiver=form.own_waiver.data,
+                finder_name=form.finder_name.data,
+                own_name_note=form.own_name_note.data,
+                finder_age=form.finder_age.data,
+                finder_sex=form.finder_sex.data,
+                finder_post=form.finder_post.data,
+                finder_tel1=form.finder_tel1.data,
+                finder_tel2=form.finder_tel2.data,
+
+                # 大中小項目の実装
+
+                item_value=form.item_value.data,
+                item_feature=form.item_feature.data,
+                item_color=form.item_color.data,
+                item_storage=form.item_storage.data,
+                item_storage_place=form.item_storage_place.data,
+                item_maker=form.item_maker.data,
+                item_expiration=form.item_expiration.data,
+                item_num=form.item_num.data,
+                item_unit=form.item_unit.data,
+                item_plice=form.item_plice.data,
+                item_money=form.item_money.data,
+                item_remarks=form.item_remarks.data,
+                item_situation=form.item_situation.data,
+                finder_class=form.finder_class.data,
+                finder_affiliation=form.finder_affiliation.data,
+            )
+            db.session.add(ownerlostitem)
+            db.session.commit()
+            redirect(url_for("register.item_detail"))
+    elif choice_finder == "第三者拾得":
+        form = ThirdPartyLostItemForm()
+        if form.validate_on_submit():
+            thirdpartylostitem = ThirdPartyLostItem(
+                    choice_finder=choice_finder,
+                    track_num=form.track_num.data,
+                    notify=form.notify.data,
+                    get_item=form.get_item.data,
+                    get_item_hour=form.get_item_hour.data,
+                    get_item_minute=form.get_item_minute.data,
+                    recep_item=form.recep_item.data,
+                    recep_item_hour=form.recep_item_hour.data,
+                    recep_item_minute=form.recep_item_minute.data,
+                    recep_manager=form.recep_manager.data,
+                    find_area=form.find_area.data,
+                    find_area_police=form.find_area_police.data,
+                    own_waiver=form.own_waiver.data,
+                    finder_name=form.finder_name.data,
+                    own_name_note=form.own_name_note.data,
+                    finder_age=form.finder_age.data,
+                    finder_sex=form.finder_sex.data,
+                    finder_post=form.finder_post.data,
+                    finder_tel1=form.finder_tel1.data,
+                    finder_tel2=form.finder_tel2.data,
+
+                    # 大中小項目の実装
+
+                    item_value=form.item_value.data,
+                    item_feature=form.item_feature.data,
+                    item_color=form.item_color.data,
+                    item_storage=form.item_storage.data,
+                    item_storage_place=form.item_storage_place.data,
+                    item_maker=form.item_maker.data,
+                    item_expiration=form.item_expiration.data,
+                    item_num=form.item_num.data,
+                    item_unit=form.item_unit.data,
+                    item_plice=form.item_plice.data,
+                    item_money=form.item_money.data,
+                    item_remarks=form.item_remarks.data,
+                    item_situation=form.item_situation.data,
+                    finder_class=form.finder_class.data,
+                    finder_affiliation=form.finder_affiliation.data,
+            )
+            db.session.add(thirdpartylostitem)
+            db.session.commit()
+            redirect(url_for("register.item_detail"))
+    return render_template("register/register_item.html", choice_finder=choice_finder,
+                           form=form)
 
 
 # 画像の表示

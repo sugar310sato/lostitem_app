@@ -47,6 +47,7 @@
                 },
                 success: function (response) {
                     console.log('画像を保存しました:', response);
+                    window.location.href = "{{ url_for('register.choices_finder') }}";
                 },
                 error: function (error) {
                     console.error('画像の保存に失敗しました:', error);

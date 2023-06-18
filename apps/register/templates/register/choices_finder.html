@@ -1,0 +1,19 @@
+{% extends "register/base.html" %}
+{% block title %}拾得者選択{% endblock %}
+{% block content %}
+<h2>拾得者選択</h2>
+<p>拾得者を選択してください。</p>
+
+<section class="dt-auth-main">
+    <form action="{{ url_for('register.choices_finder') }}" method="post">
+        {{ form.csrf_token }}
+        <p>
+            {{ form.choice_finder.label }}
+            {{ form.choice_finder(class="control") }}
+        </p>
+        <p>
+            {{ form.submit(class="btn btn-primary") }}
+        </p>
+    </form>
+</section>
+{% endblock %}
