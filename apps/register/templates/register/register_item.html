@@ -37,6 +37,16 @@
         <p>{{ form.item_plice.label }} {{ form.item_plice }}</p>
         <p>{{ form.item_money.label }} {{ form.item_money }}</p>
         <p>{{ form.item_remarks.label }} {{ form.item_remarks }}</p>
+        {% if choice_finder=="占有者拾得" %}
+        <p>{{ form.finder_class.label }} {{ form.finder_class }}</p>
+        <p>{{ form.finder_affiliation.label }} {{ form.finder_affiliation }}</p>
+        <p>{{ form.submit }}</p>
+        {% else %}
+        <p>{{ form.thirdparty_waiver.label }} {{ form.thirdparty_waiver }}</p>
+        <p>{{ form.thirdparty_name_note.label }} {{ form.thirdparty_name_note }}</p>
+        <p>{{ form.submit }}</p>
+        {% endif %}
     </form>
+
 </section>
 {% endblock %}
