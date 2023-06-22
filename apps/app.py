@@ -42,4 +42,9 @@ def create_app(config_key):
 
     app.register_blueprint(auth_views.auth, url_prefix="/auth")
 
+    # itemsアプリ
+    from apps.items import views as items_views
+
+    app.register_blueprint(items_views.items, url_prefix="/items")
+
     return app

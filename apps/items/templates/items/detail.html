@@ -1,0 +1,11 @@
+{% extends "register/base.html" %}
+{% block title %}拾得物詳細画面{% endblock %}
+{% block content %}
+<h2>拾得物詳細画面</h2>
+{{ item.track_num }}
+{{ item.notify }}
+{{ item.get_item_hour }}
+{% if item.choice_finder=="拾得者拾得" %}
+{% else %}
+{% endif %}
+{% endblock %}

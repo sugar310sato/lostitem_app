@@ -18,7 +18,7 @@ class LostItem(db.Model):
     # 受付日時
     recep_item = db.Column(db.DateTime, default=datetime.now)
     recep_item_hour = db.Column(db.String)
-    recep_item_minute = db.column(db.String)
+    recep_item_minute = db.Column(db.String)
     recep_manager = db.Column(db.String)
 
     # 拾得者情報等の管理
@@ -51,14 +51,10 @@ class LostItem(db.Model):
     item_remarks = db.Column(db.String)
     item_situation = db.Column(db.Boolean, default=False)
 
-
-# 占有者拾得物クラス
-class OwnerLostItem(LostItem):
+    # 占有者用入力項目
     finder_class = db.Column(db.String)
     finder_affiliation = db.Column(db.String)
 
-
-# 第三者拾得物クラス
-class ThirdPartyLostItem(LostItem):
+    # 第三者用入力項目
     thirdparty_waiver = db.Column(db.String)
     thirdparty_name_note = db.Column(db.String)

@@ -8,7 +8,7 @@ from flask import (Blueprint, current_app, redirect, render_template, request,
 from apps.app import db
 from apps.register.forms import (ChoicesFinderForm, OwnerLostItemForm,
                                  ThirdPartyLostItemForm)
-from apps.register.models import OwnerLostItem, ThirdPartyLostItem
+from apps.register.models import LostItem
 
 basedir = Path(__file__).parent.parent
 UPLOAD_FOLDER = str(Path(basedir, "images"))
@@ -63,8 +63,10 @@ def choices_finder():
 def register_item(choice_finder):
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
-        if form.validate_on_submit():
-            ownerlostitem = OwnerLostItem(
+        # form.validate_on_submit()だとNULLをうまく受け付けてくれない
+        # submit.dataとすることで、入力がない場合にも対応できる
+        if form.submit.data:
+            ownerlostitem = LostItem(
                 choice_finder=choice_finder,
                 track_num=form.track_num.data,
                 notify=form.notify.data,
@@ -109,8 +111,8 @@ def register_item(choice_finder):
             redirect(url_for("register.item_detail"))
     elif choice_finder == "第三者拾得":
         form = ThirdPartyLostItemForm()
-        if form.validate_on_submit():
-            thirdpartylostitem = ThirdPartyLostItem(
+        if form.submit.data:
+            thirdpartylostitem = LostItem(
                     choice_finder=choice_finder,
                     track_num=form.track_num.data,
                     notify=form.notify.data,
@@ -147,8 +149,8 @@ def register_item(choice_finder):
                     item_money=form.item_money.data,
                     item_remarks=form.item_remarks.data,
                     item_situation=form.item_situation.data,
-                    finder_class=form.finder_class.data,
-                    finder_affiliation=form.finder_affiliation.data,
+                    thirdparty_waiver=form.thirdparty_waiver.data,
+                    thirdparty_name_note=form.thirdparty_name_note.data,
             )
             db.session.add(thirdpartylostitem)
             db.session.commit()

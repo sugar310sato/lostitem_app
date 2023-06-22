@@ -1,0 +1,39 @@
+{% extends "register/base.html" %}
+{% block title %}拾得物一覧{% endblock %}
+{% block content %}
+<h2>拾得物一覧</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>管理番号(詳細)</th>
+            <th>拾得日時</th>
+            <th>拾得場所</th>
+            <th>拾得物名/特徴</th>
+            <th>色</th>
+            <th>保管施設/場所</th>
+            <th>状況</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in all_lost_item %}
+        <tr>
+            <td>
+                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+            </td>
+            <td>{{ item.get_item.strftime('%Y/%m/%d') }} {{ item.get_item_hour }}{{ item.get_item_minute }}</td>
+            <td>{{ item.find_area }}</td>
+            <td>{{ item.item_feature }}</td>
+            <td>{{ item.item_color }}</td>
+            <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
+            <td>
+                {% if item.item_situation %}
+                届出済み
+                {% else %}
+                届け出不要
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

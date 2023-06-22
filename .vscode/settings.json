@@ -8,5 +8,6 @@
     "editor.codeActionsOnSave": {
         "source.organizeImports": true
     },
-    "python.linting.mypyEnabled": true
+    "python.linting.mypyEnabled": true,
+    "json.schemas": []
 }
