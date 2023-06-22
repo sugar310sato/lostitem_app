@@ -27,6 +27,14 @@ def detail(item_id):
     return render_template("items/detail.html", item=item)
 
 
+# 編集物選択画面（メインor同梱物）
+@items.route("/edit/select/<item_id>", methods=["POST", "GET"])
+def edit_select(item_id):
+    # 現状は、メインの拾得物のみ
+    item = LostItem.query.filter_by(id=item_id).first()
+    return render_template("items/edit_select.html", item=item)
+
+
 # 編集画面
 @items.route("/edit/<item_id>", methods=["POST", "GET"])
 def edit(item_id):

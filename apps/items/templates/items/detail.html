@@ -2,10 +2,63 @@
 {% block title %}拾得物詳細画面{% endblock %}
 {% block content %}
 <h2>拾得物詳細画面</h2>
-{{ item.track_num }}
-{{ item.notify }}
-{{ item.get_item_hour }}
-{% if item.choice_finder=="拾得者拾得" %}
-{% else %}
-{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">管理番号 <u>{{ item.track_num }}</u></div>
+        <div class="col-3">通知 <u>{{ item.notify }}</u></div>
+        <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') }}
+                {{ item.get_item_hour }}{{ item.get_item_minute }}</u></div>
+        <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') }}
+                {{ item.recep_item_hour }}{{ item.recep_item_minute }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">受付者 <u>{{ item.recep_manager }}</u></div>
+        <div class="col-3">拾得場所 <u>{{ item.find_area }}</u></div>
+        <div class="col-3">警察届出用拾得場所 <u>{{ item.find_area_police }}</u></div>
+        <div class="col-3">占有者権利放棄 <u>{{ item.own_waiver }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">拾得者氏名 <u>{{ item.finder_name }}</u></div>
+        <div class="col-3">占有者氏名等告知 <u>{{ item.own_name_note }}</u></div>
+        <div class="col-3">年齢 <u>{{ item.finder_age }}</u></div>
+        <div class="col-3">性別 <u>{{ item.finder_sex }}</u></div>
+    </div>
+    <div class="row">
+        {% if item.choice_finder=="占有者拾得" %}
+        <div class="col-3">拾得者属性 <u>{{ item.finder_class }}</u></div>
+        <div class="col-3">拾得者所属 <u>{{ item.finder_affiliation }}</u></div>
+        {% else %}
+        <div class="col-3">権利放棄 <u>{{ item.thirdparty_waiver }}</u></div>
+        <div class="col-3">氏名等告知 <u>{{ item.thirdparty_name_note }}</u></div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-3">郵便番号 <u>{{ item.finder_post }}</u></div>
+        <div class="col-3">連絡先1 <u>{{ item.finder_tel1 }}</u></div>
+        <div class="col-3">連絡先2 <u>{{ item.finder_tel2 }}</u></div>
+        <div class="col-3">貴重な物品に該当 <u>{{ item.item_value }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">物品の特徴 <u>{{ item.item_feature }}</u></div>
+        <div class="col-3">色 <u>{{ item.item_color }}</u></div>
+        <div class="col-3">保管施設 <u>{{ item.item_storage }}</u></div>
+        <div class="col-3">保管場所 <u>{{ item.item_storage_place }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">メーカー <u>{{ item.item_maker }}</u></div>
+        <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') }}</u></div>
+        <div class="col-3">数量 <u>{{ item.item_num }}</u></div>
+        <div class="col-3">単位 <u>{{ item.item_unit }}</u></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">値段 <u>{{ item.item_plice }}</u></div>
+        <div class="col-3">金額 <u>{{ item.item_money }}</u></div>
+        <div class="col-3">備考 <u>{{ item.item_remarks }}</u></div>
+        <div class="col-3">届出済 <u>{{ item.item_situation }}</u></div>
+    </div>
+</div>
+<div class="text-center">
+    <a class="btn btn-primary" href="{{ url_for('items.edit_select', item_id=item.id) }}" role="button">編集/削除</a>
+    <a class="btn btn-primary" href="{{ url_for('items.index') }}" role="button">戻る</a>
+</div>
 {% endblock %}

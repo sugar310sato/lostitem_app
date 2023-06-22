@@ -94,3 +94,12 @@ input[type="search"] {
 .dt-image-submit {
     margin-left: 10px;
 }
+
+u {
+    color: dimgray;
+    width: max-content;
+}
+
+.col-3 {
+    height: 40px;
+}
