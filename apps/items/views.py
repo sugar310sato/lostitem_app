@@ -127,4 +127,14 @@ def edit(item_id):
             db.session.add(item)
             db.session.commit()
             return redirect(url_for("items.detail", item_id=item.id))
-    return render_template("items/edit.html", form=form, item=item)
+    return render_template("items/edit.html", form=form, item=item,
+                           choice_finder=item.choice_finder)
+
+
+# 拾得物の削除
+@items.route("/delete/<item_id>", methods=["POST", "GET"])
+def delete(item_id):
+    item = LostItem.query.filter_by(id=item_id).first()
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for("items.index"))
