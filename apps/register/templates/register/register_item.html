@@ -2,51 +2,72 @@
 {% block title %}拾得物の登録{% endblock %}
 {% block content %}
 <h2>拾得物情報の登録</h2>
-
-<section class="dt-auth-main">
-    <form action="{{ url_for('register.register_item', choice_finder=choice_finder) }}" method="post">
-        {{ form.csrf_token }}
-        <p>{{ form.track_num.label }} {{ form.track_num }}</p>
-        <p>{{ form.notify.label }} {{ form.notify }}</p>
-        <p>{{ form.get_item.label }} {{ form.get_item }}</p>
-        <p>{{ form.get_item_hour.label }} {{ form.get_item_hour }}</p>
-        <p>{{ form.get_item_minute.label }} {{ form.get_item_minute }}</p>
-        <p>{{ form.recep_item.label }} {{ form.recep_item }}</p>
-        <p>{{ form.recep_item_hour.label }} {{ form.recep_item_hour }}</p>
-        <p>{{ form.recep_item_minute.label }} {{ form.recep_item_minute }}</p>
-        <p>{{ form.recep_manager.label }} {{ form.recep_manager }}</p>
-        <p>{{ form.find_area.label }} {{ form.find_area }}</p>
-        <p>{{ form.find_area_police.label }} {{ form.find_area_police }}</p>
-        <p>{{ form.own_waiver.label }} {{ form.own_waiver }}</p>
-        <p>{{ form.finder_name.label }} {{ form.finder_name }}</p>
-        <p>{{ form.own_name_note.label }} {{ form.own_name_note }}</p>
-        <p>{{ form.finder_age.label }} {{ form.finder_age }}</p>
-        <p>{{ form.finder_sex.label }} {{ form.finder_sex }}</p>
-        <p>{{ form.finder_post.label }} {{ form.finder_post }}</p>
-        <p>{{ form.finder_tel1.label }} {{ form.finder_tel1 }}</p>
-        <p>{{ form.finder_tel2.label }} {{ form.finder_tel2 }}</p>
-        <p>{{ form.item_value.label }} {{ form.item_value }}</p>
-        <p>{{ form.item_feature.label }} {{ form.item_feature }}</p>
-        <p>{{ form.item_color.label }} {{ form.item_color }}</p>
-        <p>{{ form.item_storage.label }} {{ form.item_storage }}</p>
-        <p>{{ form.item_storage_place.label }} {{ form.item_storage_place }}</p>
-        <p>{{ form.item_maker.label }} {{ form.item_maker }}</p>
-        <p>{{ form.item_expiration.label }} {{ form.item_expiration }}</p>
-        <p>{{ form.item_num.label }} {{ form.item_num }}</p>
-        <p>{{ form.item_unit.label }} {{ form.item_unit }}</p>
-        <p>{{ form.item_plice.label }} {{ form.item_plice }}</p>
-        <p>{{ form.item_money.label }} {{ form.item_money }}</p>
-        <p>{{ form.item_remarks.label }} {{ form.item_remarks }}</p>
-        {% if choice_finder=="占有者拾得" %}
-        <p>{{ form.finder_class.label }} {{ form.finder_class }}</p>
-        <p>{{ form.finder_affiliation.label }} {{ form.finder_affiliation }}</p>
-        <p>{{ form.submit }}</p>
-        {% else %}
-        <p>{{ form.thirdparty_waiver.label }} {{ form.thirdparty_waiver }}</p>
-        <p>{{ form.thirdparty_name_note.label }} {{ form.thirdparty_name_note }}</p>
-        <p>{{ form.submit }}</p>
-        {% endif %}
-    </form>
-
-</section>
+<form action="{{ url_for('register.register_item', choice_finder=choice_finder) }}" method="post">
+    {{ form.csrf_token }}
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-6">{{ form.track_num.label }} {{ form.track_num }}</div>
+            <div class="col-6">{{ form.notify.label }} {{ form.notify }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.get_item.label }} {{ form.get_item }}</div>
+            <div class="col-4">{{ form.get_item_hour.label }} {{ form.get_item_hour }}</div>
+            <div class="col-4">{{ form.get_item_minute.label }} {{ form.get_item_minute }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item }}</div>
+            <div class="col-3">{{ form.recep_item_hour.label }} {{ form.recep_item_hour }}</div>
+            <div class="col-3">{{ form.recep_item_minute.label }} {{ form.recep_item_minute }}</div>
+            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager }}</div>
+        </div>
+        <div class="row mb-3">
+            {% if choice_finder=="占有者拾得" %}
+            <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class }}</div>
+            <div class="col-4">{{ form.finder_affiliation.label }} {{ form.finder_affiliation }}</div>
+            {% else %}
+            <div class="col-4">{{ form.thirdparty_waiver.label }} {{ form.thirdparty_waiver }}</div>
+            <div class="col-4">{{ form.thirdparty_name_note.label }} {{ form.thirdparty_name_note }}</div>
+            {% endif %}
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.find_area.label }} {{ form.find_area }}</div>
+            <div class="col-4">{{ form.find_area_police.label }} {{ form.find_area_police }}</div>
+            <div class="col-4">{{ form.own_waiver.label }} {{ form.own_waiver }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.finder_name.label }} {{ form.finder_name }}</div>
+            <div class="col-4">{{ form.own_name_note.label }} {{ form.own_name_note }}</div>
+            <div class="col-4">{{ form.finder_age.label }} {{ form.finder_age }}</div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-3">{{ form.finder_sex.label }} {{ form.finder_sex }}</div>
+            <div class="col-3">{{ form.finder_post.label }} {{ form.finder_post }}</div>
+            <div class="col-3">{{ form.finder_tel1.label }} {{ form.finder_tel1 }}</div>
+            <div class="col-3">{{ form.finder_tel2.label }} {{ form.finder_tel2 }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.item_value.label }} {{ form.item_value }}</div>
+            <div class="col-4">{{ form.item_color.label }} {{ form.item_color }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.item_storage.label }} {{ form.item_storage }}</div>
+            <div class="col-4">{{ form.item_storage_place.label }} {{ form.item_storage_place }}</div>
+            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker }}</div>
+            <div class="col-4">{{ form.item_num.label }} {{ form.item_num }}</div>
+            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice }}</div>
+            <div class="col-4">{{ form.item_money.label }} {{ form.item_money }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks }}</div>
+            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+        </div>
+        {{ form.submit }}
+    </div>
+</form>
 {% endblock %}

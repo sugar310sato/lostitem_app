@@ -123,4 +123,4 @@ def edit(item_id):
             item.thirdparty_name_note = form.thirdparty_name_note.data,
             db.session.add(item)
             db.session.commit()
-    return render_template("items/edit.html", form=form)
+    return render_template("items/edit.html", form=form, item=item)
