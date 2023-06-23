@@ -2,7 +2,7 @@
 {% block title %}拾得物編集画面{% endblock %}
 {% block content %}
 <h2>拾得物編集画面</h2>
-<form action="{{ url_for('register.register_item', choice_finder=choice_finder) }}" method="post">
+<form action="{{ url_for('items.edit', item_id=item.id) }}" method="post">
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
@@ -21,7 +21,7 @@
             <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager }}</div>
         </div>
         <div class="row mb-3">
-            {% if item.choice_finder=="占有者拾得" %}
+            {% if choice_finder=="占有者拾得" %}
             <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class }}</div>
             <div class="col-4">{{ form.finder_affiliation.label }} {{ form.finder_affiliation }}</div>
             {% else %}
@@ -67,6 +67,7 @@
             <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks }}</div>
             <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
         </div>
+        {{ form.submit }}
     </div>
 </form>
 {% endblock %}

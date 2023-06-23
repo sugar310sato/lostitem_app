@@ -46,7 +46,9 @@
     </div>
     <div class="row">
         <div class="col-3">メーカー <u>{{ item.item_maker }}</u></div>
+        {% if item.item_expiration!=None %}
         <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') }}</u></div>
+        {% endif %}
         <div class="col-3">数量 <u>{{ item.item_num }}</u></div>
         <div class="col-3">単位 <u>{{ item.item_unit }}</u></div>
     </div>
