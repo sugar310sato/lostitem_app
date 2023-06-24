@@ -42,7 +42,7 @@ def save_image():
     # 画像の移動
     for file in os.listdir(source_folder):
         file_path = os.path.join(source_folder, new_filename)
-        moved_path = shutil.move(file_path, destination_folder)
+        shutil.move(file_path, destination_folder)
 
     # imagesに登録されている写真の削除
     sourcefoder = Path(current_app.root_path, "images")

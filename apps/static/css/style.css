@@ -103,3 +103,8 @@ u {
 .col-3 {
     height: 40px;
 }
+
+.text-center {
+    margin-top: 10px;
+    /* 上部のマージンを追加 */
+}

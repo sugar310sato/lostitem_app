@@ -1,25 +1,11 @@
 {% extends "register/base.html" %}
-{% block title %}拾得物一覧{% endblock %}
+{% block title %}検索結果{% endblock %}
 {% block content %}
-<h2>検索項目</h2>
-<form action="{{ url_for('items.index') }}" method="post">
-    {{ form.csrf_token }}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color }}</div>
-            <div class="col-4">{{ form.find_area.label }} {{ form.find_area }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-12">{{ form.item_feature.label }} {{ form.item_feature }}</div>
-        </div>
-        <div class="text-center">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </div>
-</form>
-<h2>拾得物一覧</h2>
-<table class="table table-bordered table-striped">
+<div class="text-center">
+    <a href="{{ url_for('items.index') }}" class="btn btn-primary">一覧に戻る</a>
+</div>
+<h2>検索結果</h2>
+<table class=" table table-bordered table-striped">
     <thead>
         <tr>
             <th>管理番号(詳細)</th>
@@ -32,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in all_lost_item %}
+        {% for item in search_results %}
         <tr>
             <td>
                 <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>

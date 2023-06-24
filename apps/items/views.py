@@ -1,7 +1,8 @@
 from flask import (Blueprint, current_app, redirect, render_template,
-                   send_from_directory, url_for)
+                   send_from_directory, session, url_for)
 
 from apps.app import db
+from apps.items.forms import SearchItems
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
 from apps.register.models import LostItem
 
@@ -14,11 +15,42 @@ items = Blueprint(
 
 
 # 拾得物一覧画面
-@items.route("/")
+@items.route("/", methods=["POST", "GET"])
 def index():
     # すべての拾得物を表示
+    form = SearchItems()
+
+    if form.submit.data:
+        id = form.id.data
+        start_date = form.start_date.data
+        end_date = form.end_date.data
+        item_feature = form.item_feature.data
+        find_area = form.find_area.data
+        item_color = form.item_color.data
+        # 拾得物を検索するクエリを作成
+        query = db.session.query(LostItem)
+        # 入力された情報に基づいてクエリを絞り込む
+        if id:
+            query = query.filter(LostItem.id == id)
+        if start_date and end_date:
+            query = query.filter(LostItem.get_item.between(start_date, end_date))
+        elif start_date:
+            query = query.filter(LostItem.get_item >= start_date)
+        elif end_date:
+            query = query.filter(LostItem.get_item <= end_date)
+        if item_feature:
+            query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
+        if find_area:
+            query = query.filter(LostItem.find_area.ilike(f"%{find_area}%"))
+        if item_color:
+            query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
+        # 結果を取得
+        search_results = query.all()
+        session['search_results'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("items.item_search"))
+
     all_lost_item = db.session.query(LostItem).all()
-    return render_template("items/index.html", all_lost_item=all_lost_item)
+    return render_template("items/index.html", all_lost_item=all_lost_item, form=form)
 
 
 # 詳細画面
@@ -130,6 +162,13 @@ def edit(item_id):
             return redirect(url_for("items.detail", item_id=item.id))
     return render_template("items/edit.html", form=form, item=item,
                            choice_finder=item.choice_finder)
+
+
+# 拾得物の検索
+@items.route("/items/search", methods=["POST", "GET"])
+def item_search():
+    search_results = session.get('search_results', [])
+    return render_template("items/search.html", search_results=search_results)
 
 
 # 拾得物の削除
