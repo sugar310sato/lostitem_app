@@ -266,4 +266,4 @@ pyrightconfig.json
 # 無視するファイルの追加
 local.sqlite
 config.py
-images
+*jpg

@@ -8,6 +8,7 @@ class BaseConfig:
     WTF_CSRF_SECRET_KEY = "CSRFのシークレットキー"
     UPLOAD_FOLDER = str(Path(basedir, "apps", "images"))
     CARD_IMAGE_FOLDER = str(Path(basedir, "apps", "register", "card_image"))
+    LENAMED_FOLDER = str(Path(basedir, "apps", "renamed_images"))
 
 
 class LocalConfig(BaseConfig):

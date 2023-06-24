@@ -4,6 +4,9 @@
 <h2>拾得物詳細画面</h2>
 <div class="container">
     <div class="row">
+        <img src="{{ url_for('items.image_file', item_id=item.id) }}" alt="拾得物の画像" width="25%" height="auto">
+    </div>
+    <div class="row">
         <div class="col-3">管理番号 <u>{{ item.track_num }}</u></div>
         <div class="col-3">通知 <u>{{ item.notify }}</u></div>
         <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') }}

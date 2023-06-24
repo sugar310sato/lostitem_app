@@ -50,6 +50,7 @@ class LostItem(db.Model):
     item_money = db.Column(db.String)
     item_remarks = db.Column(db.String)
     item_situation = db.Column(db.Boolean, default=False)
+    item_image = db.Column(db.String)
 
     # 占有者用入力項目
     finder_class = db.Column(db.String)

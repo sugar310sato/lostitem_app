@@ -1,4 +1,5 @@
-from flask import Blueprint, redirect, render_template, url_for
+from flask import (Blueprint, current_app, redirect, render_template,
+                   send_from_directory, url_for)
 
 from apps.app import db
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
@@ -138,3 +139,10 @@ def delete(item_id):
     db.session.delete(item)
     db.session.commit()
     return redirect(url_for("items.index"))
+
+
+# 画像表示用関数
+@items.route("/images/<item_id>")
+def image_file(item_id):
+    item = LostItem.query.filter_by(id=item_id).first()
+    return send_from_directory(current_app.config["LENAMED_FOLDER"], item.item_image)

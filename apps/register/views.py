@@ -1,5 +1,7 @@
 import base64
 import os
+import shutil
+import uuid
 from pathlib import Path
 
 from flask import (Blueprint, current_app, redirect, render_template, request,
@@ -18,6 +20,37 @@ register = Blueprint(
     __name__,
     template_folder="templates",
 )
+
+
+def save_image():
+    # 画像の保存処理
+    # 画像取得元
+    source_folder = Path(current_app.root_path, "images")
+    # 画像移動先フォルダ
+    destination_folder = Path(current_app.root_path, "renamed_images")
+
+    # ファイル名と拡張子を取得、ファイル名をuuidに
+    originnl_filename = "captured_image.jpg"
+    new_filename = str(uuid.uuid4())
+    _, file_extention = os.path.splitext(originnl_filename)
+    new_filename = new_filename + file_extention
+    send_file = new_filename
+    originnl_filename = os.path.join(source_folder, originnl_filename)
+    new_filename = os.path.join(source_folder, new_filename)
+    os.rename(originnl_filename, new_filename)
+
+    # 画像の移動
+    for file in os.listdir(source_folder):
+        file_path = os.path.join(source_folder, new_filename)
+        moved_path = shutil.move(file_path, destination_folder)
+
+    # imagesに登録されている写真の削除
+    sourcefoder = Path(current_app.root_path, "images")
+    for filename in os.listdir(sourcefoder):
+        file_path = os.path.join(sourcefoder, filename)
+        os.unlink(file_path)
+
+    return send_file
 
 
 # ホーム画面
@@ -66,6 +99,7 @@ def register_item(choice_finder):
         # form.validate_on_submit()だとNULLをうまく受け付けてくれない
         # submit.dataとすることで、入力がない場合にも対応できる
         if form.submit.data:
+            moved_path = save_image()
             ownerlostitem = LostItem(
                 choice_finder=choice_finder,
                 track_num=form.track_num.data,
@@ -103,15 +137,17 @@ def register_item(choice_finder):
                 item_money=form.item_money.data,
                 item_remarks=form.item_remarks.data,
                 item_situation=form.item_situation.data,
+                item_image=moved_path,
                 finder_class=form.finder_class.data,
                 finder_affiliation=form.finder_affiliation.data,
             )
             db.session.add(ownerlostitem)
             db.session.commit()
-            redirect(url_for("register.item_detail"))
+            return redirect(url_for("items.detail", item_id=ownerlostitem.id))
     elif choice_finder == "第三者拾得":
         form = ThirdPartyLostItemForm()
         if form.submit.data:
+            moved_path = save_image()
             thirdpartylostitem = LostItem(
                     choice_finder=choice_finder,
                     track_num=form.track_num.data,
@@ -149,12 +185,13 @@ def register_item(choice_finder):
                     item_money=form.item_money.data,
                     item_remarks=form.item_remarks.data,
                     item_situation=form.item_situation.data,
+                    item_image=moved_path,
                     thirdparty_waiver=form.thirdparty_waiver.data,
                     thirdparty_name_note=form.thirdparty_name_note.data,
             )
             db.session.add(thirdpartylostitem)
             db.session.commit()
-            redirect(url_for("register.item_detail"))
+            return redirect(url_for("items.detail", item_id=thirdpartylostitem.id))
     return render_template("register/register_item.html", choice_finder=choice_finder,
                            form=form)
 
