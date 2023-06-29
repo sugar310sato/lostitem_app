@@ -13,7 +13,7 @@
 apps直下にconfig.pyというファイルを作成し、config.sampleの内容をコピーします。  
 シークレットキー、CSRFのシークレットキーの内容を任意の20桁の英数字に変更してください。
 
-#### .envファイルの作成
+### .envの作成
 lost_item直下に、.envというファイルを作成してください。ファイルの中身は、次の通りです。  
 ```
 FLASK_APP=apps.app:create_app("local")
