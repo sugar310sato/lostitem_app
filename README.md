@@ -15,9 +15,11 @@ apps直下にconfig.pyというファイルを作成し、config.sampleの内容
 
 #### .envファイルの作成
 lost_item直下に、.envというファイルを作成してください。ファイルの中身は、次の通りです。  
-    FLASK_APP=apps.app:create_app("local")
-    FLASK_ENV=development
-    FLASK_DEBUG=1
+```
+FLASK_APP=apps.app:create_app("local")
+FLASK_ENV=development
+FLASK_DEBUG=1
+```
 
 
 ### DBの作成
