@@ -6,3 +6,8 @@
 ### 仮想環境の作成
 以下のコマンドで任意の仮想環境を作成し、ライブラリのインストールを行います。  
 `python -m venv   任意の名前`
+`./仮想環境名/Script/activate`  
+`pip install -r requirements.txt`
+
+### config.pyの作成
+apps直下にconfig.pyというファイルを作成し、config.sampleの内容をコピーします。
