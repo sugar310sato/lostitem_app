@@ -9,9 +9,9 @@
     <div class="row">
         <div class="col-3">管理番号 <u>{{ item.track_num }}</u></div>
         <div class="col-3">通知 <u>{{ item.notify }}</u></div>
-        <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') }}
+        <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
                 {{ item.get_item_hour }}{{ item.get_item_minute }}</u></div>
-        <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') }}
+        <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') if item.get_item is not none else ""}}
                 {{ item.recep_item_hour }}{{ item.recep_item_minute }}</u></div>
     </div>
     <div class="row">
@@ -36,6 +36,11 @@
         {% endif %}
     </div>
     <div class="row">
+        <div class="col-4">物件分類（大） <u>{{ item.item_class_L }}</u></div>
+        <div class="col-4">物件分類（中） <u>{{ item.item_class_M }}</u></div>
+        <div class="col-4">物件分類（小） <u>{{ item.item_class_S }}</u></div>
+    </div>
+    <div class="row">
         <div class="col-3">郵便番号 <u>{{ item.finder_post }}</u></div>
         <div class="col-3">連絡先1 <u>{{ item.finder_tel1 }}</u></div>
         <div class="col-3">連絡先2 <u>{{ item.finder_tel2 }}</u></div>
@@ -50,7 +55,8 @@
     <div class="row">
         <div class="col-3">メーカー <u>{{ item.item_maker }}</u></div>
         {% if item.item_expiration!=None %}
-        <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') }}</u></div>
+        <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') if item.get_item is not none else
+                ""}}</u></div>
         {% endif %}
         <div class="col-3">数量 <u>{{ item.item_num }}</u></div>
         <div class="col-3">単位 <u>{{ item.item_unit }}</u></div>
