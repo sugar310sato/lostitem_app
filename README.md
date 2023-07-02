@@ -21,6 +21,9 @@ FLASK_ENV=development
 FLASK_DEBUG=1
 ```
 
+### images、renamed_imagesの作成
+apps直下に、images、renamed_imagesフォルダを作ってください。
+
 
 ### DBの作成
 以下のコマンドを入力し、DBを作成してください。  
