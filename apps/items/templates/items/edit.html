@@ -6,27 +6,33 @@
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
-            <div class="col-6">{{ form.track_num.label }} {{ form.track_num }}</div>
-            <div class="col-6">{{ form.notify.label }} {{ form.notify }}</div>
+            <div class="col-6">{{ form.track_num.label }} {{ form.track_num(value=item.track_num) }}</div>
+            <div class="col-6">{{ form.notify.label }} {{ form.notify(value=item.notify) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.get_item.label }} {{ form.get_item }}</div>
-            <div class="col-4">{{ form.get_item_hour.label }} {{ form.get_item_hour }}</div>
-            <div class="col-4">{{ form.get_item_minute.label }} {{ form.get_item_minute }}</div>
+            <div class="col-4">{{ form.get_item.label }} {{ form.get_item(value=item.get_item) }}</div>
+            <div class="col-4">{{ form.get_item_hour.label }} {{ form.get_item_hour(value=item.get_item_hour) }}</div>
+            <div class="col-4">{{ form.get_item_minute.label }} {{ form.get_item_minute(value=item.get_item_minute) }}
+            </div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item }}</div>
-            <div class="col-3">{{ form.recep_item_hour.label }} {{ form.recep_item_hour }}</div>
-            <div class="col-3">{{ form.recep_item_minute.label }} {{ form.recep_item_minute }}</div>
-            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager }}</div>
+            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item(value=item.recep_item) }}</div>
+            <div class="col-3">{{ form.recep_item_hour.label }} {{ form.recep_item_hour(value=item.recep_item_hour) }}
+            </div>
+            <div class="col-3">{{ form.recep_item_minute.label }} {{
+                form.recep_item_minute(value=item.recep_item_minute) }}</div>
+            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager(value=item.recep_manager) }}</div>
         </div>
         <div class="row mb-3">
             {% if choice_finder=="占有者拾得" %}
-            <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class }}</div>
-            <div class="col-4">{{ form.finder_affiliation.label }} {{ form.finder_affiliation }}</div>
+            <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class(value=item.finder_class) }}</div>
+            <div class="col-4">{{ form.finder_affiliation.label }} {{
+                form.finder_affiliation(value=item.finder_affiliation) }}</div>
             {% else %}
-            <div class="col-4">{{ form.thirdparty_waiver.label }} {{ form.thirdparty_waiver }}</div>
-            <div class="col-4">{{ form.thirdparty_name_note.label }} {{ form.thirdparty_name_note }}</div>
+            <div class="col-4">{{ form.thirdparty_waiver.label }} {{
+                form.thirdparty_waiver(value=item.thirdparty_waiver) }}</div>
+            <div class="col-4">{{ form.thirdparty_name_note.label }} {{
+                form.thirdparty_name_note(value=item.thirdparty_name_note) }}</div>
             {% endif %}
         </div>
         <div class="row mb-3">
@@ -63,633 +69,1169 @@
             </div>
             <div class="col-4">
                 <select name="item_class_M" id="item_class_M">
-                    <option value="現金" data-val="現金">現金</option>
-                    <option value="手提げかばん" data-val="かばん類">手提げかばん</option>
-                    <option value="肩掛けかばん" data-val="かばん類">肩掛けかばん</option>
-                    <option value="抱えかばん" data-val="かばん類">抱えかばん</option>
-                    <option value="小物入れ" data-val="かばん類">小物入れ</option>
-                    <option value="その他かばん類" data-val="かばん類">その他かばん類</option>
-                    <option value="袋" data-val="袋・封筒類">袋</option>
-                    <option value="封筒" data-val="袋・封筒類">封筒</option>
-                    <option value="財布" data-val="財布類">財布</option>
-                    <option value="がま口" data-val="財布類">がま口</option>
-                    <option value="小銭入れ" data-val="財布類">小銭入れ</option>
-                    <option value="カードケース" data-val="カードケース類">カードケース</option>
-                    <option value="名刺入れ" data-val="カードケース類">名刺入れ</option>
-                    <option value="カメラ" data-val="カメラ類">カメラ</option>
-                    <option value="ビデオカメラ" data-val="カメラ類">ビデオカメラ</option>
-                    <option value="カメラ付属品類" data-val="カメラ類">カメラ付属品類</option>
-                    <option value="腕時計" data-val="時計類">腕時計</option>
-                    <option value="その他時計類" data-val="時計類">その他時計類</option>
-                    <option value="めがね" data-val="めがね類">めがね</option>
-                    <option value="サングラス類" data-val="めがね類">サングラス類</option>
-                    <option value="コンタクトレンズ" data-val="めがね類">コンタクトレンズ</option>
-                    <option value="双眼鏡類" data-val="めがね類">双眼鏡類</option>
-                    <option value="電気製品" data-val="電気製品類">電気製品</option>
-                    <option value="携帯音響品" data-val="電気製品類">携帯音響品</option>
-                    <option value="音響関連品" data-val="電気製品類">音響関連品</option>
-                    <option value="電子機器" data-val="電気製品類">電子機器</option>
-                    <option value="電子玩具" data-val="電気製品類">電子玩具</option>
-                    <option value="外部記録媒体" data-val="電気製品類">外部記録媒体</option>
-                    <option value="電気製品類付属品" data-val="電気製品類">電気製品類付属品</option>
-                    <option value="携帯電話機" data-val="携帯電話類">携帯電話機</option>
-                    <option value="その他通信機器類" data-val="携帯電話類">その他通信機器類</option>
-                    <option value="ネックレス" data-val="貴金属類">ネックレス</option>
-                    <option value="指輪" data-val="貴金属類">指輪</option>
-                    <option value="ブレスレット" data-val="貴金属類">ブレスレット</option>
-                    <option value="イヤリング類" data-val="貴金属類">イヤリング類</option>
-                    <option value="ブローチ" data-val="貴金属類">ブローチ</option>
-                    <option value="ペンダント" data-val="貴金属類">ペンダント</option>
-                    <option value="その他貴金属類" data-val="貴金属類">その他貴金属類</option>
-                    <option value="レジャー・スポーツ用品" data-val="趣味娯楽用品類">レジャー・スポーツ用品</option>
-                    <option value="楽器類" data-val="趣味娯楽用品類">楽器類</option>
-                    <option value="その他趣味・娯楽用品類" data-val="趣味娯楽用品類">その他趣味・娯楽用品類</option>
-                    <option value="運転免許証" data-val="証明書類・カード類">運転免許証</option>
-                    <option value="身分証明書類" data-val="証明書類・カード類">身分証明書類</option>
-                    <option value="健康保険証類" data-val="証明書類・カード類">健康保険証類</option>
-                    <option value="その他証明書類" data-val="証明書類・カード類">その他証明書類</option>
-                    <option value="預貯金通帳" data-val="証明書類・カード類">預貯金通帳</option>
-                    <option value="キャッシュカード類" data-val="証明書類・カード類">キャッシュカード類</option>
-                    <option value="会員証（カード）類" data-val="証明書類・カード類">会員証（カード）類</option>
-                    <option value="有価証券" data-val="有価証券類">有価証券</option>
-                    <option value="プリペイドカード類" data-val="有価証券類">プリペイドカード類</option>
-                    <option value="定期券類" data-val="有価証券類">定期券類</option>
-                    <option value="乗車券類" data-val="有価証券類">乗車券類</option>
-                    <option value="馬券・宝くじ類" data-val="有価証券類">馬券・宝くじ類</option>
-                    <option value="切手類" data-val="有価証券類">切手類</option>
-                    <option value="その他証券類" data-val="有価証券類">その他証券類</option>
-                    <option value="書籍類" data-val="著作品類">書籍類</option>
-                    <option value="ディスク・テープ類" data-val="著作品類">ディスク・テープ類</option>
-                    <option value="写真類" data-val="著作品類">写真類</option>
-                    <option value="その他著作品類" data-val="著作品類">その他著作品類</option>
-                    <option value="手帳・ノート類" data-val="手帳文具類">手帳・ノート類</option>
-                    <option value="印鑑類" data-val="手帳文具類">印鑑類</option>
-                    <option value="整理収納用品類" data-val="手帳文具類">整理収納用品類</option>
-                    <option value="筆箱・筆記用具類" data-val="手帳文具類">筆箱・筆記用具類</option>
-                    <option value="その他文具類" data-val="手帳文具類">その他文具類</option>
-                    <option value="書類" data-val="書類・紙類">書類</option>
-                    <option value="図面類" data-val="書類・紙類">図面類</option>
-                    <option value="名刺" data-val="書類・紙類">名刺</option>
-                    <option value="その他紙類" data-val="書類・紙類">その他紙類</option>
-                    <option value="小包・箱類" data-val="小包・箱類">小包・箱類</option>
-                    <option value="帽子類" data-val="衣類・履物類">帽子類</option>
-                    <option value="手袋" data-val="衣類・履物類">手袋</option>
-                    <option value="マフラー類" data-val="衣類・履物類">マフラー類</option>
-                    <option value="上着類" data-val="衣類・履物類">上着類</option>
-                    <option value="ズボン類" data-val="衣類・履物類">ズボン類</option>
-                    <option value="上下衣類" data-val="衣類・履物類">上下衣類</option>
-                    <option value="その他衣類" data-val="衣類・履物類">その他衣類</option>
-                    <option value="衣類付属品" data-val="衣類・履物類">衣類付属品</option>
-                    <option value="履物類" data-val="衣類・履物類">履物類</option>
-                    <option value="かさ" data-val="かさ類">かさ</option>
-                    <option value="鍵" data-val="鍵類">鍵</option>
-                    <option value="鍵（キーホルダー付）" data-val="鍵類">鍵（キーホルダー付）</option>
-                    <option value="鍵（キーケース付）" data-val="鍵類">鍵（キーケース付）</option>
-                    <option value="カードキー" data-val="鍵類">カードキー</option>
-                    <option value="生活用品" data-val="生活用品類">生活用品</option>
-                    <option value="食器類" data-val="生活用品類">食器類</option>
-                    <option value="工具類" data-val="生活用品類">工具類</option>
-                    <option value="装飾品類" data-val="生活用品類">装飾品類</option>
-                    <option value="神仏具品類" data-val="生活用品類">神仏具品類</option>
-                    <option value="自転車類" data-val="生活用品類">自転車類</option>
-                    <option value="ケース・カバー類" data-val="生活用品類">ケース・カバー類</option>
-                    <option value="薬類" data-val="医療・化粧品類">薬類</option>
-                    <option value="医療関連品類" data-val="医療・化粧品類">医療関連品類</option>
-                    <option value="化粧品類" data-val="医療・化粧品類">化粧品類</option>
-                    <option value="食料品類" data-val="食料品類">食料品類</option>
-                    <option value="動物" data-val="動植物類">動物</option>
-                    <option value="植物" data-val="動植物類">植物</option>
-                    <option value="動植物関連品" data-val="動植物類">動植物関連品</option>
-                    <option value="所持禁止物品" data-val="その他">所持禁止物品</option>
-                    <option value="その他" data-val="その他">その他</option>
+                    <option value="現金" data-val="現金" {% if item.item_class_M=="現金" %}selected{% endif %}>現金</option>
+                    <option value="手提げかばん" data-val="かばん類" {% if item.item_class_M=="手提げかばん" %}selected{% endif %}>
+                        手提げかばん
+                    </option>
+                    <option value="肩掛けかばん" data-val="かばん類" {% if item.item_class_M=="肩掛けかばん" %}selected{% endif %}>
+                        肩掛けかばん
+                    </option>
+                    <option value="抱えかばん" data-val="かばん類" {% if item.item_class_M=="抱えかばん" %}selected{% endif %}>抱えかばん
+                    </option>
+                    <option value="小物入れ" data-val="かばん類" {% if item.item_class_M=="小物入れ" %}selected{% endif %}>小物入れ
+                    </option>
+                    <option value="その他かばん類" data-val="かばん類" {% if item.item_class_M=="その他かばん類" %}selected{% endif %}>
+                        その他かばん類
+                    </option>
+                    <option value="袋" data-val="袋・封筒類" {% if item.item_class_M=="袋" %}selected{% endif %}>袋</option>
+                    <option value="封筒" data-val="袋・封筒類" {% if item.item_class_M=="封筒" %}selected{% endif %}>封筒</option>
+                    <option value="財布" data-val="財布類" {% if item.item_class_M=="財布" %}selected{% endif %}>財布</option>
+                    <option value="がま口" data-val="財布類" {% if item.item_class_M=="がま口" %}selected{% endif %}>がま口</option>
+                    <option value="小銭入れ" data-val="財布類" {% if item.item_class_M=="小銭入れ" %}selected{% endif %}>小銭入れ
+                    </option>
+                    <option value="カードケース" data-val="カードケース類" {% if item.item_class_M=="カードケース" %}selected{% endif %}>
+                        カードケース</option>
+                    <option value="名刺入れ" data-val="カードケース類" {% if item.item_class_M=="名刺入れ" %}selected{% endif %}>名刺入れ
+                    </option>
+                    <option value="カメラ" data-val="カメラ類" {% if item.item_class_M=="カメラ" %}selected{% endif %}>カメラ
+                    </option>
+                    <option value="ビデオカメラ" data-val="カメラ類" {% if item.item_class_M=="ビデオカメラ" %}selected{% endif %}>
+                        ビデオカメラ
+                    </option>
+                    <option value="カメラ付属品類" data-val="カメラ類" {% if item.item_class_M=="カメラ付属品類" %}selected{% endif %}>
+                        カメラ付属品類
+                    </option>
+                    <option value="腕時計" data-val="時計類" {% if item.item_class_M=="腕時計" %}selected{% endif %}>腕時計</option>
+                    <option value="その他時計類" data-val="時計類" {% if item.item_class_M=="その他時計類" %}selected{% endif %}>その他時計類
+                    </option>
+                    <option value="めがね" data-val="めがね類" {% if item.item_class_M=="めがね" %}selected{% endif %}>めがね
+                    </option>
+                    <option value="サングラス類" data-val="めがね類" {% if item.item_class_M=="サングラス類" %}selected{% endif %}>
+                        サングラス類
+                    </option>
+                    <option value="コンタクトレンズ" data-val="めがね類" {% if item.item_class_M=="コンタクトレンズ" %}selected{% endif %}>
+                        コンタクトレンズ</option>
+                    <option value="双眼鏡類" data-val="めがね類" {% if item.item_class_M=="双眼鏡類" %}selected{% endif %}>双眼鏡類
+                    </option>
+                    <option value="電気製品" data-val="電気製品類" {% if item.item_class_M=="電気製品" %}selected{% endif %}>電気製品
+                    </option>
+                    <option value="携帯音響品" data-val="電気製品類" {% if item.item_class_M=="携帯音響品" %}selected{% endif %}>携帯音響品
+                    </option>
+                    <option value="音響関連品" data-val="電気製品類" {% if item.item_class_M=="音響関連品" %}selected{% endif %}>音響関連品
+                    </option>
+                    <option value="電子機器" data-val="電気製品類" {% if item.item_class_M=="電子機器" %}selected{% endif %}>電子機器
+                    </option>
+                    <option value="電子玩具" data-val="電気製品類" {% if item.item_class_M=="電子玩具" %}selected{% endif %}>電子玩具
+                    </option>
+                    <option value="外部記録媒体" data-val="電気製品類" {% if item.item_class_M=="外部記録媒体" %}selected{% endif %}>
+                        外部記録媒体
+                    </option>
+                    <option value="電気製品類付属品" data-val="電気製品類" {% if item.item_class_M=="電気製品類付属品" %}selected{% endif %}>
+                        電気製品類付属品</option>
+                    <option value="携帯電話機" data-val="携帯電話類" {% if item.item_class_M=="携帯電話機" %}selected{% endif %}>携帯電話機
+                    </option>
+                    <option value="その他通信機器類" data-val="携帯電話類" {% if item.item_class_M=="その他通信機器類" %}selected{% endif %}>
+                        その他通信機器類</option>
+                    <option value="ネックレス" data-val="貴金属類" {% if item.item_class_M=="ネックレス" %}selected{% endif %}>ネックレス
+                    </option>
+                    <option value="指輪" data-val="貴金属類" {% if item.item_class_M=="指輪" %}selected{% endif %}>指輪</option>
+                    <option value="ブレスレット" data-val="貴金属類" {% if item.item_class_M=="ブレスレット" %}selected{% endif %}>
+                        ブレスレット
+                    </option>
+                    <option value="イヤリング類" data-val="貴金属類" {% if item.item_class_M=="イヤリング類" %}selected{% endif %}>
+                        イヤリング類
+                    </option>
+                    <option value="ブローチ" data-val="貴金属類" {% if item.item_class_M=="ブローチ" %}selected{% endif %}>ブローチ
+                    </option>
+                    <option value="ペンダント" data-val="貴金属類" {% if item.item_class_M=="ペンダント" %}selected{% endif %}>ペンダント
+                    </option>
+                    <option value="その他貴金属類" data-val="貴金属類" {% if item.item_class_M=="その他貴金属類" %}selected{% endif %}>
+                        その他貴金属類
+                    </option>
+                    <option value="レジャー・スポーツ用品" data-val="趣味娯楽用品類" {% if item.item_class_M=="レジャー・スポーツ用品" %}selected{%
+                        endif %}>
+                        レジャー・スポーツ用品</option>
+                    <option value="楽器類" data-val="趣味娯楽用品類" {% if item.item_class_M=="楽器類" %}selected{% endif %}>楽器類
+                    </option>
+                    <option value="その他趣味・娯楽用品類" data-val="趣味娯楽用品類" {% if item.item_class_M=="その他趣味・娯楽用品類" %}selected{%
+                        endif %}>
+                        その他趣味・娯楽用品類</option>
+                    <option value="運転免許証" data-val="証明書類・カード類" {% if item.item_class_M=="運転免許証" %}selected{% endif %}>
+                        運転免許証</option>
+                    <option value="身分証明書類" data-val="証明書類・カード類" {% if item.item_class_M=="身分証明書類" %}selected{% endif %}>
+                        身分証明書類</option>
+                    <option value="健康保険証類" data-val="証明書類・カード類" {% if item.item_class_M=="健康保険証類" %}selected{% endif %}>
+                        健康保険証類</option>
+                    <option value="その他証明書類" data-val="証明書類・カード類" {% if item.item_class_M=="その他証明書類" %}selected{% endif
+                        %}>
+                        その他証明書類</option>
+                    <option value="預貯金通帳" data-val="証明書類・カード類" {% if item.item_class_M=="預貯金通帳" %}selected{% endif %}>
+                        預貯金通帳</option>
+                    <option value="キャッシュカード類" data-val="証明書類・カード類" {% if item.item_class_M=="キャッシュカード類" %}selected{%
+                        endif %}>
+                        キャッシュカード類</option>
+                    <option value="会員証（カード）類" data-val="証明書類・カード類" {% if item.item_class_M=="会員証（カード）類" %}selected{%
+                        endif %}>
+                        会員証（カード）類</option>
+                    <option value="有価証券" data-val="有価証券類" {% if item.item_class_M=="有価証券" %}selected{% endif %}>有価証券
+                    </option>
+                    <option value="プリペイドカード類" data-val="有価証券類" {% if item.item_class_M=="プリペイドカード類" %}selected{% endif
+                        %}>
+                        プリペイドカード類</option>
+                    <option value="定期券類" data-val="有価証券類" {% if item.item_class_M=="定期券類" %}selected{% endif %}>定期券類
+                    </option>
+                    <option value="乗車券類" data-val="有価証券類" {% if item.item_class_M=="乗車券類" %}selected{% endif %}>乗車券類
+                    </option>
+                    <option value="馬券・宝くじ類" data-val="有価証券類" {% if item.item_class_M=="馬券・宝くじ類" %}selected{% endif %}>
+                        馬券・宝くじ類</option>
+                    <option value="切手類" data-val="有価証券類" {% if item.item_class_M=="切手類" %}selected{% endif %}>切手類
+                    </option>
+                    <option value="その他証券類" data-val="有価証券類" {% if item.item_class_M=="その他証券類" %}selected{% endif %}>
+                        その他証券類
+                    </option>
+                    <option value="書籍類" data-val="著作品類" {% if item.item_class_M=="書籍類" %}selected{% endif %}>書籍類
+                    </option>
+                    <option value="ディスク・テープ類" data-val="著作品類" {% if item.item_class_M=="ディスク・テープ類" %}selected{% endif
+                        %}>
+                        ディスク・テープ類</option>
+                    <option value="写真類" data-val="著作品類" {% if item.item_class_M=="写真類" %}selected{% endif %}>写真類
+                    </option>
+                    <option value="その他著作品類" data-val="著作品類" {% if item.item_class_M=="その他著作品類" %}selected{% endif %}>
+                        その他著作品類
+                    </option>
+                    <option value="手帳・ノート類" data-val="手帳文具類" {% if item.item_class_M=="手帳・ノート類" %}selected{% endif %}>
+                        手帳・ノート類</option>
+                    <option value="印鑑類" data-val="手帳文具類" {% if item.item_class_M=="印鑑類" %}selected{% endif %}>印鑑類
+                    </option>
+                    <option value="整理収納用品類" data-val="手帳文具類" {% if item.item_class_M=="整理収納用品類" %}selected{% endif %}>
+                        整理収納用品類</option>
+                    <option value="筆箱・筆記用具類" data-val="手帳文具類" {% if item.item_class_M=="筆箱・筆記用具類" %}selected{% endif %}>
+                        筆箱・筆記用具類</option>
+                    <option value="その他文具類" data-val="手帳文具類" {% if item.item_class_M=="その他文具類" %}selected{% endif %}>
+                        その他文具類
+                    </option>
+                    <option value="書類" data-val="書類・紙類" {% if item.item_class_M=="書類" %}selected{% endif %}>書類</option>
+                    <option value="図面類" data-val="書類・紙類" {% if item.item_class_M=="図面類" %}selected{% endif %}>図面類
+                    </option>
+                    <option value="名刺" data-val="書類・紙類" {% if item.item_class_M=="名刺" %}selected{% endif %}>名刺</option>
+                    <option value="その他紙類" data-val="書類・紙類" {% if item.item_class_M=="その他紙類" %}selected{% endif %}>その他紙類
+                    </option>
+                    <option value="小包・箱類" data-val="小包・箱類" {% if item.item_class_M=="小包・箱類" %}selected{% endif %}>小包・箱類
+                    </option>
+                    <option value="帽子類" data-val="衣類・履物類" {% if item.item_class_M=="帽子類" %}selected{% endif %}>帽子類
+                    </option>
+                    <option value="手袋" data-val="衣類・履物類" {% if item.item_class_M=="手袋" %}selected{% endif %}>手袋
+                    </option>
+                    <option value="マフラー類" data-val="衣類・履物類" {% if item.item_class_M=="マフラー類" %}selected{% endif %}>マフラー類
+                    </option>
+                    <option value="上着類" data-val="衣類・履物類" {% if item.item_class_M=="上着類" %}selected{% endif %}>上着類
+                    </option>
+                    <option value="ズボン類" data-val="衣類・履物類" {% if item.item_class_M=="ズボン類" %}selected{% endif %}>ズボン類
+                    </option>
+                    <option value="上下衣類" data-val="衣類・履物類" {% if item.item_class_M=="上下衣類" %}selected{% endif %}>上下衣類
+                    </option>
+                    <option value="その他衣類" data-val="衣類・履物類" {% if item.item_class_M=="その他衣類" %}selected{% endif %}>その他衣類
+                    </option>
+                    <option value="衣類付属品" data-val="衣類・履物類" {% if item.item_class_M=="衣類付属品" %}selected{% endif %}>衣類付属品
+                    </option>
+                    <option value="履物類" data-val="衣類・履物類" {% if item.item_class_M=="履物類" %}selected{% endif %}>履物類
+                    </option>
+                    <option value="かさ" data-val="かさ類" {% if item.item_class_M=="かさ" %}selected{% endif %}>かさ</option>
+                    <option value="鍵" data-val="鍵類" {% if item.item_class_M=="鍵" %}selected{% endif %}>鍵</option>
+                    <option value="鍵（キーホルダー付）" data-val="鍵類" {% if item.item_class_M=="鍵（キーホルダー付）" %}selected{% endif
+                        %}>
+                        鍵（キーホルダー付）</option>
+                    <option value="鍵（キーケース付）" data-val="鍵類" {% if item.item_class_M==" 鍵（キーケース付）" %}selected{% endif %}>
+                        鍵（キーケース付）</option>
+                    <option value="カードキー" data-val="鍵類" {% if item.item_class_M=="カードキー" %}selected{% endif %}>カードキー
+                    </option>
+                    <option value="生活用品" data-val="生活用品類" {% if item.item_class_M=="生活用品" %}selected{% endif %}>生活用品
+                    </option>
+                    <option value="食器類" data-val="生活用品類" {% if item.item_class_M=="食器類" %}selected{% endif %}>食器類
+                    </option>
+                    <option value="工具類" data-val="生活用品類" {% if item.item_class_M=="工具類" %}selected{% endif %}>工具類
+                    </option>
+                    <option value="装飾品類" data-val="生活用品類" {% if item.item_class_M=="装飾品類" %}selected{% endif %}>装飾品類
+                    </option>
+                    <option value="神仏具品類" data-val="生活用品類" {% if item.item_class_M=="神仏具品類" %}selected{% endif %}>神仏具品類
+                    </option>
+                    <option value="自転車類" data-val="生活用品類" {% if item.item_class_M=="自転車類" %}selected{% endif %}>自転車類
+                    </option>
+                    <option value="ケース・カバー類" data-val="生活用品類" {% if item.item_class_M=="ケース・カバー類" %}selected{% endif %}>
+                        ケース・カバー類</option>
+                    <option value="薬類" data-val="医療・化粧品類" {% if item.item_class_M=="薬類" %}selected{% endif %}>薬類
+                    </option>
+                    <option value="医療関連品類" data-val="医療・化粧品類" {% if item.item_class_M=="医療関連品類" %}selected{% endif %}>
+                        医療関連品類</option>
+                    <option value="化粧品類" data-val="医療・化粧品類" {% if item.item_class_M=="化粧品類" %}selected{% endif %}>化粧品類
+                    </option>
+                    <option value="食料品類" data-val="食料品類" {% if item.item_class_M=="食料品類" %}selected{% endif %}>食料品類
+                    </option>
+                    <option value="動物" data-val="動植物類" {% if item.item_class_M=="動物" %}selected{% endif %}>動物</option>
+                    <option value="植物" data-val="動植物類" {% if item.item_class_M=="植物" %}selected{% endif %}>植物</option>
+                    <option value="動植物関連品" data-val="動植物類" {% if item.item_class_M=="動植物関連品" %}selected{% endif %}>
+                        動植物関連品
+                    </option>
+                    <option value="所持禁止物品" data-val="その他" {% if item.item_class_M=="所持禁止物品" %}selected{% endif %}>所持禁止物品
+                    </option>
+                    <option value="その他" data-val="その他" {% if item.item_class_M=="その他" %}selected{% endif %}>その他</option>
                 </select>
             </div>
             <div class="col-4">
                 <select name="item_class_S" id="item_class_S">
-                    <option value="現金" data-val="現金">現金</option>
-                    <option value="ハンドバッグ" data-val="手提げかばん">ハンドバッグ</option>
-                    <option value="ビジネスバッグ" data-val="手提げかばん">ビジネスバッグ</option>
-                    <option value="トートバッグ" data-val="手提げかばん">トートバッグ</option>
-                    <option value="ボストンバッグ" data-val="手提げかばん">ボストンバッグ</option>
-                    <option value="スポーツバッグ" data-val="手提げかばん">スポーツバッグ</option>
-                    <option value="アタッシュケース" data-val="手提げかばん">アタッシュケース</option>
-                    <option value="トランク" data-val="手提げかばん">トランク</option>
-                    <option value="シューズバッグ" data-val="手提げかばん">シューズバッグ</option>
-                    <option value="学生かばん" data-val="手提げかばん">学生かばん</option>
-                    <option value="手提げかばん" data-val="手提げかばん">手提げかばん</option>
-                    <option value="ショルダーバッグ" data-val="肩掛けかばん">ショルダーバッグ</option>
-                    <option value="リュックサック" data-val="肩掛けかばん">リュックサック</option>
-                    <option value="デイバッグ" data-val="肩掛けかばん">デイバッグ</option>
-                    <option value="肩掛けかばん" data-val="肩掛けかばん">肩掛けかばん</option>
-                    <option value="セカンドバッグ" data-val="抱えかばん">セカンドバッグ</option>
-                    <option value="抱えかばん" data-val="抱えかばん">抱えかばん</option>
-                    <option value="ポーチ" data-val="小物入れ">ポーチ</option>
-                    <option value="ウエストポーチ" data-val="小物入れ">ウエストポーチ</option>
-                    <option value="ポシェット" data-val="小物入れ">ポシェット</option>
-                    <option value="きんちゃく" data-val="小物入れ">きんちゃく</option>
-                    <option value="たばこ入れ" data-val="小物入れ">たばこ入れ</option>
-                    <option value="小物入れ" data-val="小物入れ">小物入れ</option>
-                    <option value="スーツケース" data-val="その他かばん類">スーツケース</option>
-                    <option value="ハンガーケース" data-val="その他かばん類">ハンガーケース</option>
-                    <option value="その他かばん" data-val="その他かばん類">その他かばん</option>
-                    <option value="手提げ袋（ビニール）" data-val="袋">手提げ袋（ビニール）</option>
-                    <option value="手提げ袋（紙）" data-val="袋">手提げ袋（紙）</option>
-                    <option value="レジ袋" data-val="袋">レジ袋</option>
-                    <option value="ビニール袋" data-val="袋">ビニール袋</option>
-                    <option value="紙袋" data-val="袋">紙袋</option>
-                    <option value="布袋" data-val="袋">布袋</option>
-                    <option value="その他袋" data-val="袋">その他袋</option>
-                    <option value="お年玉袋" data-val="封筒">お年玉袋</option>
-                    <option value="のし袋" data-val="封筒">のし袋</option>
-                    <option value="薬袋" data-val="封筒">薬袋</option>
-                    <option value="書類袋" data-val="封筒">書類袋</option>
-                    <option value="名入り封筒" data-val="封筒">名入り封筒</option>
-                    <option value="封筒" data-val="封筒">封筒</option>
-                    <option value="札入れ" data-val="財布">札入れ</option>
-                    <option value="財布" data-val="財布">財布</option>
-                    <option value="がま口" data-val="がま口">がま口</option>
-                    <option value="小銭入れ（チャック式）" data-val="小銭入れ">小銭入れ（チャック式）</option>
-                    <option value="小銭入れ（ホック式）" data-val="小銭入れ">小銭入れ（ホック式）</option>
-                    <option value="小銭入れ" data-val="小銭入れ">小銭入れ</option>
-                    <option value="コインケース" data-val="小銭入れ">コインケース</option>
-                    <option value="定期券入れ" data-val="カードケース">定期券入れ</option>
-                    <option value="免許証入れ" data-val="カードケース">免許証入れ</option>
-                    <option value="カード入れ" data-val="カードケース">カード入れ</option>
-                    <option value="名刺入れ" data-val="名刺入れ">名刺入れ</option>
-                    <option value="デジタルカメラ" data-val="カメラ">デジタルカメラ</option>
-                    <option value="コンパクトカメラ" data-val="カメラ">コンパクトカメラ</option>
-                    <option value="一眼レフカメラ" data-val="カメラ">一眼レフカメラ</option>
-                    <option value="使い捨てカメラ" data-val="カメラ">使い捨てカメラ</option>
-                    <option value="その他カメラ" data-val="カメラ">その他カメラ</option>
-                    <option value="デジタルビデオカメラ" data-val="ビデオカメラ">デジタルビデオカメラ</option>
-                    <option value="ビデオカメラ" data-val="ビデオカメラ">ビデオカメラ</option>
-                    <option value="カメラケース" data-val="カメラ付属品類">カメラケース</option>
-                    <option value="フィルム" data-val="カメラ付属品類">フィルム</option>
-                    <option value="三脚" data-val="カメラ付属品類">三脚</option>
-                    <option value="カメラレンズ" data-val="カメラ付属品類">カメラレンズ</option>
-                    <option value="その他カメラ付属品" data-val="カメラ付属品類">その他カメラ付属品</option>
-                    <option value="腕時計男性（金属製ベルト）" data-val="腕時計">腕時計男性（金属製ベルト）</option>
-                    <option value="腕時計女性（金属製ベルト）" data-val="腕時計">腕時計女性（金属製ベルト）</option>
-                    <option value="腕時計男性（革製ベルト）" data-val="腕時計">腕時計男性（革製ベルト）</option>
-                    <option value="腕時計女性（革製ベルト）" data-val="腕時計">腕時計女性（革製ベルト）</option>
-                    <option value="腕時計男性（その他ベルト）" data-val="腕時計">腕時計男性（その他ベルト）</option>
-                    <option value="腕時計女性（その他ベルト）" data-val="腕時計">腕時計女性（その他ベルト）</option>
-                    <option value="置時計" data-val="その他時計類">置時計</option>
-                    <option value="懐中時計" data-val="その他時計類">懐中時計</option>
-                    <option value="壁掛時計" data-val="その他時計類">壁掛時計</option>
-                    <option value="その他時計" data-val="その他時計類">その他時計</option>
-                    <option value="めがね（ケースあり）" data-val="めがね">めがね（ケースあり）</option>
-                    <option value="めがね（ケース無し）" data-val="めがね">めがね（ケース無し）</option>
-                    <option value="その他めがね" data-val="めがね">その他めがね</option>
-                    <option value="サングラス" data-val="サングラス類">サングラス</option>
-                    <option value="ゴーグル" data-val="サングラス類">ゴーグル</option>
-                    <option value="コンタクトレンズ" data-val="コンタクトレンズ">コンタクトレンズ</option>
-                    <option value="双眼鏡" data-val="双眼鏡類">双眼鏡</option>
-                    <option value="レンズ" data-val="双眼鏡類">レンズ</option>
-                    <option value="ルーペ" data-val="双眼鏡類">ルーペ</option>
-                    <option value="その他めがね" data-val="双眼鏡類">その他めがね</option>
-                    <option value=防犯ブザー"" data-val="電気製品" 防犯ブザー></option>
-                    <option value="ライト" data-val="電気製品">ライト</option>
-                    <option value="電気カミソリ" data-val="電気製品">電気カミソリ</option>
-                    <option value="DVDプレーヤー" data-val="電気製品">DVDプレーヤー</option>
-                    <option value="ドライヤー" data-val="電気製品">ドライヤー</option>
-                    <option value="電球" data-val="電気製品">電球</option>
-                    <option value="その他電気製品" data-val="電気製品">その他電気製品</option>
-                    <option value="MP3プレーヤー" data-val="携帯音響品">MP3プレーヤー</option>
-                    <option value="デジタルオーディオプレーヤー" data-val="携帯音響品">デジタルオーディオプレーヤー</option>
-                    <option value="携帯ラジオ" data-val="携帯音響品">携帯ラジオ</option>
-                    <option value="MDプレーヤー" data-val="携帯音響品">MDプレーヤー</option>
-                    <option value="CDプレーヤー" data-val="携帯音響品">CDプレーヤー</option>
-                    <option value="その他携帯音響品" data-val="携帯音響品">その他携帯音響品</option>
-                    <option value="イヤホン" data-val="音響関連品">イヤホン</option>
-                    <option value="ヘッドホン" data-val="音響関連品">ヘッドホン</option>
-                    <option value="マイク" data-val="音響関連品">マイク</option>
-                    <option value="その他音響関連" data-val="音響関連品">その他音響関連</option>
-                    <option value="ノートパソコン" data-val="電子機器">ノートパソコン</option>
-                    <option value="電卓" data-val="電子機器">電卓</option>
-                    <option value="電子辞書" data-val="電子機器">電子辞書</option>
-                    <option value="電子手帳" data-val="電子機器">電子手帳</option>
-                    <option value="パソコンソフト" data-val="電子機器">パソコンソフト</option>
-                    <option value="マウスパッド" data-val="電子機器">マウスパッド</option>
-                    <option value="その他電子機器" data-val="電子機器">その他電子機器</option>
-                    <option value="ゲーム機" data-val="電子玩具">ゲーム機</option>
-                    <option value="ゲームソフト" data-val="電子玩具">ゲームソフト</option>
-                    <option value="その他電子玩具" data-val="電子玩具">その他電子玩具</option>
-                    <option value="FD" data-val="外部記録媒体">FD</option>
-                    <option value="USBメモリー" data-val="外部記録媒体">USBメモリー</option>
-                    <option value="メモリーカード" data-val="外部記録媒体">メモリーカード</option>
-                    <option value="ビデオテープ" data-val="外部記録媒体">ビデオテープ</option>
-                    <option value="カセットテープ" data-val="外部記録媒体">カセットテープ</option>
-                    <option value="DVD" data-val="外部記録媒体">DVD</option>
-                    <option value="CD" data-val="外部記録媒体">CD</option>
-                    <option value="MD" data-val="外部記録媒体">MD</option>
-                    <option value="その他外部記録媒体" data-val="外部記録媒体">その他外部記録媒体</option>
-                    <option value="充電器" data-val="外部記録媒体">充電器</option>
-                    <option value="電源" data-val="外部記録媒体">電源</option>
-                    <option value="アダプター" data-val="外部記録媒体">アダプター</option>
-                    <option value="コード" data-val="外部記録媒体">コード</option>
-                    <option value="その他電気製品付属品" data-val="外部記録媒体">その他電気製品付属品</option>
-                    <option value="携帯電話機" data-val="携帯電話機">携帯電話機</option>
-                    <option value="ポケットベル" data-val="携帯電話機">ポケットベル</option>
-                    <option value="その他携帯電話機" data-val="携帯電話機">その他携帯電話機</option>
-                    <option value="位置情報携帯端末" data-val="その他通信機器類">位置情報携帯端末</option>
-                    <option value="ネックレス" data-val="ネックレス">ネックレス</option>
-                    <option value="指輪（石つき）" data-val="指輪">指輪（石つき）</option>
-                    <option value="指輪（石なし）" data-val="指輪">指輪（石なし）</option>
-                    <option value="ブレスレット" data-val="ブレスレット">ブレスレット</option>
-                    <option value="ピアス" data-val="イヤリング類">ピアス</option>
-                    <option value="イヤリング" data-val="イヤリング類">イヤリング</option>
-                    <option value="ブローチ" data-val="ブローチ">ブローチ</option>
-                    <option value="ペンダント" data-val="ペンダント">ペンダント</option>
-                    <option value="金地金" data-val="その他貴金属類">金地金</option>
-                    <option value="グローブ" data-val="レジャー・スポーツ用品">グローブ</option>
-                    <option value="ゴルフバッグ" data-val="レジャー・スポーツ用品">ゴルフバッグ</option>
-                    <option value="ゴルフクラブ" data-val="レジャー・スポーツ用品">ゴルフクラブ</option>
-                    <option value="テニスラケット" data-val="レジャー・スポーツ用品">テニスラケット</option>
-                    <option value="スケートボード" data-val="レジャー・スポーツ用品">スケートボード</option>
-                    <option value="浮き輪" data-val="レジャー・スポーツ用品">浮き輪</option>
-                    <option value="釣り竿" data-val="レジャー・スポーツ用品">釣り竿</option>
-                    <option value="釣り道具" data-val="レジャー・スポーツ用品">釣り道具</option>
-                    <option value="クーラーボックス" data-val="レジャー・スポーツ用品">クーラーボックス</option>
-                    <option value="その他レジャー用品" data-val="レジャー・スポーツ用品">その他レジャー用品</option>
-                    <option value="その他スポーツ用品" data-val="レジャー・スポーツ用品">その他スポーツ用品</option>
-                    <option value="ギター" data-val="楽器類">ギター</option>
-                    <option value="笛" data-val="楽器類">笛</option>
-                    <option value="フルート" data-val="楽器類">フルート</option>
-                    <option value="その他楽器" data-val="楽器類">その他楽器</option>
-                    <option value="おもちゃ" data-val="その他趣味・娯楽用品類">おもちゃ</option>
-                    <option value="ぬいぐるみ" data-val="その他趣味・娯楽用品類">ぬいぐるみ</option>
-                    <option value="ゲームカード" data-val="その他趣味・娯楽用品類">ゲームカード</option>
-                    <option value="人形" data-val="その他趣味・娯楽用品類">人形</option>
-                    <option value="トランプ" data-val="その他趣味・娯楽用品類">トランプ</option>
-                    <option value="キックボード" data-val="その他趣味・娯楽用品類">キックボード</option>
-                    <option value="その他趣味用品" data-val="その他趣味・娯楽用品類">その他趣味用品</option>
-                    <option value="その他娯楽用品" data-val="その他趣味・娯楽用品類">その他娯楽用品</option>
-                    <option value="運転免許証" data-val="運転免許証">運転免許証</option>
-                    <option value="仮運転免許証" data-val="運転免許証">仮運転免許証</option>
-                    <option value="国際免許証" data-val="運転免許証">国際免許証</option>
-                    <option value="学生証" data-val="身分証明書類">学生証</option>
-                    <option value="生徒証" data-val="身分証明書類">生徒証</option>
-                    <option value="従業員証" data-val="身分証明書類">従業員証</option>
-                    <option value="会社員証" data-val="身分証明書類">会社員証</option>
-                    <option value="外国人登録証" data-val="身分証明書類">外国人登録証</option>
-                    <option value="パスポート" data-val="身分証明書類">パスポート</option>
-                    <option value="身分証明書" data-val="身分証明書類">身分証明書</option>
-                    <option value="国民健康保険証" data-val="健康保険証類">国民健康保険証</option>
-                    <option value="社会保険証" data-val="健康保険証類">社会保険証</option>
-                    <option value="共済組合員証" data-val="健康保険証類">共済組合員証</option>
-                    <option value="老人医療証" data-val="健康保険証類">老人医療証</option>
-                    <option value="乳児医療証" data-val="健康保険証類">乳児医療証</option>
-                    <option value="診察券" data-val="健康保険証類">診察券</option>
-                    <option value="身体障碍者手帳" data-val="その他証明書類">身体障碍者手帳</option>
-                    <option value="母子手帳" data-val="その他証明書類">母子手帳</option>
-                    <option value="年金手帳" data-val="その他証明書類">年金手帳</option>
-                    <option value="献血手帳" data-val="その他証明書類">献血手帳</option>
-                    <option value="雇用保険被保険者証" data-val="その他証明書類">雇用保険被保険者証</option>
-                    <option value="印鑑登録証" data-val="その他証明書類">印鑑登録証</option>
-                    <option value="印鑑登録証明書" data-val="その他証明書類">印鑑登録証明書</option>
-                    <option value="住民票" data-val="その他証明書類">住民票</option>
-                    <option value="住民基本台帳カード" data-val="その他証明書類">住民基本台帳カード</option>
-                    <option value="自動車検査証" data-val="その他証明書類">自動車検査証</option>
-                    <option value="ナンバープレート" data-val="その他証明書類">ナンバープレート</option>
-                    <option value="自賠責保険証" data-val="その他証明書類">自賠責保険証</option>
-                    <option value="生命保険証" data-val="その他証明書類">生命保険証</option>
-                    <option value="傷害保険証" data-val="その他証明書類">傷害保険証</option>
-                    <option value="船舶免許証" data-val="その他証明書類">船舶免許証</option>
-                    <option value="無線免許証" data-val="その他証明書類">無線免許証</option>
-                    <option value="クレーン免許証" data-val="その他証明書類">クレーン免許証</option>
-                    <option value="宅地建物取扱主任者証" data-val="その他証明書類">宅地建物取扱主任者証</option>
-                    <option value="通行証" data-val="その他証明書類">通行証</option>
-                    <option value="その他証明証" data-val="その他証明書類">その他証明証</option>
-                    <option value="預貯金通帳" data-val="預貯金通帳">預貯金通帳</option>
-                    <option value="預貯金証書" data-val="預貯金通帳">預貯金証書</option>
-                    <option value="その他通帳" data-val="預貯金通帳">その他通帳</option>
-                    <option value="キャッシュカード" data-val="キャッシュカード類">キャッシュカード</option>
-                    <option value="クレジットカード" data-val="キャッシュカード類">クレジットカード</option>
-                    <option value="PiTaPaカード" data-val="キャッシュカード類">PiTaPaカード</option>
-                    <option value="メンバーズカード" data-val="会員証（カード）類">メンバーズカード</option>
-                    <option value="ポイントカード" data-val="会員証（カード）類">ポイントカード</option>
-                    <option value="図書館利用者カード" data-val="会員証（カード）類">図書館利用者カード</option>
-                    <option value="ビデオレンタルカード" data-val="会員証（カード）類">ビデオレンタルカード</option>
-                    <option value="振込カード" data-val="会員証（カード）類">振込カード</option>
-                    <option value="給油カード" data-val="会員証（カード）類">給油カード</option>
-                    <option value="受験カード" data-val="会員証（カード）類">受験カード</option>
-                    <option value="その他のカード" data-val="会員証（カード）類">その他のカード</option>
-                    <option value="商品券" data-val="有価証券">商品券</option>
-                    <option value="図書券" data-val="有価証券">図書券</option>
-                    <option value="会員券" data-val="有価証券">会員券</option>
-                    <option value="ギフト券" data-val="有価証券">ギフト券</option>
-                    <option value="ビール券" data-val="有価証券">ビール券</option>
-                    <option value="小切手" data-val="有価証券">小切手</option>
-                    <option value="株券" data-val="有価証券">株券</option>
-                    <option value="テレホンカード" data-val="プリペイドカード類">テレホンカード</option>
-                    <option value="パスネット" data-val="プリペイドカード類">パスネット</option>
-                    <option value="パスカード" data-val="プリペイドカード類">パスカード</option>
-                    <option value="Suica" data-val="プリペイドカード類">Suica</option>
-                    <option value="ICOCA" data-val="プリペイドカード類">ICOCA</option>
-                    <option value="PASMO" data-val="プリペイドカード類">PASMO</option>
-                    <option value="オレンジカード" data-val="プリペイドカード類">オレンジカード</option>
-                    <option value="その他プリペイドカード" data-val="プリペイドカード類">その他プリペイドカード</option>
-                    <option value="定期券" data-val="定期券類">定期券</option>
-                    <option value="Suica定期" data-val="定期券類">Suica定期</option>
-                    <option value="ICOCA定期" data-val="定期券類">ICOCA定期</option>
-                    <option value="PASMO定期" data-val="定期券類">PASMO定期</option>
-                    <option value="シルバーパス" data-val="定期券類">シルバーパス</option>
-                    <option value="身体障碍者無料乗車証" data-val="定期券類">身体障碍者無料乗車証</option>
-                    <option value="株主優待乗車証" data-val="定期券類">株主優待乗車証</option>
-                    <option value="回数券" data-val="乗車券類">回数券</option>
-                    <option value="乗車券" data-val="乗車券類">乗車券</option>
-                    <option value="航空券" data-val="乗車券類">航空券</option>
-                    <option value="宝くじ" data-val="馬券・宝くじ類">宝くじ</option>
-                    <option value="馬券" data-val="馬券・宝くじ類">馬券</option>
-                    <option value="郵便切手" data-val="切手類">郵便切手</option>
-                    <option value="収入印紙" data-val="切手類">収入印紙</option>
-                    <option value="未使用郵便はがき" data-val="切手類">未使用郵便はがき</option>
-                    <option value="損傷紙幣" data-val="その他証券類">損傷紙幣</option>
-                    <option value="外国通貨" data-val="その他証券類">外国通貨</option>
-                    <option value="古銭・旧通貨" data-val="その他証券類" 古銭・旧通貨></option>
-                    <option value="入場券" data-val="その他証券類">入場券</option>
-                    <option value="その他証券" data-val="その他証券類">その他証券</option>
-                    <option value="文庫本" data-val="書籍類">文庫本</option>
-                    <option value="雑誌" data-val="書籍類">雑誌</option>
-                    <option value="単行本" data-val="書籍類">単行本</option>
-                    <option value="時刻表" data-val="書籍類">時刻表</option>
-                    <option value="マンガ本" data-val="書籍類">マンガ本</option>
-                    <option value="教科書" data-val="書籍類">教科書</option>
-                    <option value="冊子" data-val="書籍類">冊子</option>
-                    <option value="地図" data-val="書籍類">地図</option>
-                    <option value="その他書籍" data-val="書籍類">その他書籍</option>
-                    <option value="ビデオソフト" data-val="ディスク・テープ類">ビデオソフト</option>
-                    <option value="CDソフト" data-val="ディスク・テープ類">CDソフト</option>
-                    <option value="MDソフト" data-val="ディスク・テープ類">MDソフト</option>
-                    <option value="DVDソフト" data-val="ディスク・テープ類">DVDソフト</option>
-                    <option value="その他ディスクテープ" data-val="ディスク・テープ類">その他ディスクテープ</option>
-                    <option value="写真" data-val="写真類">写真</option>
-                    <option value="ネガ" data-val="写真類">ネガ</option>
-                    <option value="写真パネル" data-val="写真類">写真パネル</option>
-                    <option value="その他写真類" data-val="写真類">その他写真類</option>
-                    <option value="絵画" data-val="その他著作品類">絵画</option>
-                    <option value="版画" data-val="その他著作品類">版画</option>
-                    <option value="その他著作品類" data-val="その他著作品類">その他著作品類</option>
-                    <option value="手帳" data-val="手帳・ノート類">手帳</option>
-                    <option value="アドレス帳" data-val="手帳・ノート類">アドレス帳</option>
-                    <option value="ノート" data-val="手帳・ノート類">ノート</option>
-                    <option value="システム手帳" data-val="手帳・ノート類">システム手帳</option>
-                    <option value="印鑑" data-val="印鑑類">印鑑</option>
-                    <option value="朱肉" data-val="印鑑類">朱肉</option>
-                    <option value="ビニールケース" data-val="整理収納用品類">ビニールケース</option>
-                    <option value="クリアーファイル" data-val="整理収納用品類">クリアーファイル</option>
-                    <option value="書類入れ" data-val="整理収納用品類">書類入れ</option>
-                    <option value="バインダー" data-val="整理収納用品類">バインダー</option>
-                    <option value="アルバム" data-val="整理収納用品類">アルバム</option>
-                    <option value="クリアーケース" data-val="整理収納用品類">クリアーケース</option>
-                    <option value="プラスチックケース" data-val="整理収納用品類">プラスチックケース</option>
-                    <option value="手提げ金庫" data-val="整理収納用品類">手提げ金庫</option>
-                    <option value="ボールペン" data-val="筆箱・筆記用具類">ボールペン</option>
-                    <option value="筆入れ" data-val="筆箱・筆記用具類">筆入れ</option>
-                    <option value="カッターナイフ" data-val="その他文具類">カッターナイフ</option>
-                    <option value="定規" data-val="その他文具類">定規</option>
-                    <option value="ハサミ" data-val="その他文具類">ハサミ</option>
-                    <option value="その他文具" data-val="その他文具類">その他文具</option>
-                    <option value="領収書" data-val="書類">領収書</option>
-                    <option value="明細書" data-val="書類">明細書</option>
-                    <option value="契約書" data-val="書類">契約書</option>
-                    <option value="履歴書" data-val="書類">履歴書</option>
-                    <option value="受領書" data-val="書類">受領書</option>
-                    <option value="保証書" data-val="書類">保証書</option>
-                    <option value="注文書" data-val="書類">注文書</option>
-                    <option value="資料" data-val="書類">資料</option>
-                    <option value="賞状" data-val="書類">賞状</option>
-                    <option value="その他書類" data-val="書類">その他書類</option>
-                    <option value="建築図面" data-val="図面類">建築図面</option>
-                    <option value="電気図面" data-val="図面類">電気図面</option>
-                    <option value="カレンダー" data-val="図面類">カレンダー</option>
-                    <option value="パンフレット" data-val="図面類">パンフレット</option>
-                    <option value="カタログ" data-val="図面類">カタログ</option>
-                    <option value="名刺" data-val="名刺">名刺</option>
-                    <option value="レシート" data-val="その他紙類">レシート</option>
-                    <option value="割引券" data-val="その他紙類">割引券</option>
-                    <option value="使用済み郵便はがき" data-val="その他紙類">使用済み郵便はがき</option>
-                    <option value="振込用紙" data-val="その他紙類">振込用紙</option>
-                    <option value="手紙" data-val="その他紙類">手紙</option>
-                    <option value="駐車券" data-val="その他紙類">駐車券</option>
-                    <option value="食券" data-val="その他紙類">食券</option>
-                    <option value="その他紙類" data-val="その他紙類">その他紙類</option>
-                    <option value="段ボール箱" data-val="小包・箱類">段ボール箱</option>
-                    <option value="箱" data-val="小包・箱類">箱</option>
-                    <option value="菓子箱" data-val="小包・箱類">菓子箱</option>
-                    <option value="宅配物" data-val="小包・箱類">宅配物</option>
-                    <option value="郵便小包" data-val="小包・箱類">郵便小包</option>
-                    <option value="その他小包・箱類" data-val="小包・箱類">その他小包・箱類</option>
-                    <option value="ヘルメット" data-val="帽子類">ヘルメット</option>
-                    <option value="サンバイザー" data-val="帽子類">サンバイザー</option>
-                    <option value="野球帽" data-val="帽子類">野球帽</option>
-                    <option value="耳あて" data-val="帽子類">耳あて</option>
-                    <option value="帽子" data-val="帽子類">帽子</option>
-                    <option value="手袋（両手）" data-val="手袋">手袋（両手）</option>
-                    <option value="手袋（片手）" data-val="手袋">手袋（片手）</option>
-                    <option value="マフラー" data-val="マフラー類">マフラー</option>
-                    <option value="スカーフ" data-val="マフラー類">スカーフ</option>
-                    <option value="ショール" data-val="マフラー類">ショール</option>
-                    <option value="ストール" data-val="マフラー類">ストール</option>
-                    <option value="ひざ掛け" data-val="マフラー類">ひざ掛け</option>
-                    <option value="ジャンパー" data-val="上着類">ジャンパー</option>
-                    <option value="ジャケット" data-val="上着類">ジャケット</option>
-                    <option value="カーディガン" data-val="上着類">カーディガン</option>
-                    <option value="Tシャツ" data-val="上着類">Tシャツ</option>
-                    <option value="ワイシャツ" data-val="上着類">ワイシャツ</option>
-                    <option value="ブラウス" data-val="上着類">ブラウス</option>
-                    <option value="セーター" data-val="上着類">セーター</option>
-                    <option value="トレーナー" data-val="上着類">トレーナー</option>
-                    <option value="ベスト" data-val="上着類">ベスト</option>
-                    <option value="コート" data-val="上着類">コート</option>
-                    <option value="パーカー" data-val="上着類">パーカー</option>
-                    <option value="ズボン" data-val="ズボン類">ズボン</option>
-                    <option value="ジーパン" data-val="ズボン類">ジーパン</option>
-                    <option value="スカート" data-val="ズボン類">スカート</option>
-                    <option value="スーツ" data-val="上下衣類">スーツ</option>
-                    <option value="ワンピース" data-val="上下衣類">ワンピース</option>
-                    <option value="作業着" data-val="上下衣類">作業着</option>
-                    <option value="制服" data-val="上下衣類">制服</option>
-                    <option value="白衣" data-val="上下衣類">白衣</option>
-                    <option value="柔道着" data-val="上下衣類">柔道着</option>
-                    <option value="ウインドブレーカー" data-val="上下衣類">ウインドブレーカー</option>
-                    <option value="スポーツウェア" data-val="上下衣類">スポーツウェア</option>
-                    <option value="合羽" data-val="上下衣類">合羽</option>
-                    <option value="着物" data-val="上下衣類">着物</option>
-                    <option value="下着類" data-val="その他衣類">下着類</option>
-                    <option value="水着" data-val="その他衣類">水着</option>
-                    <option value="ネクタイ" data-val="その他衣類">ネクタイ</option>
-                    <option value="エプロン" data-val="その他衣類">エプロン</option>
-                    <option value="バンダナ" data-val="その他衣類">バンダナ</option>
-                    <option value="パジャマ" data-val="その他衣類">パジャマ</option>
-                    <option value="靴下" data-val="その他衣類">靴下</option>
-                    <option value="その他衣類" data-val="その他衣類">その他衣類</option>
-                    <option value="ベルト" data-val="衣類付属品">ベルト</option>
-                    <option value="バックル" data-val="衣類付属品">バックル</option>
-                    <option value="ネクタイピン" data-val="衣類付属品">ネクタイピン</option>
-                    <option value="カフスボタン" data-val="衣類付属品">カフスボタン</option>
-                    <option value="ボタン" data-val="衣類付属品">ボタン</option>
-                    <option value="その他衣類付属品" data-val="衣類付属品">その他衣類付属品</option>
-                    <option value="上履き" data-val="履物類">上履き</option>
-                    <option value="ランニングシューズ" data-val="履物類">ランニングシューズ</option>
-                    <option value="サンダル" data-val="履物類">サンダル</option>
-                    <option value="スリッパ" data-val="履物類">スリッパ</option>
-                    <option value="その他履物" data-val="履物類">その他履物</option>
-                    <option value="長傘" data-val="かさ">長傘</option>
-                    <option value="折りたたみ傘" data-val="かさ">折りたたみ傘</option>
-                    <option value="ビニール傘" data-val="かさ">ビニール傘</option>
-                    <option value="その他（かさ）" data-val="かさ">その他（かさ）</option>
-                    <option value="自動車用鍵" data-val="鍵">自動車用鍵</option>
-                    <option value="自転車用鍵" data-val="鍵">自転車用鍵</option>
-                    <option value="家用鍵" data-val="鍵">家用鍵</option>
-                    <option value="その他鍵" data-val="鍵">その他鍵</option>
-                    <option value="自動車用鍵" data-val="鍵（キーホルダー付）">自動車用鍵</option>
-                    <option value="自転車用鍵" data-val="鍵（キーホルダー付）">自転車用鍵</option>
-                    <option value="家用鍵" data-val="鍵（キーホルダー付）">家用鍵</option>
-                    <option value="その他キーホルダー付鍵" data-val="鍵（キーホルダー付）">その他キーホルダー付鍵</option>
-                    <option value="自動車用鍵" data-val="鍵（キーケース付）">自動車用鍵</option>
-                    <option value="自転車用鍵" data-val="鍵（キーケース付）">自転車用鍵</option>
-                    <option value="家用鍵" data-val="鍵（キーケース付）">家用鍵</option>
-                    <option value="その他キーケース付鍵" data-val="鍵（キーケース付）">その他キーケース付鍵</option>
-                    <option value="セキュリティカード" data-val="カードキー">セキュリティカード</option>
-                    <option value="ICカード" data-val="カードキー">ICカード</option>
-                    <option value="入室カード" data-val="カードキー">入室カード</option>
-                    <option value="その他カードキー" data-val="カードキー">その他カードキー</option>
-                    <option value="タオル" data-val="生活用品">タオル</option>
-                    <option value="ハンカチ" data-val="生活用品">ハンカチ</option>
-                    <option value="ライター" data-val="生活用品">ライター</option>
-                    <option value="灰皿" data-val="生活用品">灰皿</option>
-                    <option value="キーホルダー" data-val="生活用品">キーホルダー</option>
-                    <option value="ストラップ" data-val="生活用品">ストラップ</option>
-                    <option value="ティッシュペーパー" data-val="生活用品">ティッシュペーパー</option>
-                    <option value="くし" data-val="生活用品">くし</option>
-                    <option value="洗面具" data-val="生活用品">洗面具</option>
-                    <option value="鏡" data-val="生活用品">鏡</option>
-                    <option value="石鹸" data-val="生活用品">石鹸</option>
-                    <option value="紙おむつ" data-val="生活用品">紙おむつ</option>
-                    <option value="扇子" data-val="生活用品">扇子</option>
-                    <option value="風呂敷" data-val="生活用品">風呂敷</option>
-                    <option value="クッション" data-val="生活用品">クッション</option>
-                    <option value="枕" data-val="生活用品">枕</option>
-                    <option value="ハサミ" data-val="生活用品">ハサミ</option>
-                    <option value="その他生活用品" data-val="生活用品">その他生活用品</option>
-                    <option value="水筒" data-val="食器類">水筒</option>
-                    <option value="弁当箱" data-val="食器類">弁当箱</option>
-                    <option value="包丁" data-val="食器類">包丁</option>
-                    <option value="食品保存容器" data-val="食器類">食品保存容器</option>
-                    <option value="皿" data-val="食器類">皿</option>
-                    <option value="その他食器" data-val="食器類">その他食器</option>
-                    <option value="ドライバー" data-val="工具類">ドライバー</option>
-                    <option value="ペンチ" data-val="工具類">ペンチ</option>
-                    <option value="レンチ" data-val="工具類">レンチ</option>
-                    <option value="その他工具" data-val="工具類">その他工具</option>
-                    <option value="名札" data-val="装飾品類">名札</option>
-                    <option value="腕章" data-val="装飾品類">腕章</option>
-                    <option value="バッチ" data-val="装飾品類">バッチ</option>
-                    <option value="ヘアピン" data-val="装飾品類">ヘアピン</option>
-                    <option value="かんざし" data-val="装飾品類">かんざし</option>
-                    <option value="コサージュ" data-val="装飾品類">コサージュ</option>
-                    <option value="リストバンド" data-val="装飾品類">リストバンド</option>
-                    <option value="その他装飾品" data-val="装飾品類">その他装飾品</option>
-                    <option value="お守り" data-val="神仏具品類">お守り</option>
-                    <option value="数珠" data-val="神仏具品類">数珠</option>
-                    <option value="おみくじ" data-val="神仏具品類">おみくじ</option>
-                    <option value="お骨" data-val="神仏具品類">お骨</option>
-                    <option value="その他神仏具品" data-val="神仏具品類">その他神仏具品</option>
-                    <option value="自転車" data-val="自転車類">自転車</option>
-                    <option value="キャリアカート" data-val="自転車類">キャリアカート</option>
-                    <option value="ベビーカー" data-val="自転車類">ベビーカー</option>
-                    <option value="台車" data-val="自転車類">台車</option>
-                    <option value="タイヤ" data-val="自転車類">タイヤ</option>
-                    <option value="その他自転車類" data-val="自転車類">その他自転車類</option>
-                    <option value="めがねケース" data-val="ケース・カバー類">めがねケース</option>
-                    <option value="キーケース" data-val="ケース・カバー類">キーケース</option>
-                    <option value="ペットボトルケース" data-val="ケース・カバー類">ペットボトルケース</option>
-                    <option value="ティッシュケース" data-val="ケース・カバー類">ティッシュケース</option>
-                    <option value="傘カバー" data-val="ケース・カバー類">傘カバー</option>
-                    <option value="その他ケース・カバー" data-val="ケース・カバー類">その他ケース・カバー</option>
-                    <option value="絆創膏" data-val="薬類">絆創膏</option>
-                    <option value="コンタクト洗浄液" data-val="薬類">コンタクト洗浄液</option>
-                    <option value="薬" data-val="薬類">薬</option>
-                    <option value="救急箱" data-val="薬類">救急箱</option>
-                    <option value="その他薬類" data-val="薬類">その他薬類</option>
-                    <option value="杖" data-val="医療関連品類">杖</option>
-                    <option value="万歩計" data-val="医療関連品類">万歩計</option>
-                    <option value="入れ歯" data-val="医療関連品類">入れ歯</option>
-                    <option value="補聴器" data-val="医療関連品類">補聴器</option>
-                    <option value="その他医療品関連" data-val="医療関連品類">その他医療品関連</option>
-                    <option value="口紅" data-val="化粧品類">口紅</option>
-                    <option value="香水" data-val="化粧品類">香水</option>
-                    <option value="コンパクト" data-val="化粧品類">コンパクト</option>
-                    <option value="化粧品" data-val="化粧品類">化粧品</option>
-                    <option value="その他化粧品類" data-val="化粧品類">その他化粧品類</option>
-                    <option value="食品" data-val="食料品類">食品</option>
-                    <option value="飲料品" data-val="食料品類">飲料品</option>
-                    <option value="酒" data-val="食料品類">酒</option>
-                    <option value="たばこ" data-val="食料品類">たばこ</option>
-                    <option value="その他食料品" data-val="食料品類">その他食料品</option>
-                    <option value="（動物名）記載" data-val="動物">（動物名）記載</option>
-                    <option value="（昆虫名）記載" data-val="動物">（昆虫名）記載</option>
-                    <option value="その他動物" data-val="動物">その他動物</option>
-                    <option value="花束" data-val="植物">花束</option>
-                    <option value="鉢植え" data-val="植物">鉢植え</option>
-                    <option value="その他植物" data-val="植物">その他植物</option>
-                    <option value="虫かご" data-val="動植物関連品">虫かご</option>
-                    <option value="鳥かご" data-val="動植物関連品">鳥かご</option>
-                    <option value="ペットフード" data-val="動植物関連品">ペットフード</option>
-                    <option value="肥料" data-val="動植物関連品">肥料</option>
-                    <option value="その他動植物関連品" data-val="動植物関連品">その他動植物関連品</option>
-                    <option value="けん銃" data-val="所持禁止物品">けん銃</option>
-                    <option value="刀" data-val="所持禁止物品">刀</option>
-                    <option value="覚せい剤" data-val="所持禁止物品">覚せい剤</option>
-                    <option value="その他所持禁止物品" data-val="所持禁止物品">その他所持禁止物品</option>
-                    <option value="土器・石器" data-val="その他">土器・石器</option>
-                    <option value="金庫" data-val="その他">金庫</option>
-                    <option value="消火器" data-val="その他">消火器</option>
-                    <option value="薬品" data-val="その他">薬品</option>
-                    <option value="看板" data-val="その他">看板</option>
-                    <option value="その他" data-val="その他">その他</option>
+                    <option value="現金" data-val="現金" {% if item.item_class_S=="現金" %}selected{% endif %}>現金</option>
+                    <option value="ハンドバッグ" data-val="手提げかばん" {% if item.item_class_S=="ハンドバッグ" %}selected{% endif %}>
+                        ハンドバッグ</option>
+                    <option value="ビジネスバッグ" data-val="手提げかばん" {% if item.item_class_S=="ビジネスバッグ" %}selected{% endif %}>
+                        ビジネスバッグ</option>
+                    <option value="トートバッグ" data-val="手提げかばん" {% if item.item_class_S=="トートバッグ" %}selected{% endif %}>
+                        トートバッグ</option>
+                    <option value="ボストンバッグ" data-val="手提げかばん" {% if item.item_class_S=="ボストンバッグ" %}selected{% endif %}>
+                        ボストンバッグ</option>
+                    <option value="スポーツバッグ" data-val="手提げかばん" {% if item.item_class_S=="スポーツバッグ" %}selected{% endif %}>
+                        スポーツバッグ</option>
+                    <option value="アタッシュケース" data-val="手提げかばん" {% if item.item_class_S=="アタッシュケース" %}selected{% endif
+                        %}>アタッシュケース</option>
+                    <option value="トランク" data-val="手提げかばん" {% if item.item_class_S=="トランク" %}selected{% endif %}>トランク
+                    </option>
+                    <option value="シューズバッグ" data-val="手提げかばん" {% if item.item_class_S=="シューズバッグ" %}selected{% endif %}>
+                        シューズバッグ</option>
+                    <option value="学生かばん" data-val="手提げかばん" {% if item.item_class_S=="学生かばん" %}selected{% endif %}>学生かばん
+                    </option>
+                    <option value="手提げかばん" data-val="手提げかばん" {% if item.item_class_S=="手提げかばん" %}selected{% endif %}>
+                        手提げかばん</option>
+                    <option value="ショルダーバッグ" data-val="肩掛けかばん" {% if item.item_class_S=="ショルダーバッグ" %}selected{% endif
+                        %}>ショルダーバッグ</option>
+                    <option value="リュックサック" data-val="肩掛けかばん" {% if item.item_class_S=="リュックサック" %}selected{% endif %}>
+                        リュックサック</option>
+                    <option value="デイバッグ" data-val="肩掛けかばん" {% if item.item_class_S=="デイバッグ" %}selected{% endif %}>デイバッグ
+                    </option>
+                    <option value="肩掛けかばん" data-val="肩掛けかばん" {% if item.item_class_S=="肩掛けかばん" %}selected{% endif %}>
+                        肩掛けかばん</option>
+                    <option value="セカンドバッグ" data-val="抱えかばん" {% if item.item_class_S=="セカンドバッグ" %}selected{% endif %}>
+                        セカンドバッグ</option>
+                    <option value="抱えかばん" data-val="抱えかばん" {% if item.item_class_S=="抱えかばん" %}selected{% endif %}>抱えかばん
+                    </option>
+                    <option value="ポーチ" data-val="小物入れ" {% if item.item_class_S=="ポーチ" %}selected{% endif %}>ポーチ
+                    </option>
+                    <option value="ウエストポーチ" data-val="小物入れ" {% if item.item_class_S=="ウエストポーチ" %}selected{% endif %}>
+                        ウエストポーチ</option>
+                    <option value="ポシェット" data-val="小物入れ" {% if item.item_class_S=="ポシェット" %}selected{% endif %}>ポシェット
+                    </option>
+                    <option value="きんちゃく" data-val="小物入れ" {% if item.item_class_S=="きんちゃく" %}selected{% endif %}>きんちゃく
+                    </option>
+                    <option value="たばこ入れ" data-val="小物入れ" {% if item.item_class_S=="たばこ入れ" %}selected{% endif %}>たばこ入れ
+                    </option>
+                    <option value="小物入れ" data-val="小物入れ" {% if item.item_class_S=="小物入れ" %}selected{% endif %}>小物入れ
+                    </option>
+                    <option value="スーツケース" data-val="その他かばん類" {% if item.item_class_S=="スーツケース" %}selected{% endif %}>
+                        スーツケース</option>
+                    <option value="ハンガーケース" data-val="その他かばん類" {% if item.item_class_S=="ハンガーケース" %}selected{% endif %}>
+                        ハンガーケース</option>
+                    <option value="その他かばん" data-val="その他かばん類" {% if item.item_class_S=="その他かばん" %}selected{% endif %}>
+                        その他かばん</option>
+                    <option value="手提げ袋（ビニール）" data-val="袋" {% if item.item_class_S=="手提げ袋（ビニール）" %}selected{% endif %}>
+                        手提げ袋（ビニール）</option>
+                    <option value="手提げ袋（紙）" data-val="袋" {% if item.item_class_S=="手提げ袋（紙）" %}selected{% endif %}>
+                        手提げ袋（紙）</option>
+                    <option value="レジ袋" data-val="袋" {% if item.item_class_S=="レジ袋" %}selected{% endif %}>レジ袋</option>
+                    <option value="ビニール袋" data-val="袋" {% if item.item_class_S=="ビニール袋" %}selected{% endif %}>ビニール袋
+                    </option>
+                    <option value="紙袋" data-val="袋" {% if item.item_class_S=="紙袋" %}selected{% endif %}>紙袋</option>
+                    <option value="布袋" data-val="袋" {% if item.item_class_S=="布袋" %}selected{% endif %}>布袋</option>
+                    <option value="その他袋" data-val="袋" {% if item.item_class_S=="その他袋" %}selected{% endif %}>その他袋
+                    </option>
+                    <option value="お年玉袋" data-val="封筒" {% if item.item_class_S=="お年玉袋" %}selected{% endif %}>お年玉袋
+                    </option>
+                    <option value="のし袋" data-val="封筒" {% if item.item_class_S=="のし袋" %}selected{% endif %}>のし袋</option>
+                    <option value="薬袋" data-val="封筒" {% if item.item_class_S=="薬袋" %}selected{% endif %}>薬袋</option>
+                    <option value="書類袋" data-val="封筒" {% if item.item_class_S=="書類袋" %}selected{% endif %}>書類袋</option>
+                    <option value="名入り封筒" data-val="封筒" {% if item.item_class_S=="名入り封筒" %}selected{% endif %}>名入り封筒
+                    </option>
+                    <option value="封筒" data-val="封筒" {% if item.item_class_S=="封筒" %}selected{% endif %}>封筒</option>
+                    <option value="札入れ" data-val="財布" {% if item.item_class_S=="札入れ" %}selected{% endif %}>札入れ</option>
+                    <option value="財布" data-val="財布" {% if item.item_class_S=="財布" %}selected{% endif %}>財布</option>
+                    <option value="がま口" data-val="がま口" {% if item.item_class_S=="がま口" %}selected{% endif %}>がま口</option>
+                    <option value="小銭入れ（チャック式）" data-val="小銭入れ" {% if item.item_class_S=="小銭入れ（チャック式）" %}selected{%
+                        endif %}>小銭入れ（チャック式）</option>
+                    <option value="小銭入れ（ホック式）" data-val="小銭入れ" {% if item.item_class_S=="小銭入れ（ホック式）" %}selected{% endif
+                        %}>小銭入れ（ホック式）</option>
+                    <option value="小銭入れ" data-val="小銭入れ" {% if item.item_class_S=="小銭入れ" %}selected{% endif %}>小銭入れ
+                    </option>
+                    <option value="コインケース" data-val="小銭入れ" {% if item.item_class_S=="コインケース" %}selected{% endif %}>
+                        コインケース</option>
+                    <option value="定期券入れ" data-val="カードケース" {% if item.item_class_S=="定期券入れ" %}selected{% endif %}>定期券入れ
+                    </option>
+                    <option value="免許証入れ" data-val="カードケース" {% if item.item_class_S=="免許証入れ" %}selected{% endif %}>免許証入れ
+                    </option>
+                    <option value="カード入れ" data-val="カードケース" {% if item.item_class_S=="カード入れ" %}selected{% endif %}>カード入れ
+                    </option>
+                    <option value="名刺入れ" data-val="名刺入れ" {% if item.item_class_S=="名刺入れ" %}selected{% endif %}>名刺入れ
+                    </option>
+                    <option value="デジタルカメラ" data-val="カメラ" {% if item.item_class_S=="デジタルカメラ" %}selected{% endif %}>
+                        デジタルカメラ</option>
+                    <option value="コンパクトカメラ" data-val="カメラ" {% if item.item_class_S=="コンパクトカメラ" %}selected{% endif %}>
+                        コンパクトカメラ</option>
+                    <option value="一眼レフカメラ" data-val="カメラ" {% if item.item_class_S=="一眼レフカメラ" %}selected{% endif %}>
+                        一眼レフカメラ</option>
+                    <option value="使い捨てカメラ" data-val="カメラ" {% if item.item_class_S=="使い捨てカメラ" %}selected{% endif %}>
+                        使い捨てカメラ</option>
+                    <option value="その他カメラ" data-val="カメラ" {% if item.item_class_S=="その他カメラ" %}selected{% endif %}>その他カメラ
+                    </option>
+                    <option value="デジタルビデオカメラ" data-val="ビデオカメラ" {% if item.item_class_S=="デジタルビデオカメラ" %}selected{%
+                        endif %}>デジタルビデオカメラ</option>
+                    <option value="ビデオカメラ" data-val="ビデオカメラ" {% if item.item_class_S=="ビデオカメラ" %}selected{% endif %}>
+                        ビデオカメラ</option>
+                    <option value="カメラケース" data-val="カメラ付属品類" {% if item.item_class_S=="カメラケース" %}selected{% endif %}>
+                        カメラケース</option>
+                    <option value="フィルム" data-val="カメラ付属品類" {% if item.item_class_S=="フィルム" %}selected{% endif %}>フィルム
+                    </option>
+                    <option value="三脚" data-val="カメラ付属品類" {% if item.item_class_S=="三脚" %}selected{% endif %}>三脚
+                    </option>
+                    <option value="カメラレンズ" data-val="カメラ付属品類" {% if item.item_class_S=="カメラレンズ" %}selected{% endif %}>
+                        カメラレンズ</option>
+                    <option value="その他カメラ付属品" data-val="カメラ付属品類" {% if item.item_class_S=="その他カメラ付属品" %}selected{% endif
+                        %}>その他カメラ付属品</option>
+                    <option value="腕時計男性（金属製ベルト）" data-val="腕時計" {% if item.item_class_S=="腕時計男性（金属製ベルト）" %}selected{%
+                        endif %}>腕時計男性（金属製ベルト）</option>
+                    <option value="腕時計女性（金属製ベルト）" data-val="腕時計" {% if item.item_class_S=="腕時計女性（金属製ベルト）" %}selected{%
+                        endif %}>腕時計女性（金属製ベルト）</option>
+                    <option value="腕時計男性（革製ベルト）" data-val="腕時計" {% if item.item_class_S=="腕時計男性（革製ベルト）" %}selected{%
+                        endif %}>腕時計男性（革製ベルト）</option>
+                    <option value="腕時計女性（革製ベルト）" data-val="腕時計" {% if item.item_class_S=="腕時計女性（革製ベルト）" %}selected{%
+                        endif %}>腕時計女性（革製ベルト）</option>
+                    <option value="腕時計男性（その他ベルト）" data-val="腕時計" {% if item.item_class_S=="腕時計男性（その他ベルト）" %}selected{%
+                        endif %}>腕時計男性（その他ベルト）</option>
+                    <option value="腕時計女性（その他ベルト）" data-val="腕時計" {% if item.item_class_S=="腕時計女性（その他ベルト）" %}selected{%
+                        endif %}>腕時計女性（その他ベルト）</option>
+                    <option value="置時計" data-val="その他時計類" {% if item.item_class_S=="置時計" %}selected{% endif %}>置時計
+                    </option>
+                    <option value="懐中時計" data-val="その他時計類" {% if item.item_class_S=="懐中時計" %}selected{% endif %}>懐中時計
+                    </option>
+                    <option value="壁掛時計" data-val="その他時計類" {% if item.item_class_S=="壁掛時計" %}selected{% endif %}>壁掛時計
+                    </option>
+                    <option value="その他時計" data-val="その他時計類" {% if item.item_class_S=="その他時計" %}selected{% endif %}>その他時計
+                    </option>
+                    <option value="めがね（ケースあり）" data-val="めがね" {% if item.item_class_S=="めがね（ケースあり）" %}selected{% endif
+                        %}>めがね（ケースあり）</option>
+                    <option value="めがね（ケース無し）" data-val="めがね" {% if item.item_class_S=="めがね（ケース無し）" %}selected{% endif
+                        %}>めがね（ケース無し）</option>
+                    <option value="その他めがね" data-val="めがね" {% if item.item_class_S=="その他めがね" %}selected{% endif %}>その他めがね
+                    </option>
+                    <option value="サングラス" data-val="サングラス類" {% if item.item_class_S=="サングラス" %}selected{% endif %}>サングラス
+                    </option>
+                    <option value="ゴーグル" data-val="サングラス類" {% if item.item_class_S=="ゴーグル" %}selected{% endif %}>ゴーグル
+                    </option>
+                    <option value="コンタクトレンズ" data-val="コンタクトレンズ" {% if item.item_class_S=="コンタクトレンズ" %}selected{% endif
+                        %}>コンタクトレンズ</option>
+                    <option value="双眼鏡" data-val="双眼鏡類" {% if item.item_class_S=="双眼鏡" %}selected{% endif %}>双眼鏡
+                    </option>
+                    <option value="レンズ" data-val="双眼鏡類" {% if item.item_class_S=="レンズ" %}selected{% endif %}>レンズ
+                    </option>
+                    <option value="ルーペ" data-val="双眼鏡類" {% if item.item_class_S=="ルーペ" %}selected{% endif %}>ルーペ
+                    </option>
+                    <option value="その他めがね" data-val="双眼鏡類" {% if item.item_class_S=="その他めがね" %}selected{% endif %}>
+                        その他めがね</option>
+                    <option value=防犯ブザー"" data-val="電気製品" {% if item.item_class_S=="防犯ブザー" %}selected{% endif %}>防犯ブザー
+                    </option>
+                    <option value="ライト" data-val="電気製品" {% if item.item_class_S=="ライト" %}selected{% endif %}>ライト
+                    </option>
+                    <option value="電気カミソリ" data-val="電気製品" {% if item.item_class_S=="電気カミソリ" %}selected{% endif %}>
+                        電気カミソリ</option>
+                    <option value="DVDプレーヤー" data-val="電気製品" {% if item.item_class_S=="DVDプレーヤー" %}selected{% endif %}>
+                        DVDプレーヤー</option>
+                    <option value="ドライヤー" data-val="電気製品" {% if item.item_class_S=="ドライヤー" %}selected{% endif %}>ドライヤー
+                    </option>
+                    <option value="電球" data-val="電気製品" {% if item.item_class_S=="電球" %}selected{% endif %}>電球</option>
+                    <option value="その他電気製品" data-val="電気製品" {% if item.item_class_S=="その他電気製品" %}selected{% endif %}>
+                        その他電気製品</option>
+                    <option value="MP3プレーヤー" data-val="携帯音響品" {% if item.item_class_S=="MP3プレーヤー" %}selected{% endif %}>
+                        MP3プレーヤー</option>
+                    <option value="デジタルオーディオプレーヤー" data-val="携帯音響品" {% if item.item_class_S=="デジタルオーディオプレーヤー"
+                        %}selected{% endif %}>デジタルオーディオプレーヤー</option>
+                    <option value="携帯ラジオ" data-val="携帯音響品" {% if item.item_class_S=="携帯ラジオ" %}selected{% endif %}>携帯ラジオ
+                    </option>
+                    <option value="MDプレーヤー" data-val="携帯音響品" {% if item.item_class_S=="MDプレーヤー" %}selected{% endif %}>
+                        MDプレーヤー</option>
+                    <option value="CDプレーヤー" data-val="携帯音響品" {% if item.item_class_S=="CDプレーヤー" %}selected{% endif %}>
+                        CDプレーヤー</option>
+                    <option value="その他携帯音響品" data-val="携帯音響品" {% if item.item_class_S=="その他携帯音響品" %}selected{% endif %}>
+                        その他携帯音響品</option>
+                    <option value="イヤホン" data-val="音響関連品" {% if item.item_class_S=="イヤホン" %}selected{% endif %}>イヤホン
+                    </option>
+                    <option value="ヘッドホン" data-val="音響関連品" {% if item.item_class_S=="ヘッドホン" %}selected{% endif %}>ヘッドホン
+                    </option>
+                    <option value="マイク" data-val="音響関連品" {% if item.item_class_S=="マイク" %}selected{% endif %}>マイク
+                    </option>
+                    <option value="その他音響関連" data-val="音響関連品" {% if item.item_class_S=="その他音響関連" %}selected{% endif %}>
+                        その他音響関連</option>
+                    <option value="ノートパソコン" data-val="電子機器" {% if item.item_class_S=="ノートパソコン" %}selected{% endif %}>
+                        ノートパソコン</option>
+                    <option value="電卓" data-val="電子機器" {% if item.item_class_S=="電卓" %}selected{% endif %}>電卓</option>
+                    <option value="電子辞書" data-val="電子機器" {% if item.item_class_S=="電子辞書" %}selected{% endif %}>電子辞書
+                    </option>
+                    <option value="電子手帳" data-val="電子機器" {% if item.item_class_S=="電子手帳" %}selected{% endif %}>電子手帳
+                    </option>
+                    <option value="パソコンソフト" data-val="電子機器" {% if item.item_class_S=="パソコンソフト" %}selected{% endif %}>
+                        パソコンソフト</option>
+                    <option value="マウスパッド" data-val="電子機器" {% if item.item_class_S=="マウスパッド" %}selected{% endif %}>
+                        マウスパッド</option>
+                    <option value="その他電子機器" data-val="電子機器" {% if item.item_class_S=="その他電子機器" %}selected{% endif %}>
+                        その他電子機器</option>
+                    <option value="ゲーム機" data-val="電子玩具" {% if item.item_class_S=="ゲーム機" %}selected{% endif %}>ゲーム機
+                    </option>
+                    <option value="ゲームソフト" data-val="電子玩具" {% if item.item_class_S=="ゲームソフト" %}selected{% endif %}>
+                        ゲームソフト</option>
+                    <option value="その他電子玩具" data-val="電子玩具" {% if item.item_class_S=="その他電子玩具" %}selected{% endif %}>
+                        その他電子玩具</option>
+                    <option value="FD" data-val="外部記録媒体" {% if item.item_class_S=="FD" %}selected{% endif %}>FD</option>
+                    <option value="USBメモリー" data-val="外部記録媒体" {% if item.item_class_S=="USBメモリー" %}selected{% endif %}>
+                        USBメモリー</option>
+                    <option value="メモリーカード" data-val="外部記録媒体" {% if item.item_class_S=="メモリーカード" %}selected{% endif %}>
+                        メモリーカード</option>
+                    <option value="ビデオテープ" data-val="外部記録媒体" {% if item.item_class_S=="ビデオテープ" %}selected{% endif %}>
+                        ビデオテープ</option>
+                    <option value="カセットテープ" data-val="外部記録媒体" {% if item.item_class_S=="カセットテープ" %}selected{% endif %}>
+                        カセットテープ</option>
+                    <option value="DVD" data-val="外部記録媒体" {% if item.item_class_S=="DVD" %}selected{% endif %}>DVD
+                    </option>
+                    <option value="CD" data-val="外部記録媒体" {% if item.item_class_S=="CD" %}selected{% endif %}>CD</option>
+                    <option value="MD" data-val="外部記録媒体" {% if item.item_class_S=="MD" %}selected{% endif %}>MD</option>
+                    <option value="その他外部記録媒体" data-val="外部記録媒体" {% if item.item_class_S=="その他外部記録媒体" %}selected{% endif
+                        %}>その他外部記録媒体</option>
+                    <option value="充電器" data-val="外部記録媒体" {% if item.item_class_S=="充電器" %}selected{% endif %}>充電器
+                    </option>
+                    <option value="電源" data-val="外部記録媒体" {% if item.item_class_S=="電源" %}selected{% endif %}>電源</option>
+                    <option value="アダプター" data-val="外部記録媒体" {% if item.item_class_S=="アダプター" %}selected{% endif %}>アダプター
+                    </option>
+                    <option value="コード" data-val="外部記録媒体" {% if item.item_class_S=="コード" %}selected{% endif %}>コード
+                    </option>
+                    <option value="その他電気製品付属品" data-val="外部記録媒体" {% if item.item_class_S=="その他電気製品付属品" %}selected{%
+                        endif %}>その他電気製品付属品</option>
+                    <option value="携帯電話機" data-val="携帯電話機" {% if item.item_class_S=="携帯電話機" %}selected{% endif %}>携帯電話機
+                    </option>
+                    <option value="ポケットベル" data-val="携帯電話機" {% if item.item_class_S=="ポケットベル" %}selected{% endif %}>
+                        ポケットベル</option>
+                    <option value="その他携帯電話機" data-val="携帯電話機" {% if item.item_class_S=="その他携帯電話機" %}selected{% endif %}>
+                        その他携帯電話機</option>
+                    <option value="位置情報携帯端末" data-val="その他通信機器類" {% if item.item_class_S=="位置情報携帯端末" %}selected{% endif
+                        %}>位置情報携帯端末</option>
+                    <option value="ネックレス" data-val="ネックレス" {% if item.item_class_S=="ネックレス" %}selected{% endif %}>ネックレス
+                    </option>
+                    <option value="指輪（石つき）" data-val="指輪" {% if item.item_class_S=="指輪（石つき）" %}selected{% endif %}>
+                        指輪（石つき）</option>
+                    <option value="指輪（石なし）" data-val="指輪" {% if item.item_class_S=="指輪（石なし）" %}selected{% endif %}>
+                        指輪（石なし）</option>
+                    <option value="ブレスレット" data-val="ブレスレット" {% if item.item_class_S=="ブレスレット" %}selected{% endif %}>
+                        ブレスレット</option>
+                    <option value="ピアス" data-val="イヤリング類" {% if item.item_class_S=="ピアス" %}selected{% endif %}>ピアス
+                    </option>
+                    <option value="イヤリング" data-val="イヤリング類" {% if item.item_class_S=="イヤリング" %}selected{% endif %}>イヤリング
+                    </option>
+                    <option value="ブローチ" data-val="ブローチ" {% if item.item_class_S=="ブローチ" %}selected{% endif %}>ブローチ
+                    </option>
+                    <option value="ペンダント" data-val="ペンダント" {% if item.item_class_S=="ペンダント" %}selected{% endif %}>ペンダント
+                    </option>
+                    <option value="金地金" data-val="その他貴金属類" {% if item.item_class_S=="金地金" %}selected{% endif %}>金地金
+                    </option>
+                    <option value="グローブ" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="グローブ" %}selected{% endif %}>
+                        グローブ</option>
+                    <option value="ゴルフバッグ" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="ゴルフバッグ" %}selected{% endif
+                        %}>ゴルフバッグ</option>
+                    <option value="ゴルフクラブ" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="ゴルフクラブ" %}selected{% endif
+                        %}>ゴルフクラブ</option>
+                    <option value="テニスラケット" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="テニスラケット" %}selected{% endif
+                        %}>テニスラケット</option>
+                    <option value="スケートボード" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="スケートボード" %}selected{% endif
+                        %}>スケートボード</option>
+                    <option value="浮き輪" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="浮き輪" %}selected{% endif %}>浮き輪
+                    </option>
+                    <option value="釣り竿" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="釣り竿" %}selected{% endif %}>釣り竿
+                    </option>
+                    <option value="釣り道具" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="釣り道具" %}selected{% endif %}>
+                        釣り道具</option>
+                    <option value="クーラーボックス" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="クーラーボックス" %}selected{%
+                        endif %}>クーラーボックス</option>
+                    <option value="その他レジャー用品" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="その他レジャー用品" %}selected{%
+                        endif %}>その他レジャー用品</option>
+                    <option value="その他スポーツ用品" data-val="レジャー・スポーツ用品" {% if item.item_class_S=="その他スポーツ用品" %}selected{%
+                        endif %}>その他スポーツ用品</option>
+                    <option value="ギター" data-val="楽器類" {% if item.item_class_S=="ギター" %}selected{% endif %}>ギター</option>
+                    <option value="笛" data-val="楽器類" {% if item.item_class_S=="笛" %}selected{% endif %}>笛</option>
+                    <option value="フルート" data-val="楽器類" {% if item.item_class_S=="フルート" %}selected{% endif %}>フルート
+                    </option>
+                    <option value="その他楽器" data-val="楽器類" {% if item.item_class_S=="その他楽器" %}selected{% endif %}>その他楽器
+                    </option>
+                    <option value="おもちゃ" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="おもちゃ" %}selected{% endif %}>
+                        おもちゃ</option>
+                    <option value="ぬいぐるみ" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="ぬいぐるみ" %}selected{% endif %}>
+                        ぬいぐるみ</option>
+                    <option value="ゲームカード" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="ゲームカード" %}selected{% endif
+                        %}>ゲームカード</option>
+                    <option value="人形" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="人形" %}selected{% endif %}>人形
+                    </option>
+                    <option value="トランプ" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="トランプ" %}selected{% endif %}>
+                        トランプ</option>
+                    <option value="キックボード" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="キックボード" %}selected{% endif
+                        %}>キックボード</option>
+                    <option value="その他趣味用品" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="その他趣味用品" %}selected{% endif
+                        %}>その他趣味用品</option>
+                    <option value="その他娯楽用品" data-val="その他趣味・娯楽用品類" {% if item.item_class_S=="その他娯楽用品" %}selected{% endif
+                        %}>その他娯楽用品</option>
+                    <option value="運転免許証" data-val="運転免許証" {% if item.item_class_S=="運転免許証" %}selected{% endif %}>運転免許証
+                    </option>
+                    <option value="仮運転免許証" data-val="運転免許証" {% if item.item_class_S=="仮運転免許証" %}selected{% endif %}>
+                        仮運転免許証</option>
+                    <option value="国際免許証" data-val="運転免許証" {% if item.item_class_S=="国際免許証" %}selected{% endif %}>国際免許証
+                    </option>
+                    <option value="学生証" data-val="身分証明書類" {% if item.item_class_S=="学生証" %}selected{% endif %}>学生証
+                    </option>
+                    <option value="生徒証" data-val="身分証明書類" {% if item.item_class_S=="生徒証" %}selected{% endif %}>生徒証
+                    </option>
+                    <option value="従業員証" data-val="身分証明書類" {% if item.item_class_S=="従業員証" %}selected{% endif %}>従業員証
+                    </option>
+                    <option value="会社員証" data-val="身分証明書類" {% if item.item_class_S=="会社員証" %}selected{% endif %}>会社員証
+                    </option>
+                    <option value="外国人登録証" data-val="身分証明書類" {% if item.item_class_S=="外国人登録証" %}selected{% endif %}>
+                        外国人登録証</option>
+                    <option value="パスポート" data-val="身分証明書類" {% if item.item_class_S=="パスポート" %}selected{% endif %}>パスポート
+                    </option>
+                    <option value="身分証明書" data-val="身分証明書類" {% if item.item_class_S=="身分証明書" %}selected{% endif %}>身分証明書
+                    </option>
+                    <option value="国民健康保険証" data-val="健康保険証類" {% if item.item_class_S=="国民健康保険証" %}selected{% endif %}>
+                        国民健康保険証</option>
+                    <option value="社会保険証" data-val="健康保険証類" {% if item.item_class_S=="社会保険証" %}selected{% endif %}>社会保険証
+                    </option>
+                    <option value="共済組合員証" data-val="健康保険証類" {% if item.item_class_S=="社会保険証" %}selected{% endif %}>
+                        共済組合員証</option>
+                    <option value="老人医療証" data-val="健康保険証類" {% if item.item_class_S=="老人医療証" %}selected{% endif %}>老人医療証
+                    </option>
+                    <option value="乳児医療証" data-val="健康保険証類" {% if item.item_class_S=="乳児医療証" %}selected{% endif %}>乳児医療証
+                    </option>
+                    <option value="診察券" data-val="健康保険証類" {% if item.item_class_S=="診察券" %}selected{% endif %}>診察券
+                    </option>
+                    <option value="身体障碍者手帳" data-val="その他証明書類" {% if item.item_class_S=="身体障碍者手帳" %}selected{% endif %}>
+                        身体障碍者手帳</option>
+                    <option value="母子手帳" data-val="その他証明書類" {% if item.item_class_S=="母子手帳" %}selected{% endif %}>母子手帳
+                    </option>
+                    <option value="年金手帳" data-val="その他証明書類" {% if item.item_class_S=="年金手帳" %}selected{% endif %}>年金手帳
+                    </option>
+                    <option value="献血手帳" data-val="その他証明書類" {% if item.item_class_S=="献血手帳" %}selected{% endif %}>献血手帳
+                    </option>
+                    <option value="雇用保険被保険者証" data-val="その他証明書類" {% if item.item_class_S=="雇用保険被保険者証" %}selected{% endif
+                        %}>雇用保険被保険者証</option>
+                    <option value="印鑑登録証" data-val="その他証明書類" {% if item.item_class_S=="印鑑登録証" %}selected{% endif %}>
+                        印鑑登録証</option>
+                    <option value="印鑑登録証明書" data-val="その他証明書類" {% if item.item_class_S=="印鑑登録証明書" %}selected{% endif %}>
+                        印鑑登録証明書</option>
+                    <option value="住民票" data-val="その他証明書類" {% if item.item_class_S=="住民票" %}selected{% endif %}>住民票
+                    </option>
+                    <option value="住民基本台帳カード" data-val="その他証明書類" {% if item.item_class_S=="住民基本台帳カード" %}selected{% endif
+                        %}>住民基本台帳カード</option>
+                    <option value="自動車検査証" data-val="その他証明書類" {% if item.item_class_S=="自動車検査証" %}selected{% endif %}>
+                        自動車検査証</option>
+                    <option value="ナンバープレート" data-val="その他証明書類" {% if item.item_class_S=="自動車検査証" %}selected{% endif %}>
+                        ナンバープレート</option>
+                    <option value="自賠責保険証" data-val="その他証明書類" {% if item.item_class_S=="自賠責保険証" %}selected{% endif %}>
+                        自賠責保険証</option>
+                    <option value="生命保険証" data-val="その他証明書類" {% if item.item_class_S=="生命保険証" %}selected{% endif %}>
+                        生命保険証</option>
+                    <option value="傷害保険証" data-val="その他証明書類" {% if item.item_class_S=="傷害保険証" %}selected{% endif %}>
+                        傷害保険証</option>
+                    <option value="船舶免許証" data-val="その他証明書類" {% if item.item_class_S=="船舶免許証" %}selected{% endif %}>
+                        船舶免許証</option>
+                    <option value="無線免許証" data-val="その他証明書類" {% if item.item_class_S=="無線免許証" %}selected{% endif %}>
+                        無線免許証</option>
+                    <option value="クレーン免許証" data-val="その他証明書類" {% if item.item_class_S=="クレーン免許証" %}selected{% endif %}>
+                        クレーン免許証</option>
+                    <option value="宅地建物取扱主任者証" data-val="その他証明書類" {% if item.item_class_S=="宅地建物取扱主任者証" %}selected{%
+                        endif %}>宅地建物取扱主任者証</option>
+                    <option value="通行証" data-val="その他証明書類" {% if item.item_class_S=="通行証" %}selected{% endif %}>通行証
+                    </option>
+                    <option value="その他証明証" data-val="その他証明書類" {% if item.item_class_S=="その他証明証" %}selected{% endif %}>
+                        その他証明証</option>
+                    <option value="預貯金通帳" data-val="預貯金通帳" {% if item.item_class_S=="預貯金通帳" %}selected{% endif %}>預貯金通帳
+                    </option>
+                    <option value="預貯金証書" data-val="預貯金通帳" {% if item.item_class_S=="預貯金証書" %}selected{% endif %}>預貯金証書
+                    </option>
+                    <option value="その他通帳" data-val="預貯金通帳" {% if item.item_class_S=="その他通帳" %}selected{% endif %}>その他通帳
+                    </option>
+                    <option value="キャッシュカード" data-val="キャッシュカード類" {% if item.item_class_S=="キャッシュカード" %}selected{% endif
+                        %}>キャッシュカード</option>
+                    <option value="クレジットカード" data-val="キャッシュカード類" {% if item.item_class_S=="クレジットカード" %}selected{% endif
+                        %}>クレジットカード</option>
+                    <option value="PiTaPaカード" data-val="キャッシュカード類" {% if item.item_class_S=="PiTaPaカード" %}selected{%
+                        endif %}>PiTaPaカード</option>
+                    <option value="メンバーズカード" data-val="会員証（カード）類" {% if item.item_class_S=="メンバーズカード" %}selected{% endif
+                        %}>メンバーズカード</option>
+                    <option value="ポイントカード" data-val="会員証（カード）類" {% if item.item_class_S=="ポイントカード" %}selected{% endif
+                        %}>ポイントカード</option>
+                    <option value="図書館利用者カード" data-val="会員証（カード）類" {% if item.item_class_S=="図書館利用者カード" %}selected{%
+                        endif %}>図書館利用者カード</option>
+                    <option value="ビデオレンタルカード" data-val="会員証（カード）類" {% if item.item_class_S=="ビデオレンタルカード" %}selected{%
+                        endif %}>ビデオレンタルカード</option>
+                    <option value="振込カード" data-val="会員証（カード）類" {% if item.item_class_S=="振込カード" %}selected{% endif %}>
+                        振込カード</option>
+                    <option value="給油カード" data-val="会員証（カード）類" {% if item.item_class_S=="給油カード" %}selected{% endif %}>
+                        給油カード</option>
+                    <option value="受験カード" data-val="会員証（カード）類" {% if item.item_class_S=="受験カード" %}selected{% endif %}>
+                        受験カード</option>
+                    <option value="その他のカード" data-val="会員証（カード）類" {% if item.item_class_S=="その他のカード" %}selected{% endif
+                        %}>その他のカード</option>
+                    <option value="商品券" data-val="有価証券" {% if item.item_class_S=="商品券" %}selected{% endif %}>商品券
+                    </option>
+                    <option value="図書券" data-val="有価証券" {% if item.item_class_S=="図書券" %}selected{% endif %}>図書券
+                    </option>
+                    <option value="会員券" data-val="有価証券" {% if item.item_class_S=="会員券" %}selected{% endif %}>会員券
+                    </option>
+                    <option value="ギフト券" data-val="有価証券" {% if item.item_class_S=="ギフト券" %}selected{% endif %}>ギフト券
+                    </option>
+                    <option value="ビール券" data-val="有価証券" {% if item.item_class_S=="ビール券" %}selected{% endif %}>ビール券
+                    </option>
+                    <option value="小切手" data-val="有価証券" {% if item.item_class_S=="小切手" %}selected{% endif %}>小切手
+                    </option>
+                    <option value="株券" data-val="有価証券" {% if item.item_class_S=="株券" %}selected{% endif %}>株券</option>
+                    <option value="テレホンカード" data-val="プリペイドカード類" {% if item.item_class_S=="テレホンカード" %}selected{% endif
+                        %}>テレホンカード</option>
+                    <option value="パスネット" data-val="プリペイドカード類" {% if item.item_class_S=="パスネット" %}selected{% endif %}>
+                        パスネット</option>
+                    <option value="パスカード" data-val="プリペイドカード類" {% if item.item_class_S=="パスカード" %}selected{% endif %}>
+                        パスカード</option>
+                    <option value="Suica" data-val="プリペイドカード類" {% if item.item_class_S=="Suica" %}selected{% endif %}>
+                        Suica</option>
+                    <option value="ICOCA" data-val="プリペイドカード類" {% if item.item_class_S=="ICOCA" %}selected{% endif %}>
+                        ICOCA</option>
+                    <option value="PASMO" data-val="プリペイドカード類" {% if item.item_class_S=="PASMO" %}selected{% endif %}>
+                        PASMO</option>
+                    <option value="オレンジカード" data-val="プリペイドカード類" {% if item.item_class_S=="オレンジカード" %}selected{% endif
+                        %}>オレンジカード</option>
+                    <option value="その他プリペイドカード" data-val="プリペイドカード類" {% if item.item_class_S=="その他プリペイドカード" %}selected{%
+                        endif %}>その他プリペイドカード</option>
+                    <option value="定期券" data-val="定期券類" {% if item.item_class_S=="定期券" %}selected{% endif %}>定期券
+                    </option>
+                    <option value="Suica定期" data-val="定期券類" {% if item.item_class_S=="Suica定期" %}selected{% endif %}>
+                        Suica定期</option>
+                    <option value="ICOCA定期" data-val="定期券類" {% if item.item_class_S=="ICOCA定期" %}selected{% endif %}>
+                        ICOCA定期</option>
+                    <option value="PASMO定期" data-val="定期券類" {% if item.item_class_S=="PASMO定期" %}selected{% endif %}>
+                        PASMO定期</option>
+                    <option value="シルバーパス" data-val="定期券類" {% if item.item_class_S=="シルバーパス" %}selected{% endif %}>
+                        シルバーパス</option>
+                    <option value="身体障碍者無料乗車証" data-val="定期券類" {% if item.item_class_S=="身体障碍者無料乗車証" %}selected{% endif
+                        %}>身体障碍者無料乗車証</option>
+                    <option value="株主優待乗車証" data-val="定期券類" {% if item.item_class_S=="株主優待乗車証" %}selected{% endif %}>
+                        株主優待乗車証</option>
+                    <option value="回数券" data-val="乗車券類" {% if item.item_class_S=="回数券" %}selected{% endif %}>回数券
+                    </option>
+                    <option value="乗車券" data-val="乗車券類" {% if item.item_class_S=="乗車券" %}selected{% endif %}>乗車券
+                    </option>
+                    <option value="航空券" data-val="乗車券類" {% if item.item_class_S=="航空券" %}selected{% endif %}>航空券
+                    </option>
+                    <option value="宝くじ" data-val="馬券・宝くじ類" {% if item.item_class_S=="宝くじ" %}selected{% endif %}>宝くじ
+                    </option>
+                    <option value="馬券" data-val="馬券・宝くじ類" {% if item.item_class_S=="馬券" %}selected{% endif %}>馬券
+                    </option>
+                    <option value="郵便切手" data-val="切手類" {% if item.item_class_S=="郵便切手" %}selected{% endif %}>郵便切手
+                    </option>
+                    <option value="収入印紙" data-val="切手類" {% if item.item_class_S=="収入印紙" %}selected{% endif %}>収入印紙
+                    </option>
+                    <option value="未使用郵便はがき" data-val="切手類" {% if item.item_class_S=="未使用郵便はがき" %}selected{% endif %}>
+                        未使用郵便はがき</option>
+                    <option value="損傷紙幣" data-val="その他証券類" {% if item.item_class_S=="損傷紙幣" %}selected{% endif %}>損傷紙幣
+                    </option>
+                    <option value="外国通貨" data-val="その他証券類" {% if item.item_class_S=="外国通貨" %}selected{% endif %}>外国通貨
+                    </option>
+                    <option value="古銭・旧通貨" data-val="その他証券類" {% if item.item_class_S=="古銭・旧通貨" %}selected{% endif %}>
+                        古銭・旧通貨</option>
+                    <option value="入場券" data-val="その他証券類" {% if item.item_class_S=="入場券" %}selected{% endif %}>入場券
+                    </option>
+                    <option value="その他証券" data-val="その他証券類" {% if item.item_class_S=="その他証券" %}selected{% endif %}>その他証券
+                    </option>
+                    <option value="文庫本" data-val="書籍類" {% if item.item_class_S=="文庫本" %}selected{% endif %}>文庫本</option>
+                    <option value="雑誌" data-val="書籍類" {% if item.item_class_S=="雑誌" %}selected{% endif %}>雑誌</option>
+                    <option value="単行本" data-val="書籍類" {% if item.item_class_S=="単行本" %}selected{% endif %}>単行本</option>
+                    <option value="時刻表" data-val="書籍類" {% if item.item_class_S=="時刻表" %}selected{% endif %}>時刻表</option>
+                    <option value="マンガ本" data-val="書籍類" {% if item.item_class_S=="マンガ本" %}selected{% endif %}>マンガ本
+                    </option>
+                    <option value="教科書" data-val="書籍類" {% if item.item_class_S=="教科書" %}selected{% endif %}>教科書</option>
+                    <option value="冊子" data-val="書籍類" {% if item.item_class_S=="冊子" %}selected{% endif %}>冊子</option>
+                    <option value="地図" data-val="書籍類" {% if item.item_class_S=="地図" %}selected{% endif %}>地図</option>
+                    <option value="その他書籍" data-val="書籍類" {% if item.item_class_S=="その他書籍" %}selected{% endif %}>その他書籍
+                    </option>
+                    <option value="ビデオソフト" data-val="ディスク・テープ類" {% if item.item_class_S=="ビデオソフト" %}selected{% endif %}>
+                        ビデオソフト</option>
+                    <option value="CDソフト" data-val="ディスク・テープ類" {% if item.item_class_S=="CDソフト" %}selected{% endif %}>
+                        CDソフト</option>
+                    <option value="MDソフト" data-val="ディスク・テープ類" {% if item.item_class_S=="MDソフト" %}selected{% endif %}>
+                        MDソフト</option>
+                    <option value="DVDソフト" data-val="ディスク・テープ類" {% if item.item_class_S=="DVDソフト" %}selected{% endif %}>
+                        DVDソフト</option>
+                    <option value="その他ディスクテープ" data-val="ディスク・テープ類" {% if item.item_class_S=="その他ディスクテープ" %}selected{%
+                        endif %}>その他ディスクテープ</option>
+                    <option value="写真" data-val="写真類" {% if item.item_class_S=="写真" %}selected{% endif %}>写真</option>
+                    <option value="ネガ" data-val="写真類" {% if item.item_class_S=="ネガ" %}selected{% endif %}>ネガ</option>
+                    <option value="写真パネル" data-val="写真類" {% if item.item_class_S=="写真パネル" %}selected{% endif %}>写真パネル
+                    </option>
+                    <option value="その他写真類" data-val="写真類" {% if item.item_class_S=="その他写真類" %}selected{% endif %}>その他写真類
+                    </option>
+                    <option value="絵画" data-val="その他著作品類" {% if item.item_class_S=="絵画" %}selected{% endif %}>絵画
+                    </option>
+                    <option value="版画" data-val="その他著作品類" {% if item.item_class_S=="版画" %}selected{% endif %}>版画
+                    </option>
+                    <option value="その他著作品類" data-val="その他著作品類" {% if item.item_class_S=="その他著作品類" %}selected{% endif %}>
+                        その他著作品類</option>
+                    <option value="手帳" data-val="手帳・ノート類" {% if item.item_class_S==" 手帳" %}selected{% endif %}>手帳
+                    </option>
+                    <option value="アドレス帳" data-val="手帳・ノート類" {% if item.item_class_S=="アドレス帳" %}selected{% endif %}>
+                        アドレス帳
+                    </option>
+                    <option value="ノート" data-val="手帳・ノート類" {% if item.item_class_S=="ノート" %}selected{% endif %}>ノート
+                    </option>
+                    <option value="システム手帳" data-val="手帳・ノート類" {% if item.item_class_S=="システム手帳" %}selected{% endif %}>
+                        システム手帳</option>
+                    <option value="印鑑" data-val="印鑑類" {% if item.item_class_S=="印鑑" %}selected{% endif %}>印鑑</option>
+                    <option value="朱肉" data-val="印鑑類" {% if item.item_class_S==" 朱肉" %}selected{% endif %}>朱肉</option>
+                    <option value="ビニールケース" data-val="整理収納用品類" {% if item.item_class_S=="ビニールケース" %}selected{% endif %}>
+                        ビニールケース</option>
+                    <option value="クリアーファイル" data-val="整理収納用品類" {% if item.item_class_S=="クリアーファイル" %}selected{% endif
+                        %}>
+                        クリアーファイル</option>
+                    <option value="書類入れ" data-val="整理収納用品類" {% if item.item_class_S=="書類入れ" %}selected{% endif %}>書類入れ
+                    </option>
+                    <option value="バインダー" data-val="整理収納用品類" {% if item.item_class_S=="バインダー" %}selected{% endif %}>
+                        バインダー
+                    </option>
+                    <option value="アルバム" data-val="整理収納用品類" {% if item.item_class_S=="アルバム" %}selected{% endif %}>アルバム
+                    </option>
+                    <option value="クリアーケース" data-val="整理収納用品類" {% if item.item_class_S=="クリアーケース" %}selected{% endif %}>
+                        クリアーケース</option>
+                    <option value="プラスチックケース" data-val="整理収納用品類" {% if item.item_class_S=="プラスチックケース" %}selected{% endif
+                        %}>
+                        プラスチックケース</option>
+                    <option value="手提げ金庫" data-val="整理収納用品類" {% if item.item_class_S=="手提げ金庫" %}selected{% endif %}>
+                        手提げ金庫
+                    </option>
+                    <option value="ボールペン" data-val="筆箱・筆記用具類" {% if item.item_class_S=="ボールペン" %}selected{% endif %}>
+                        ボールペン
+                    </option>
+                    <option value="筆入れ" data-val="筆箱・筆記用具類" {% if item.item_class_S=="筆入れ" %}selected{% endif %}>筆入れ
+                    </option>
+                    <option value="カッターナイフ" data-val="その他文具類" {% if item.item_class_S=="カッターナイフ" %}selected{% endif %}>
+                        カッターナイフ</option>
+                    <option value="定規" data-val="その他文具類" {% if item.item_class_S=="定規" %}selected{% endif %}>定規
+                    </option>
+                    <option value="ハサミ" data-val="その他文具類" {% if item.item_class_S=="ハサミ" %}selected{% endif %}>ハサミ
+                    </option>
+                    <option value="その他文具" data-val="その他文具類" {% if item.item_class_S=="その他文具" %}selected{% endif %}>その他文具
+                    </option>
+                    <option value="領収書" data-val="書類" {% if item.item_class_S=="領収書" %}selected{% endif %}>領収書</option>
+                    <option value="明細書" data-val="書類" {% if item.item_class_S=="明細書" %}selected{% endif %}>明細書</option>
+                    <option value="契約書" data-val="書類" {% if item.item_class_S=="契約書" %}selected{% endif %}>契約書</option>
+                    <option value="履歴書" data-val="書類" {% if item.item_class_S=="履歴書" %}selected{% endif %}>履歴書</option>
+                    <option value="受領書" data-val="書類" {% if item.item_class_S=="受領書" %}selected{% endif %}>受領書</option>
+                    <option value="保証書" data-val="書類" {% if item.item_class_S=="保証書" %}selected{% endif %}>保証書</option>
+                    <option value="注文書" data-val="書類" {% if item.item_class_S=="注文書" %}selected{% endif %}>注文書</option>
+                    <option value="資料" data-val="書類" {% if item.item_class_S=="資料" %}selected{% endif %}>資料</option>
+                    <option value="賞状" data-val="書類" {% if item.item_class_S=="賞状" %}selected{% endif %}>賞状</option>
+                    <option value="その他書類" data-val="書類" {% if item.item_class_S=="その他書類" %}selected{% endif %}>その他書類
+                    </option>
+                    <option value="建築図面" data-val="図面類" {% if item.item_class_S=="建築図面" %}selected{% endif %}>建築図面
+                    </option>
+                    <option value="電気図面" data-val="図面類" {% if item.item_class_S=="電気図面" %}selected{% endif %}>電気図面
+                    </option>
+                    <option value="カレンダー" data-val="図面類" {% if item.item_class_S=="カレンダー" %}selected{% endif %}>カレンダー
+                    </option>
+                    <option value="パンフレット" data-val="図面類" {% if item.item_class_S=="パンフレット" %}selected{% endif %}>パンフレット
+                    </option>
+                    <option value="カタログ" data-val="図面類" {% if item.item_class_S=="カタログ" %}selected{% endif %}>カタログ
+                    </option>
+                    <option value="名刺" data-val="名刺" {% if item.item_class_S=="名刺" %}selected{% endif %}>名刺</option>
+                    <option value="レシート" data-val="その他紙類" {% if item.item_class_S=="レシート" %}selected{% endif %}>レシート
+                    </option>
+                    <option value="割引券" data-val="その他紙類" {% if item.item_class_S=="割引券" %}selected{% endif %}>割引券
+                    </option>
+                    <option value="使用済み郵便はがき" data-val="その他紙類" {% if item.item_class_S=="使用済み郵便はがき" %}selected{% endif
+                        %}>
+                        使用済み郵便はがき</option>
+                    <option value="振込用紙" data-val="その他紙類" {% if item.item_class_S=="振込用紙" %}selected{% endif %}>振込用紙
+                    </option>
+                    <option value="手紙" data-val="その他紙類" {% if item.item_class_S=="手紙" %}selected{% endif %}>手紙</option>
+                    <option value="駐車券" data-val="その他紙類" {% if item.item_class_S=="駐車券" %}selected{% endif %}>駐車券
+                    </option>
+                    <option value="食券" data-val="その他紙類" {% if item.item_class_S=="食券" %}selected{% endif %}></option>
+                    <option value="その他紙類" data-val="その他紙類" {% if item.item_class_S=="その他紙類" %}selected{% endif %}>その他紙類
+                    </option>
+                    <option value="段ボール箱" data-val="小包・箱類" {% if item.item_class_S=="段ボール箱" %}selected{% endif %}>段ボール箱
+                    </option>
+                    <option value="箱" data-val="小包・箱類" {% if item.item_class_S=="箱" %}selected{% endif %}>箱</option>
+                    <option value="菓子箱" data-val="小包・箱類" {% if item.item_class_S=="菓子箱" %}selected{% endif %}>菓子箱
+                    </option>
+                    <option value="宅配物" data-val="小包・箱類" {% if item.item_class_S=="宅配物" %}selected{% endif %}>宅配物
+                    </option>
+                    <option value="郵便小包" data-val="小包・箱類" {% if item.item_class_S=="郵便小包" %}selected{% endif %}>郵便小包
+                    </option>
+                    <option value="その他小包・箱類" data-val="小包・箱類" {% if item.item_class_S=="その他小包・箱類" %}selected{% endif %}>
+                        その他小包・箱類</option>
+                    <option value="ヘルメット" data-val="帽子類" {% if item.item_class_S=="ヘルメット" %}selected{% endif %}>ヘルメット
+                    </option>
+                    <option value="サンバイザー" data-val="帽子類" {% if item.item_class_S=="サンバイザー" %}selected{% endif %}>サンバイザー
+                    </option>
+                    <option value="野球帽" data-val="帽子類" {% if item.item_class_S=="野球帽" %}selected{% endif %}>野球帽</option>
+                    <option value="耳あて" data-val="帽子類" {% if item.item_class_S=="耳あて" %}selected{% endif %}>耳あて</option>
+                    <option value="帽子" data-val="帽子類" {% if item.item_class_S=="帽子" %}selected{% endif %}>帽子</option>
+                    <option value="手袋（両手）" data-val="手袋" {% if item.item_class_S=="手袋（両手）" %}selected{% endif %}>手袋（両手）
+                    </option>
+                    <option value="手袋（片手）" data-val="手袋" {% if item.item_class_S=="手袋（片手）" %}selected{% endif %}>手袋（片手）
+                    </option>
+                    <option value="マフラー" data-val="マフラー類" {% if item.item_class_S=="マフラー" %}selected{% endif %}>マフラー
+                    </option>
+                    <option value="スカーフ" data-val="マフラー類" {% if item.item_class_S=="スカーフ" %}selected{% endif %}>スカーフ
+                    </option>
+                    <option value="ショール" data-val="マフラー類" {% if item.item_class_S=="ショール" %}selected{% endif %}>ショール
+                    </option>
+                    <option value="ストール" data-val="マフラー類" {% if item.item_class_S=="ストール" %}selected{% endif %}>ストール
+                    </option>
+                    <option value="ひざ掛け" data-val="マフラー類" {% if item.item_class_S=="ひざ掛け" %}selected{% endif %}>ひざ掛け
+                    </option>
+                    <option value="ジャンパー" data-val="上着類" {% if item.item_class_S=="ジャンパー" %}selected{% endif %}>ジャンパー
+                    </option>
+                    <option value="ジャケット" data-val="上着類" {% if item.item_class_S=="ジャケット" %}selected{% endif %}>ジャケット
+                    </option>
+                    <option value="カーディガン" data-val="上着類" {% if item.item_class_S=="カーディガン" %}selected{% endif %}>カーディガン
+                    </option>
+                    <option value="Tシャツ" data-val="上着類" {% if item.item_class_S=="Tシャツ" %}selected{% endif %}>Tシャツ
+                    </option>
+                    <option value="ワイシャツ" data-val="上着類" {% if item.item_class_S=="ワイシャツ" %}selected{% endif %}>ワイシャツ
+                    </option>
+                    <option value="ブラウス" data-val="上着類" {% if item.item_class_S=="ブラウス" %}selected{% endif %}>ブラウス
+                    </option>
+                    <option value="セーター" data-val="上着類" {% if item.item_class_S=="セーター" %}selected{% endif %}>セーター
+                    </option>
+                    <option value="トレーナー" data-val="上着類" {% if item.item_class_S=="トレーナー" %}selected{% endif %}>トレーナー
+                    </option>
+                    <option value="ベスト" data-val="上着類" {% if item.item_class_S=="ベスト" %}selected{% endif %}>ベスト</option>
+                    <option value="コート" data-val="上着類" {% if item.item_class_S=="コート" %}selected{% endif %}>コート</option>
+                    <option value="パーカー" data-val="上着類" {% if item.item_class_S=="パーカー" %}selected{% endif %}>パーカー
+                    </option>
+                    <option value="ズボン" data-val="ズボン類" {% if item.item_class_S=="ズボン" %}selected{% endif %}>ズボン
+                    </option>
+                    <option value="ジーパン" data-val="ズボン類" {% if item.item_class_S=="ジーパン" %}selected{% endif %}>ジーパン
+                    </option>
+                    <option value="スカート" data-val="ズボン類" {% if item.item_class_S=="スカート" %}selected{% endif %}>スカート
+                    </option>
+                    <option value="スーツ" data-val="上下衣類" {% if item.item_class_S=="スーツ" %}selected{% endif %}>スーツ
+                    </option>
+                    <option value="ワンピース" data-val="上下衣類" {% if item.item_class_S=="ワンピース" %}selected{% endif %}>ワンピース
+                    </option>
+                    <option value="作業着" data-val="上下衣類" {% if item.item_class_S=="作業着" %}selected{% endif %}>作業着
+                    </option>
+                    <option value="制服" data-val="上下衣類" {% if item.item_class_S=="制服" %}selected{% endif %}>制服</option>
+                    <option value="白衣" data-val="上下衣類" {% if item.item_class_S=="白衣" %}selected{% endif %}>白衣</option>
+                    <option value="柔道着" data-val="上下衣類" {% if item.item_class_S=="柔道着" %}selected{% endif %}>柔道着
+                    </option>
+                    <option value="ウインドブレーカー" data-val="上下衣類" {% if item.item_class_S=="ウインドブレーカー" %}selected{% endif
+                        %}>
+                        ウインドブレーカー</option>
+                    <option value="スポーツウェア" data-val="上下衣類" {% if item.item_class_S=="スポーツウェア" %}selected{% endif %}>
+                        スポーツウェア
+                    </option>
+                    <option value="合羽" data-val="上下衣類" {% if item.item_class_S=="合羽" %}selected{% endif %}>合羽</option>
+                    <option value="着物" data-val="上下衣類" {% if item.item_class_S=="着物" %}selected{% endif %}>着物</option>
+                    <option value="下着類" data-val="その他衣類" {% if item.item_class_S=="下着類" %}selected{% endif %}>下着類
+                    </option>
+                    <option value="水着" data-val="その他衣類" {% if item.item_class_S=="水着" %}selected{% endif %}>水着</option>
+                    <option value="ネクタイ" data-val="その他衣類" {% if item.item_class_S=="ネクタイ" %}selected{% endif %}>ネクタイ
+                    </option>
+                    <option value="エプロン" data-val="その他衣類" {% if item.item_class_S=="エプロン" %}selected{% endif %}>エプロン
+                    </option>
+                    <option value="バンダナ" data-val="その他衣類" {% if item.item_class_S=="バンダナ" %}selected{% endif %}>バンダナ
+                    </option>
+                    <option value="パジャマ" data-val="その他衣類" {% if item.item_class_S=="パジャマ" %}selected{% endif %}>パジャマ
+                    </option>
+                    <option value="靴下" data-val="その他衣類" {% if item.item_class_S=="靴下" %}selected{% endif %}>靴下</option>
+                    <option value="その他衣類" data-val="その他衣類" {% if item.item_class_S=="その他衣類" %}selected{% endif %}>その他衣類
+                    </option>
+                    <option value="ベルト" data-val="衣類付属品" {% if item.item_class_S=="ベルト" %}selected{% endif %}>ベルト
+                    </option>
+                    <option value="バックル" data-val="衣類付属品" {% if item.item_class_S=="バックル" %}selected{% endif %}>バックル
+                    </option>
+                    <option value="ネクタイピン" data-val="衣類付属品" {% if item.item_class_S=="ネクタイピン" %}selected{% endif %}>
+                        ネクタイピン
+                    </option>
+                    <option value="カフスボタン" data-val="衣類付属品" {% if item.item_class_S=="カフスボタン" %}selected{% endif %}>
+                        カフスボタン
+                    </option>
+                    <option value="ボタン" data-val="衣類付属品" {% if item.item_class_S=="ボタン" %}selected{% endif %}>ボタン
+                    </option>
+                    <option value="その他衣類付属品" data-val="衣類付属品" {% if item.item_class_S=="その他衣類付属品" %}selected{% endif %}>
+                        その他衣類付属品</option>
+                    <option value="上履き" data-val="履物類" {% if item.item_class_S=="上履き" %}selected{% endif %}>上履き</option>
+                    <option value="ランニングシューズ" data-val="履物類" {% if item.item_class_S=="ランニングシューズ" %}selected{% endif %}>
+                        ランニングシューズ</option>
+                    <option value="サンダル" data-val="履物類" {% if item.item_class_S=="サンダル" %}selected{% endif %}>サンダル
+                    </option>
+                    <option value="スリッパ" data-val="履物類" {% if item.item_class_S=="スリッパ" %}selected{% endif %}>スリッパ
+                    </option>
+                    <option value="その他履物" data-val="履物類" {% if item.item_class_S=="その他履物" %}selected{% endif %}>その他履物
+                    </option>
+                    <option value="長傘" data-val="かさ" {% if item.item_class_S=="長傘" %}selected{% endif %}>長傘</option>
+                    <option value="折りたたみ傘" data-val="かさ" {% if item.item_class_S=="折りたたみ傘" %}selected{% endif %}>折りたたみ傘
+                    </option>
+                    <option value="ビニール傘" data-val="かさ" {% if item.item_class_S=="ビニール傘" %}selected{% endif %}>ビニール傘
+                    </option>
+                    <option value="その他（かさ）" data-val="かさ" {% if item.item_class_S=="その他（かさ）" %}selected{% endif %}>
+                        その他（かさ）
+                    </option>
+                    <option value="自動車用鍵" data-val="鍵" {% if item.item_class_S=="自動車用鍵" %}selected{% endif %}>自動車用鍵
+                    </option>
+                    <option value="自転車用鍵" data-val="鍵" {% if item.item_class_S==" 自転車用鍵" %}selected{% endif %}>自転車用鍵
+                    </option>
+                    <option value="家用鍵" data-val="鍵" {% if item.item_class_S=="家用鍵" %}selected{% endif %}>家用鍵</option>
+                    <option value="その他鍵" data-val="鍵" {% if item.item_class_S=="その他鍵" %}selected{% endif %}>その他鍵
+                    </option>
+                    <option value="自動車用鍵" data-val="鍵（キーホルダー付）" {% if item.item_class_S=="自動車用鍵" %}selected{% endif %}>
+                        自動車用鍵</option>
+                    <option value="自転車用鍵" data-val="鍵（キーホルダー付）" {% if item.item_class_S=="自転車用鍵" %}selected{% endif %}>
+                        自転車用鍵</option>
+                    <option value="家用鍵" data-val="鍵（キーホルダー付）" {% if item.item_class_S=="家用鍵" %}selected{% endif %}>家用鍵
+                    </option>
+                    <option value="その他キーホルダー付鍵" data-val="鍵（キーホルダー付）" {% if item.item_class_S=="その他キーホルダー付鍵"
+                        %}selected{% endif %}>その他キーホルダー付鍵</option>
+                    <option value="自動車用鍵" data-val="鍵（キーケース付）" {% if item.item_class_S=="自動車用鍵" %}selected{% endif %}>
+                        自動車用鍵</option>
+                    <option value="自転車用鍵" data-val="鍵（キーケース付）" {% if item.item_class_S=="自転車用鍵" %}selected{% endif %}>
+                        自転車用鍵</option>
+                    <option value="家用鍵" data-val="鍵（キーケース付）" {% if item.item_class_S=="家用鍵" %}selected{% endif %}>家用鍵
+                    </option>
+                    <option value="その他キーケース付鍵" data-val="鍵（キーケース付）" {% if item.item_class_S=="その他キーケース付鍵" %}selected{%
+                        endif %}>その他キーケース付鍵</option>
+                    <option value="セキュリティカード" data-val="カードキー" {% if item.item_class_S=="セキュリティカード" %}selected{% endif
+                        %}>
+                        セキュリティカード</option>
+                    <option value="ICカード" data-val="カードキー" {% if item.item_class_S=="ICカード" %}selected{% endif %}>ICカード
+                    </option>
+                    <option value="入室カード" data-val="カードキー" {% if item.item_class_S=="入室カード" %}selected{% endif %}>入室カード
+                    </option>
+                    <option value="その他カードキー" data-val="カードキー" {% if item.item_class_S=="その他カードキー" %}selected{% endif %}>
+                        その他カードキー</option>
+                    <option value="タオル" data-val="生活用品" {% if item.item_class_S=="タオル" %}selected{% endif %}>タオル
+                    </option>
+                    <option value="ハンカチ" data-val="生活用品" {% if item.item_class_S=="ハンカチ" %}selected{% endif %}>ハンカチ
+                    </option>
+                    <option value="ライター" data-val="生活用品" {% if item.item_class_S=="ライター" %}selected{% endif %}>ライター
+                    </option>
+                    <option value="灰皿" data-val="生活用品" {% if item.item_class_S=="灰皿" %}selected{% endif %}>灰皿</option>
+                    <option value="キーホルダー" data-val="生活用品" {% if item.item_class_S=="キーホルダー" %}selected{% endif %}>
+                        キーホルダー
+                    </option>
+                    <option value="ストラップ" data-val="生活用品" {% if item.item_class_S=="ストラップ" %}selected{% endif %}>ストラップ
+                    </option>
+                    <option value="ティッシュペーパー" data-val="生活用品" {% if item.item_class_S=="ティッシュペーパー" %}selected{% endif
+                        %}>
+                        ティッシュペーパー</option>
+                    <option value="くし" data-val="生活用品" {% if item.item_class_S=="くし" %}selected{% endif %}>くし</option>
+                    <option value="洗面具" data-val="生活用品" {% if item.item_class_S=="洗面具" %}selected{% endif %}>洗面具
+                    </option>
+                    <option value="鏡" data-val="生活用品" {% if item.item_class_S=="鏡" %}selected{% endif %}>鏡</option>
+                    <option value="石鹸" data-val="生活用品" {% if item.item_class_S=="石鹸" %}selected{% endif %}>石鹸</option>
+                    <option value="紙おむつ" data-val="生活用品" {% if item.item_class_S=="紙おむつ" %}selected{% endif %}>紙おむつ
+                    </option>
+                    <option value="扇子" data-val="生活用品" {% if item.item_class_S=="扇子" %}selected{% endif %}>扇子</option>
+                    <option value="風呂敷" data-val="生活用品" {% if item.item_class_S=="風呂敷" %}selected{% endif %}>風呂敷
+                    </option>
+                    <option value="クッション" data-val="生活用品" {% if item.item_class_S=="クッション" %}selected{% endif %}>クッション
+                    </option>
+                    <option value="枕" data-val="生活用品" {% if item.item_class_S=="枕" %}selected{% endif %}>枕</option>
+                    <option value="ハサミ" data-val="生活用品" {% if item.item_class_S=="ハサミ" %}selected{% endif %}>ハサミ
+                    </option>
+                    <option value="その他生活用品" data-val="生活用品" {% if item.item_class_S=="その他生活用品" %}selected{% endif %}>
+                        その他生活用品
+                    </option>
+                    <option value="水筒" data-val="食器類" {% if item.item_class_S=="水筒" %}selected{% endif %}>水筒</option>
+                    <option value="弁当箱" data-val="食器類" {% if item.item_class_S=="弁当箱" %}selected{% endif %}>弁当箱</option>
+                    <option value="包丁" data-val="食器類" {% if item.item_class_S=="包丁" %}selected{% endif %}>包丁</option>
+                    <option value="食品保存容器" data-val="食器類" {% if item.item_class_S=="食品保存容器" %}selected{% endif %}>食品保存容器
+                    </option>
+                    <option value="皿" data-val="食器類" {% if item.item_class_S=="皿" %}selected{% endif %}>皿</option>
+                    <option value="その他食器" data-val="食器類" {% if item.item_class_S=="その他食器" %}selected{% endif %}>その他食器
+                    </option>
+                    <option value="ドライバー" data-val="工具類" {% if item.item_class_S=="ドライバー" %}selected{% endif %}>ドライバー
+                    </option>
+                    <option value="ペンチ" data-val="工具類" {% if item.item_class_S=="ペンチ" %}selected{% endif %}>ペンチ</option>
+                    <option value="レンチ" data-val="工具類" {% if item.item_class_S=="レンチ" %}selected{% endif %}>レンチ</option>
+                    <option value="その他工具" data-val="工具類" {% if item.item_class_S=="その他工具" %}selected{% endif %}>その他工具
+                    </option>
+                    <option value="名札" data-val="装飾品類" {% if item.item_class_S=="名札" %}selected{% endif %}>名札</option>
+                    <option value="腕章" data-val="装飾品類" {% if item.item_class_S=="腕章" %}selected{% endif %}>腕章</option>
+                    <option value="バッチ" data-val="装飾品類" {% if item.item_class_S=="バッチ" %}selected{% endif %}>バッチ
+                    </option>
+                    <option value="ヘアピン" data-val="装飾品類" {% if item.item_class_S=="ヘアピン" %}selected{% endif %}>ヘアピン
+                    </option>
+                    <option value="かんざし" data-val="装飾品類" {% if item.item_class_S=="かんざし" %}selected{% endif %}>かんざし
+                    </option>
+                    <option value="コサージュ" data-val="装飾品類" {% if item.item_class_S=="コサージュ" %}selected{% endif %}>コサージュ
+                    </option>
+                    <option value="リストバンド" data-val="装飾品類" {% if item.item_class_S=="リストバンド" %}selected{% endif %}>
+                        リストバンド
+                    </option>
+                    <option value="その他装飾品" data-val="装飾品類" {% if item.item_class_S=="その他装飾品" %}selected{% endif %}>
+                        その他装飾品
+                    </option>
+                    <option value="お守り" data-val="神仏具品類" {% if item.item_class_S=="お守り" %}selected{% endif %}>お守り
+                    </option>
+                    <option value="数珠" data-val="神仏具品類" {% if item.item_class_S=="数珠" %}selected{% endif %}>数珠</option>
+                    <option value="おみくじ" data-val="神仏具品類" {% if item.item_class_S=="おみくじ" %}selected{% endif %}>おみくじ
+                    </option>
+                    <option value="お骨" data-val="神仏具品類" {% if item.item_class_S=="お骨" %}selected{% endif %}>お骨</option>
+                    <option value="その他神仏具品" data-val="神仏具品類" {% if item.item_class_S=="その他神仏具品" %}selected{% endif %}>
+                        その他神仏具品</option>
+                    <option value="自転車" data-val="自転車類" {% if item.item_class_S=="自転車" %}selected{% endif %}>自転車
+                    </option>
+                    <option value="キャリアカート" data-val="自転車類" {% if item.item_class_S=="キャリアカート" %}selected{% endif %}>
+                        キャリアカート
+                    </option>
+                    <option value="ベビーカー" data-val="自転車類" {% if item.item_class_S=="ベビーカー" %}selected{% endif %}>ベビーカー
+                    </option>
+                    <option value="台車" data-val="自転車類" {% if item.item_class_S=="台車" %}selected{% endif %}>台車</option>
+                    <option value="タイヤ" data-val="自転車類" {% if item.item_class_S=="タイヤ" %}selected{% endif %}>タイヤ
+                    </option>
+                    <option value="その他自転車類" data-val="自転車類" {% if item.item_class_S=="その他自転車類" %}selected{% endif %}>
+                        その他自転車類
+                    </option>
+                    <option value="めがねケース" data-val="ケース・カバー類" {% if item.item_class_S=="めがねケース" %}selected{% endif %}>
+                        めがねケース</option>
+                    <option value="キーケース" data-val="ケース・カバー類" {% if item.item_class_S=="キーケース" %}selected{% endif %}>
+                        キーケース
+                    </option>
+                    <option value="ペットボトルケース" data-val="ケース・カバー類" {% if item.item_class_S=="ペットボトルケース" %}selected{%
+                        endif %}>
+                        ペットボトルケース</option>
+                    <option value="ティッシュケース" data-val="ケース・カバー類" {% if item.item_class_S=="ティッシュケース" %}selected{% endif
+                        %}>
+                        ティッシュケース</option>
+                    <option value="傘カバー" data-val="ケース・カバー類" {% if item.item_class_S=="傘カバー" %}selected{% endif %}>傘カバー
+                    </option>
+                    <option value="その他ケース・カバー" data-val="ケース・カバー類" {% if item.item_class_S=="その他ケース・カバー" %}selected{%
+                        endif %}>
+                        その他ケース・カバー</option>
+                    <option value="絆創膏" data-val="薬類" {% if item.item_class_S=="絆創膏" %}selected{% endif %}>絆創膏</option>
+                    <option value="コンタクト洗浄液" data-val="薬類" {% if item.item_class_S=="コンタクト洗浄液" %}selected{% endif %}>
+                        コンタクト洗浄液
+                    </option>
+                    <option value="薬" data-val="薬類" {% if item.item_class_S=="薬" %}selected{% endif %}>薬</option>
+                    <option value="救急箱" data-val="薬類" {% if item.item_class_S=="救急箱" %}selected{% endif %}>救急箱</option>
+                    <option value="その他薬類" data-val="薬類" {% if item.item_class_S=="その他薬類" %}selected{% endif %}>その他薬類
+                    </option>
+                    <option value="杖" data-val="医療関連品類" {% if item.item_class_S=="杖" %}selected{% endif %}>杖</option>
+                    <option value="万歩計" data-val="医療関連品類" {% if item.item_class_S=="万歩計" %}selected{% endif %}>万歩計
+                    </option>
+                    <option value="入れ歯" data-val="医療関連品類" {% if item.item_class_S=="入れ歯" %}selected{% endif %}>入れ歯
+                    </option>
+                    <option value="補聴器" data-val="医療関連品類" {% if item.item_class_S=="補聴器" %}selected{% endif %}>補聴器
+                    </option>
+                    <option value="その他医療品関連" data-val="医療関連品類" {% if item.item_class_S=="その他医療品関連" %}selected{% endif
+                        %}>
+                        その他医療品関連</option>
+                    <option value="口紅" data-val="化粧品類" {% if item.item_class_S=="口紅" %}selected{% endif %}>口紅</option>
+                    <option value="香水" data-val="化粧品類" {% if item.item_class_S=="香水" %}selected{% endif %}>香水</option>
+                    <option value="コンパクト" data-val="化粧品類" {% if item.item_class_S=="コンパクト" %}selected{% endif %}>コンパクト
+                    </option>
+                    <option value="化粧品" data-val="化粧品類" {% if item.item_class_S==" 化粧品" %}selected{% endif %}>化粧品
+                    </option>
+                    <option value="その他化粧品類" data-val="化粧品類" {% if item.item_class_S=="その他化粧品類" %}selected{% endif %}>
+                        その他化粧品類
+                    </option>
+                    <option value="食品" data-val="食料品類" {% if item.item_class_S=="食品" %}selected{% endif %}>食品</option>
+                    <option value="飲料品" data-val="食料品類" {% if item.item_class_S=="飲料品" %}selected{% endif %}>飲料品
+                    </option>
+                    <option value="酒" data-val="食料品類" {% if item.item_class_S=="酒" %}selected{% endif %}>酒</option>
+                    <option value="たばこ" data-val="食料品類" {% if item.item_class_S=="たばこ" %}selected{% endif %}>たばこ
+                    </option>
+                    <option value="その他食料品" data-val="食料品類" {% if item.item_class_S=="その他食料品" %}selected{% endif %}>
+                        その他食料品
+                    </option>
+                    <option value="（動物名）記載" data-val="動物" {% if item.item_class_S=="（動物名）記載" %}selected{% endif %}>
+                        （動物名）記載
+                    </option>
+                    <option value="（昆虫名）記載" data-val="動物" {% if item.item_class_S=="（昆虫名）記載" %}selected{% endif %}>
+                        （昆虫名）記載
+                    </option>
+                    <option value="その他動物" data-val="動物" {% if item.item_class_S=="その他動物" %}selected{% endif %}>その他動物
+                    </option>
+                    <option value="花束" data-val="植物" {% if item.item_class_S=="花束" %}selected{% endif %}>花束</option>
+                    <option value="鉢植え" data-val="植物" {% if item.item_class_S=="鉢植え" %}selected{% endif %}>鉢植え</option>
+                    <option value="その他植物" data-val="植物" {% if item.item_class_S=="その他植物" %}selected{% endif %}>その他植物
+                    </option>
+                    <option value="虫かご" data-val="動植物関連品" {% if item.item_class_S=="虫かご" %}selected{% endif %}>虫かご
+                    </option>
+                    <option value="鳥かご" data-val="動植物関連品" {% if item.item_class_S=="鳥かご" %}selected{% endif %}>鳥かご
+                    </option>
+                    <option value="ペットフード" data-val="動植物関連品" {% if item.item_class_S=="ペットフード" %}selected{% endif %}>
+                        ペットフード
+                    </option>
+                    <option value="肥料" data-val="動植物関連品" {% if item.item_class_S=="肥料" %}selected{% endif %}>肥料
+                    </option>
+                    <option value="その他動植物関連品" data-val="動植物関連品" {% if item.item_class_S=="その他動植物関連品" %}selected{% endif
+                        %}>
+                        その他動植物関連品</option>
+                    <option value="けん銃" data-val="所持禁止物品" {% if item.item_class_S=="けん銃" %}selected{% endif %}>けん銃
+                    </option>
+                    <option value="刀" data-val="所持禁止物品" {% if item.item_class_S=="刀" %}selected{% endif %}>刀</option>
+                    <option value="覚せい剤" data-val="所持禁止物品" {% if item.item_class_S=="覚せい剤" %}selected{% endif %}>覚せい剤
+                    </option>
+                    <option value="その他所持禁止物品" data-val="所持禁止物品" {% if item.item_class_S=="その他所持禁止物品" %}selected{% endif
+                        %}>
+                        その他所持禁止物品</option>
+                    <option value="土器・石器" data-val="その他" {% if item.item_class_S=="土器・石器" %}selected{% endif %}>土器・石器
+                    </option>
+                    <option value="金庫" data-val="その他" {% if item.item_class_S=="金庫" %}selected{% endif %}>金庫</option>
+                    <option value="消火器" data-val="その他" {% if item.item_class_S=="消火器" %}selected{% endif %}>消火器</option>
+                    <option value="薬品" data-val="その他" {% if item.item_class_S=="薬品" %}selected{% endif %}>薬品</option>
+                    <option value="看板" data-val="その他" {% if item.item_class_S=="看板" %}selected{% endif %}>看板</option>
+                    <option value="その他" data-val="その他" {% if item.item_class_S=="その他" %}selected{% endif %}>その他</option>
                 </select>
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.find_area.label }} {{ form.find_area }}</div>
-            <div class="col-4">{{ form.find_area_police.label }} {{ form.find_area_police }}</div>
-            <div class="col-4">{{ form.own_waiver.label }} {{ form.own_waiver }}</div>
+            <div class="col-4">{{ form.find_area.label }} {{ form.find_area(value=item.find_area) }}</div>
+            <div class="col-4">{{ form.find_area_police.label }} {{ form.find_area_police(value=item.find_area_police)
+                }}</div>
+            <div class="col-4">{{ form.own_waiver.label }} {{ form.own_waiver(value=item.own_waiver) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.finder_name.label }} {{ form.finder_name }}</div>
-            <div class="col-4">{{ form.own_name_note.label }} {{ form.own_name_note }}</div>
-            <div class="col-4">{{ form.finder_age.label }} {{ form.finder_age }}</div>
+            <div class="col-4">{{ form.finder_name.label }} {{ form.finder_name(vlaue=item.finder_name) }}</div>
+            <div class="col-4">{{ form.own_name_note.label }} {{ form.own_name_note(value=item.own_name_note) }}</div>
+            <div class="col-4">{{ form.finder_age.label }} {{ form.finder_age(value=item.finder_age) }}</div>
         </div>
         <div class="row mb-5">
-            <div class="col-3">{{ form.finder_sex.label }} {{ form.finder_sex }}</div>
-            <div class="col-3">{{ form.finder_post.label }} {{ form.finder_post }}</div>
-            <div class="col-3">{{ form.finder_tel1.label }} {{ form.finder_tel1 }}</div>
-            <div class="col-3">{{ form.finder_tel2.label }} {{ form.finder_tel2 }}</div>
+            <div class="col-3">{{ form.finder_sex.label }} {{ form.finder_sex(value=item.finder_sex) }}</div>
+            <div class="col-3">{{ form.finder_post.label }} {{ form.finder_post(value=item.finder_post) }}</div>
+            <div class="col-3">{{ form.finder_tel1.label }} {{ form.finder_tel1(value=item.finder_tel1) }}</div>
+            <div class="col-3">{{ form.finder_tel2.label }} {{ form.finder_tel2(value=item.finder_tel2) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_value.label }} {{ form.item_value }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color }}</div>
+            <div class="col-4">{{ form.item_value.label }} {{ form.item_value(value=item.item_value) }}</div>
+            <div class="col-4">{{ form.item_color.label }} {{ form.item_color(value=item.item_color) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_storage.label }} {{ form.item_storage }}</div>
-            <div class="col-4">{{ form.item_storage_place.label }} {{ form.item_storage_place }}</div>
-            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration }}</div>
+            <div class="col-4">{{ form.item_storage.label }} {{ form.item_storage(value=item.item_storage) }}</div>
+            <div class="col-4">{{ form.item_storage_place.label }} {{
+                form.item_storage_place(value=item.item_storage_place) }}</div>
+            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(value=item.item_expiration) }}
+            </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker }}</div>
-            <div class="col-4">{{ form.item_num.label }} {{ form.item_num }}</div>
-            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit }}</div>
+            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker(value=item.item_maker) }}</div>
+            <div class="col-4">{{ form.item_num.label }} {{ form.item_num(value=item.item_num) }}</div>
+            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit(value=item.item_unit) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice }}</div>
-            <div class="col-4">{{ form.item_money.label }} {{ form.item_money }}</div>
+            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(value=item.item_plice) }}</div>
+            <div class="col-4">{{ form.item_money.label }} {{ form.item_money(value=item.item_money) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks }}</div>
-            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+            <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks(value=item.item_remarks) }}</div>
+            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature(value=item.item_feature) }}</div>
         </div>
         <p>
             <hr>
@@ -697,19 +1239,21 @@
             同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
         </p>
         <div class="row mb-5">
-            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany }}</div>
-            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel }}</div>
-            <div class="col-3">{{ form.card_name.label }} {{ form.card_name }}</div>
-            <div class="col-3">{{ form.card_person.label }} {{ form.card_person }}</div>
+            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany(value=item.card_campany) }}</div>
+            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel(value=item.card_tel) }}</div>
+            <div class="col-3">{{ form.card_name.label }} {{ form.card_name(value=item.card_name) }}</div>
+            <div class="col-3">{{ form.card_person.label }} {{ form.card_person(value=item.card_person) }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.card_item.label }} {{ form.card_item }}</div>
-            <div class="col-3">{{ form.card_return.label }} {{ form.card_return }}</div>
-            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour }}</div>
-            <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute }}</div>
+            <div class="col-3">{{ form.card_item.label }} {{ form.card_item(value=item.card_item) }}</div>
+            <div class="col-3">{{ form.card_return.label }} {{ form.card_return(value=item.card_return) }}</div>
+            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour(value=item.card_item_hour) }}
+            </div>
+            <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute(value=item.card_item_minute)
+                }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager }}</div>
+            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager(value=item.card_manager) }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(value="編集",class="btn btn-primary") }}
