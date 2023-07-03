@@ -32,32 +32,33 @@
         <div class="row mb-3">
             <div class="col-4">
                 <select name="item_class_L" id="item_class_L">
-                    <option value="現金">現金</option>
-                    <option value="かばん類">かばん類</option>
-                    <option value="袋・封筒類">袋・封筒類</option>
-                    <option value="財布類">財布類</option>
-                    <option value="カードケース類">カードケース類</option>
-                    <option value="カメラ類">カメラ類</option>
-                    <option value="時計類">時計類</option>
-                    <option value="めがね類">めがね類</option>
-                    <option value="電気製品類">電気製品類</option>
-                    <option value="携帯電話類">携帯電話類</option>
-                    <option value="貴金属類">貴金属類</option>
-                    <option value="趣味娯楽用品類">趣味娯楽用品類</option>
-                    <option value="証明書類・カード類">証明書類・カード類</option>
-                    <option value="有価証券類">有価証券類</option>
-                    <option value="著作品類">著作品類</option>
-                    <option value="手帳文具類">手帳文具類</option>
-                    <option value="書類・紙類">書類・紙類</option>
-                    <option value="小包・箱類">小包・箱類</option>
-                    <option value="衣類・履物類">衣類・履物類</option>
-                    <option value="かさ類">かさ類</option>
-                    <option value="鍵類">鍵類</option>
-                    <option value="生活用品類">生活用品類</option>
-                    <option value="医療・化粧品類">医療・化粧品類</option>
-                    <option value="食料品類">食料品類</option>
-                    <option value="動植物類">動植物類</option>
-                    <option value="その他">その他</option>
+                    <option value="現金" {% if item.item_class_L=="現金" %}selected{% endif %}>現金</option>
+                    <option value="かばん類" {% if item.item_class_L=="かばん類" %}selected{% endif %}>かばん類</option>
+                    <option value="袋・封筒類" {% if item.item_class_L=="袋・封筒類" %}selected{% endif %}>袋・封筒類</option>
+                    <option value="財布類" {% if item.item_class_L=="財布類" %}selected{% endif %}>財布類</option>
+                    <option value="カードケース類" {% if item.item_class_L=="カードケース類" %}selected{% endif %}>カードケース類</option>
+                    <option value="カメラ類" {% if item.item_class_L=="カメラ類" %}selected{% endif %}>カメラ類</option>
+                    <option value="時計類" {% if item.item_class_L=="時計類" %}selected{% endif %}>時計類</option>
+                    <option value="めがね類" {% if item.item_class_L=="めがね類" %}selected{% endif %}>めがね類</option>
+                    <option value="電気製品類" {% if item.item_class_L=="電気製品類" %}selected{% endif %}>電気製品類</option>
+                    <option value="携帯電話類" {% if item.item_class_L=="携帯電話類" %}selected{% endif %}>携帯電話類</option>
+                    <option value="貴金属類" {% if item.item_class_L=="貴金属類" %}selected{% endif %}>貴金属類</option>
+                    <option value="趣味娯楽用品類" {% if item.item_class_L=="現趣味娯楽用品類金" %}selected{% endif %}>趣味娯楽用品類</option>
+                    <option value="証明書類・カード類" {% if item.item_class_L=="証明書類・カード類" %}selected{% endif %}>証明書類・カード類
+                    </option>
+                    <option value="有価証券類" {% if item.item_class_L=="有価証券類" %}selected{% endif %}>有価証券類</option>
+                    <option value="著作品類" {% if item.item_class_L=="著作品類" %}selected{% endif %}>著作品類</option>
+                    <option value="手帳文具類" {% if item.item_class_L=="手帳文具類" %}selected{% endif %}>手帳文具類</option>
+                    <option value="書類・紙類" {% if item.item_class_L=="書類・紙類" %}selected{% endif %}>書類・紙類</option>
+                    <option value="小包・箱類" {% if item.item_class_L=="小包・箱類" %}selected{% endif %}>小包・箱類</option>
+                    <option value="衣類・履物類" {% if item.item_class_L=="衣類・履物類" %}selected{% endif %}>衣類・履物類</option>
+                    <option value="かさ類" {% if item.item_class_L=="かさ類" %}selected{% endif %}>かさ類</option>
+                    <option value="鍵類" {% if item.item_class_L=="鍵類" %}selected{% endif %}>鍵類</option>
+                    <option value="生活用品類" {% if item.item_class_L=="生活用品類" %}selected{% endif %}>生活用品類</option>
+                    <option value="医療・化粧品類" {% if item.item_class_L=="医療・化粧品類" %}selected{% endif %}>医療・化粧品類</option>
+                    <option value="食料品類" {% if item.item_class_L=="食料品類" %}selected{% endif %}>食料品類</option>
+                    <option value="動植物類" {% if item.item_class_L=="動植物類" %}selected{% endif %}>動植物類</option>
+                    <option value="その他" {% if item.item_class_L=="その他" %}selected{% endif %}>その他</option>
                 </select>
             </div>
             <div class="col-4">
@@ -689,6 +690,26 @@
         <div class="row mb-3">
             <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks }}</div>
             <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+        </div>
+        <p>
+            <hr>
+            遺失物がカードであれば、以下の項目を入力してください。<br>
+            同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
+        </p>
+        <div class="row mb-5">
+            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany }}</div>
+            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel }}</div>
+            <div class="col-3">{{ form.card_name.label }} {{ form.card_name }}</div>
+            <div class="col-3">{{ form.card_person.label }} {{ form.card_person }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">{{ form.card_item.label }} {{ form.card_item }}</div>
+            <div class="col-3">{{ form.card_return.label }} {{ form.card_return }}</div>
+            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour }}</div>
+            <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(value="編集",class="btn btn-primary") }}

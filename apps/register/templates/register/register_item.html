@@ -690,6 +690,26 @@
             <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks }}</div>
             <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
         </div>
+        <p>
+            <hr>
+            遺失物がカードであれば、以下の項目を入力してください。<br>
+            同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
+        </p>
+        <div class="row mb-5">
+            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany }}</div>
+            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel }}</div>
+            <div class="col-3">{{ form.card_name.label }} {{ form.card_name }}</div>
+            <div class="col-3">{{ form.card_person.label }} {{ form.card_person }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">{{ form.card_item.label }} {{ form.card_item }}</div>
+            <div class="col-3">{{ form.card_return.label }} {{ form.card_return }}</div>
+            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour }}</div>
+            <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager }}</div>
+        </div>
         {{ form.submit }}
     </div>
 </form>

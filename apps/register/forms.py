@@ -82,6 +82,23 @@ class LostItemForm(FlaskForm):
     item_remarks = TextAreaField("備考")
     item_situation = BooleanField("届出済")
 
+    # カード情報
+    card_campany = StringField("カード発行会社名")
+    card_tel = StringField("カード発行会社連絡先")
+    card_name = StringField("カード名")
+    card_person = StringField("カード記載人名")
+    card_item = DateField("連絡日")
+    card_return = DateField("返還日")
+    card_item_hour = SelectField(
+        label="連絡時間",
+        choices=TIMES,
+    )
+    card_item_minute = SelectField(
+        label="連絡時間(分)",
+        choices=MINUTE,
+    )
+    card_manager = StringField("連絡者")
+
 
 # 占有者拾得物クラス
 class OwnerLostItemForm(LostItemForm):

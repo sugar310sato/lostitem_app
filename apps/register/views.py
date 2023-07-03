@@ -22,8 +22,8 @@ register = Blueprint(
 )
 
 
+# 画像の保存処理
 def save_image():
-    # 画像の保存処理
     # 画像取得元
     source_folder = Path(current_app.root_path, "images")
     # 画像移動先フォルダ
@@ -143,6 +143,17 @@ def register_item(choice_finder):
                 item_image=moved_path,
                 finder_class=form.finder_class.data,
                 finder_affiliation=form.finder_affiliation.data,
+
+                # カードの場合は、カード情報の登録
+                card_campany=form.card_campany.data,
+                card_tel=form.card_tel.data,
+                card_name=form.card_name.data,
+                card_person=form.card_person.data,
+                card_return=form.card_return.data,
+                card_item=form.card_item.data,
+                card_item_hour=form.card_item_hour.data,
+                card_item_minute=form.card_item_minute.data,
+                card_manager=form.card_manager.data,
             )
             db.session.add(ownerlostitem)
             db.session.commit()
@@ -194,6 +205,17 @@ def register_item(choice_finder):
                 item_image=moved_path,
                 thirdparty_waiver=form.thirdparty_waiver.data,
                 thirdparty_name_note=form.thirdparty_name_note.data,
+
+                # カードの場合は、カード情報の登録
+                card_campany=form.card_campany.data,
+                card_tel=form.card_tel.data,
+                card_name=form.card_name.data,
+                card_person=form.card_person.data,
+                card_return=form.card_return.data,
+                card_item=form.card_item.data,
+                card_item_hour=form.card_item_hour.data,
+                card_item_minute=form.card_item_minute.data,
+                card_manager=form.card_manager.data,
             )
             db.session.add(thirdpartylostitem)
             db.session.commit()

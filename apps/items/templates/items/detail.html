@@ -67,6 +67,25 @@
         <div class="col-3">備考 <u>{{ item.item_remarks }}</u></div>
         <div class="col-3">届出済 <u>{{ item.item_situation }}</u></div>
     </div>
+    {% if item.item_class_L=="証明書類・カード類" %}
+    <div class="row mb-5">
+        <div class="col-3">カード発行会社名<br> <u>{{ item.card_campany }}</u></div>
+        <div class="col-3">カード発行会社連絡先<br> <u>{{ item.card_tel }}</u></div>
+        <div class="col-3">カード名<br> <u>{{ item.card_name }}</u></div>
+        <div class="col-3">カード記載人名<br> <u>{{ item.card_person }}</u></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}</u>
+        </div>
+        <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.get_item is not none else "" }}</u>
+        </div>
+        <div class="col-3">連絡時間 <u>{{ item.card_item_hour }}</u></div>
+        <div class="col-3">連絡時間(分) <u>{{ item.card_item_minute }}</u></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">連絡者 <u>{{ item.card_manager }}</u></div>
+    </div>
+    {% endif %}
 </div>
 <div class="text-center">
     <a class="btn btn-primary" href="{{ url_for('items.edit_select', item_id=item.id) }}" role="button">編集/削除</a>

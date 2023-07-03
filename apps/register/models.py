@@ -60,48 +60,46 @@ class LostItem(db.Model):
     thirdparty_waiver = db.Column(db.String)
     thirdparty_name_note = db.Column(db.String)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'choice_finder': self.choice_finder,
-            'track_num': self.track_num,
-            'notify': self.notify,
-            'get_item': self.get_item,
-            'get_item_hour': self.get_item_hour,
-            'get_item_minute': self.get_item_minute,
-            'recep_item': self.recep_item,
-            'recep_item_hour': self.recep_item_hour,
-            'recep_item_minute': self.recep_item_minute,
-            'recep_manager': self.recep_manager,
-            'find_area': self.find_area,
-            'find_area_police': self.find_area_police,
-            'own_waiver': self.own_waiver,
-            'finder_name': self.finder_name,
-            'own_name_note': self.own_name_note,
-            'finder_age': self.finder_age,
-            'finder_sex': self.finder_sex,
-            'finder_post': self.finder_post,
-            'finder_tel1': self.finder_tel1,
-            'finder_tel2': self.finder_tel2,
-            'item_class_L': self.item_class_L,
-            'item_class_M': self.item_class_M,
-            'item_class_S': self.item_class_S,
-            'item_value': self.item_value,
-            'item_feature': self.item_feature,
-            'item_color': self.item_color,
-            'item_storage': self.item_storage,
-            'item_storage_place': self.item_storage_place,
-            'item_maker': self.item_maker,
-            'item_expiration': self.item_expiration,
-            'item_num': self.item_num,
-            'item_unit': self.item_unit,
-            'item_plice': self.item_plice,
-            'item_money': self.item_money,
-            'item_remarks': self.item_remarks,
-            'item_situation': self.item_situation,
-            'item_image': self.item_image,
-            'finder_class': self.finder_class,
-            'finder_affiliation': self.finder_affiliation,
-            'thirdparty_waiver': self.thirdparty_waiver,
-            'thirdparty_name_note': self.thirdparty_name_note
-        }
+    # カードの場合の追加情報
+    card_campany = db.Column(db.String)
+    card_tel = db.Column(db.String)
+    card_name = db.Column(db.String)
+    card_person = db.Column(db.String)
+    card_return = db.Column(db.String)
+    card_item = db.Column(db.DateTime)
+    card_item_hour = db.Column(db.String)
+    card_item_minute = db.Column(db.String)
+    card_manager = db.Column(db.String)
+
+
+# 同梱物クラス
+class BundledItems(db.Model):
+    __tablename__ = "bundled_item"
+    # 基本情報
+    id = db.Column(db.Integer, primary_key=True)
+    item_class_L = db.Column(db.String)
+    item_class_M = db.Column(db.String)
+    item_class_S = db.Column(db.String)
+    item_value = db.Column(db.Boolean, default=False)
+    item_feature = db.Column(db.String)
+    item_color = db.Column(db.String)
+    item_storage = db.Column(db.String, default="アリオ亀有")
+    item_storage_place = db.Column(db.String)
+    item_maker = db.Column(db.String)
+    item_expiration = db.Column(db.DateTime)
+    item_num = db.Column(db.Integer)
+    item_unit = db.Column(db.String)
+    item_plice = db.Column(db.String)
+    item_money = db.Column(db.String)
+    item_remarks = db.Column(db.String)
+
+    # カードの場合の追加情報
+    card_campany = db.Column(db.String)
+    card_tel = db.Column(db.String)
+    card_name = db.Column(db.String)
+    card_person = db.Column(db.String)
+    card_return = db.Column(db.String)
+    card_item = db.Column(db.DateTime)
+    card_item_hour = db.Column(db.String)
+    card_item_minute = db.Column(db.String)
+    card_manager = db.Column(db.String)

@@ -1,4 +1,4 @@
-from flask import (Blueprint, current_app, redirect, render_template,
+from flask import (Blueprint, current_app, redirect, render_template, request,
                    send_from_directory, session, url_for)
 
 from apps.app import db
@@ -97,6 +97,9 @@ def edit(item_id):
             item.finder_tel2 = form.finder_tel2.data
 
             # 大中小項目の実装
+            item.item_class_L = request.form.get('item_class_L')
+            item.item_class_M = request.form.get('item_class_M')
+            item.item_class_S = request.form.get('item_class_S')
 
             item.item_value = form.item_value.data
             item.item_feature = form.item_feature.data
@@ -111,6 +114,18 @@ def edit(item_id):
             item.item_money = form.item_money.data
             item.item_remarks = form.item_remarks.data
             item.item_situation = form.item_situation.data
+
+            # カード情報
+            item.card_campany = form.card_campany.data
+            item.card_tel = form.card_tel.data
+            item.card_name = form.card_name.data
+            item.card_person = form.card_person.data
+            item.card_return = form.card_return.data
+            item.card_item = form.card_item.data
+            item.card_item_hour = form.card_item_hour.data
+            item.card_item_minute = form.card_item_minute.data
+            item.card_item_minute = form.card_item_minute.data
+
             item.finder_class = form.finder_class.data
             item.finder_affiliation = form.finder_affiliation.data
             db.session.add(item)
@@ -141,6 +156,9 @@ def edit(item_id):
             item.finder_tel2 = form.finder_tel2.data
 
             # 大中小項目の実装
+            item.item_class_L = request.form.get('item_class_L')
+            item.item_class_M = request.form.get('item_class_M')
+            item.item_class_S = request.form.get('item_class_S')
 
             item.item_value = form.item_value.data
             item.item_feature = form.item_feature.data
@@ -155,6 +173,18 @@ def edit(item_id):
             item.item_money = form.item_money.data
             item.item_remarks = form.item_remarks.data
             item.item_situation = form.item_situation.data
+
+            # カード情報
+            item.card_campany = form.card_campany.data
+            item.card_tel = form.card_tel.data
+            item.card_name = form.card_name.data
+            item.card_person = form.card_person.data
+            item.card_return = form.card_return.data
+            item.card_item = form.card_item.data
+            item.card_item_hour = form.card_item_hour.data
+            item.card_item_minute = form.card_item_minute.data
+            item.card_item_minute = form.card_item_minute.data
+
             item.thirdparty_waiver = form.thirdparty_waiver.data
             item.thirdparty_name_note = form.thirdparty_name_note.data
             db.session.add(item)
