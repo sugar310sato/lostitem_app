@@ -47,4 +47,9 @@ def create_app(config_key):
 
     app.register_blueprint(items_views.items, url_prefix="/items")
 
+    # 同梱物用アプリ
+    from apps.bundleditems import views as bundleditems_views
+
+    app.register_blueprint(bundleditems_views.bundleditems, url_prefix="/bundled")
+
     return app

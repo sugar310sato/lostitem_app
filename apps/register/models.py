@@ -51,6 +51,7 @@ class LostItem(db.Model):
     item_remarks = db.Column(db.String)
     item_situation = db.Column(db.Boolean, default=False)
     item_image = db.Column(db.String)
+    item_bundled = db.relationship("BundledItems", backref="bundled_item")
 
     # 占有者用入力項目
     finder_class = db.Column(db.String)
@@ -92,6 +93,7 @@ class BundledItems(db.Model):
     item_plice = db.Column(db.String)
     item_money = db.Column(db.String)
     item_remarks = db.Column(db.String)
+    lostitem_id = db.Column(db.Integer, db.ForeignKey("lost_item.id"))
 
     # カードの場合の追加情報
     card_campany = db.Column(db.String)

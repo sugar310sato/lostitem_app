@@ -88,6 +88,7 @@
     {% endif %}
 </div>
 <div class="text-center">
+    <a class="btn btn-primary" href="{{ url_for('bundleditems.register', item_id=item.id) }}" role="button">同梱物登録</a>
     <a class="btn btn-primary" href="{{ url_for('items.edit_select', item_id=item.id) }}" role="button">編集/削除</a>
     <a class="btn btn-primary" href="{{ url_for('items.index') }}" role="button">戻る</a>
 </div>

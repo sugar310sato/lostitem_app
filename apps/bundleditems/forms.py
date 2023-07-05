@@ -1,0 +1,46 @@
+from flask_wtf.form import FlaskForm
+from wtforms.fields import (BooleanField, DateField, IntegerField, SelectField,
+                            StringField, SubmitField, TextAreaField)
+
+from apps.config import COLOR, MINUTE, STORAGE_PLACE, TIMES
+
+
+# 同梱物登録クラス
+class BundledItemForm(FlaskForm):
+    item_value = BooleanField(label="貴重な物品に該当")
+    item_feature = TextAreaField("物品の特徴")
+    item_color = SelectField(
+        label="色",
+        choices=COLOR,
+    )
+    item_storage = StringField("保管施設")
+    item_storage_place = SelectField(
+        label="保管場所",
+        choices=STORAGE_PLACE,
+    )
+    item_maker = StringField("メーカー")
+    item_expiration = DateField("消費期限")
+    item_num = IntegerField("数量")
+    item_unit = StringField("単位")
+    item_plice = StringField("値段")
+    item_money = StringField("金額")
+    item_remarks = TextAreaField("備考")
+
+    # カード情報
+    card_campany = StringField("カード発行会社名")
+    card_tel = StringField("カード発行会社連絡先")
+    card_name = StringField("カード名")
+    card_person = StringField("カード記載人名")
+    card_item = DateField("連絡日")
+    card_return = DateField("返還日")
+    card_item_hour = SelectField(
+        label="連絡時間",
+        choices=TIMES,
+    )
+    card_item_minute = SelectField(
+        label="連絡時間(分)",
+        choices=MINUTE,
+    )
+    card_manager = StringField("連絡者")
+
+    submit = SubmitField("同梱物登録")

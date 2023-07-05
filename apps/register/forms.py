@@ -59,9 +59,6 @@ class LostItemForm(FlaskForm):
     finder_tel1 = StringField("連絡先1")
     finder_tel2 = StringField("連絡先2")
 
-    # 大中小項目の選択肢
-    # かなりの作業なので、後日実装
-
     item_value = BooleanField(label="貴重な物品に該当")
     item_feature = TextAreaField("物品の特徴")
     item_color = SelectField(
