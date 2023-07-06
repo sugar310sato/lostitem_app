@@ -86,6 +86,29 @@
         <div class="col-3">連絡者 <u>{{ item.card_manager }}</u></div>
     </div>
     {% endif %}
+    <h2>同梱物</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>管理番号</th>
+                <th>拾得物分類</th>
+                <th>特徴</th>
+                <th>色</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bundleditem %}
+            <tr>
+                <td>
+                    {{ item.id }}
+                </td>
+                <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
+                <td>{{ item.item_feature }}</td>
+                <td>{{ item.item_color }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 <div class="text-center">
     <a class="btn btn-primary" href="{{ url_for('bundleditems.register', item_id=item.id) }}" role="button">同梱物登録</a>

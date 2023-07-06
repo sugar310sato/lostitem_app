@@ -4,7 +4,7 @@ from flask import (Blueprint, current_app, redirect, render_template, request,
 from apps.app import db
 from apps.items.forms import SearchItems
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
-from apps.register.models import LostItem
+from apps.register.models import BundledItems, LostItem
 
 items = Blueprint(
     "items",
@@ -57,7 +57,8 @@ def index():
 @items.route("/detail/<item_id>", methods=["POST", "GET"])
 def detail(item_id):
     item = LostItem.query.filter_by(id=item_id).first()
-    return render_template("items/detail.html", item=item)
+    bundleditem = BundledItems.query.filter_by(lostitem_id=item_id).all()
+    return render_template("items/detail.html", item=item, bundleditem=bundleditem)
 
 
 # 編集物選択画面（メインor同梱物）
@@ -65,7 +66,8 @@ def detail(item_id):
 def edit_select(item_id):
     # 現状は、メインの拾得物のみ
     item = LostItem.query.filter_by(id=item_id).first()
-    return render_template("items/edit_select.html", item=item)
+    bundleditem = BundledItems.query.filter_by(lostitem_id=item_id).all()
+    return render_template("items/edit_select.html", item=item, bundleditem=bundleditem)
 
 
 # 編集画面

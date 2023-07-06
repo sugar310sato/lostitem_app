@@ -6,11 +6,9 @@
     <thead>
         <tr>
             <th>管理番号(詳細)</th>
-            <th>拾得日時</th>
-            <th>拾得場所</th>
-            <th>拾得物名/特徴</th>
+            <th>拾得物分類</th>
+            <th>特徴</th>
             <th>色</th>
-            <th>保管施設/場所</th>
             <th>状況</th>
         </tr>
     </thead>
@@ -19,12 +17,9 @@
             <td>
                 <a href="{{ url_for('items.edit', item_id=item.id) }}">{{ item.id }}</a>
             </td>
-            <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else ""}} {{ item.get_item_hour }}{{
-                item.get_item_minute }}</td>
-            <td>{{ item.find_area }}</td>
+            <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
             <td>{{ item.item_feature }}</td>
             <td>{{ item.item_color }}</td>
-            <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
             <td>
                 {% if item.item_situation %}
                 届出済み
@@ -33,6 +28,29 @@
                 {% endif %}
             </td>
         </tr>
+    </tbody>
+</table>
+<h2>同梱物</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>管理番号</th>
+            <th>拾得物分類</th>
+            <th>特徴</th>
+            <th>色</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in bundleditem %}
+        <tr>
+            <td>
+                <a href="{{ url_for('bundleditems.edit', item_id=item.id) }}">{{ item.id }}</a>
+            </td>
+            <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
+            <td>{{ item.item_feature }}</td>
+            <td>{{ item.item_color }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 {% endblock %}

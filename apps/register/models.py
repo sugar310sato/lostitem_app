@@ -105,3 +105,26 @@ class BundledItems(db.Model):
     card_item_hour = db.Column(db.String)
     card_item_minute = db.Column(db.String)
     card_manager = db.Column(db.String)
+
+
+# 金種クラス
+class Denomination(db.Model):
+    __tablename__ = "denomination"
+    # 金種情報
+    id = db.Column(db.Integer, primary_key=True)
+    ten_thousand_yen = db.Column(db.Integer)
+    five_thousand_yen = db.Column(db.Integer)
+    two_thousand_yen = db.Column(db.Integer)
+    one_thousand_yen = db.Column(db.Integer)
+    five_hundred_yen = db.Column(db.Integer)
+    one_hundred_yen = db.Column(db.Integer)
+    fifty_yen = db.Column(db.Integer)
+    ten_yen = db.Column(db.Integer)
+    five_yen = db.Column(db.Integer)
+    one_yen = db.Column(db.Integer)
+
+    # 記念硬貨
+    commemorative_coin_1 = db.Column(db.String)
+    commemorative_coin_1_value = db.Column(db.String)
+    commemorative_coin_2 = db.Column(db.String)
+    commemorative_coin_2_value = db.Column(db.String)
