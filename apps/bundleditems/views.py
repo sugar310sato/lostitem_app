@@ -1,8 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 
 from apps.app import db
-from apps.bundleditems.forms import BundledItemForm
-from apps.register.models import BundledItems, LostItem
+from apps.bundleditems.forms import BundledItemForm, MoneyForm
+from apps.register.models import BundledItems, Denomination, LostItem
 
 bundleditems = Blueprint(
     "bundleditems",
@@ -93,3 +93,35 @@ def edit(item_id):
         db.session.commit()
         return redirect(url_for("items.detail", item_id=bundleditem.lostitem_id))
     return render_template("bundleditems/edit.html", form=form, item=bundleditem)
+
+
+# 金種登録
+@bundleditems.route("/money/register/<item_id>", methods=["POST", "GET"])
+def money_register(item_id):
+    form = MoneyForm()
+    lostitem = LostItem.query.filter_by(id=item_id).first()
+    if form.submit.data:
+        denomination = Denomination(
+            ten_thousand_yen=form.ten_thousand_yen.data,
+            five_thousand_yen=form.five_thousand_yen.data,
+            two_thousand_yen=form.two_thousand_yen.data,
+            one_thousand_yen=form.one_thousand_yen.data,
+            five_hundred_yen=form.five_hundred_yen.data,
+            one_hundred_yen=form.one_hundred_yen.data,
+            fifty_yen=form.fifty_yen.data,
+            ten_yen=form.ten_yen.data,
+            five_yen=form.five_yen.data,
+            one_yen=form.one_yen.data,
+
+            # 記念硬貨
+            commemorative_coin_1=form.commemorative_coin_1.data,
+            commemorative_coin_1_value=form.commemorative_coin_1_value.data,
+            commemorative_coin_2=form.commemorative_coin_2.data,
+            commemorative_coin_2_value=form.commemorative_coin_2_value.data,
+            lostitem_id=lostitem.id,
+        )
+        db.session.add(denomination)
+        db.session.commit()
+        return redirect(url_for("items.detail", item_id=denomination.lostitem_id))
+    return render_template("bundleditems/register_money.html", form=form,
+                           lostitem=lostitem)

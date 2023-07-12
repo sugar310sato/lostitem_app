@@ -44,3 +44,25 @@ class BundledItemForm(FlaskForm):
     card_manager = StringField("連絡者")
 
     submit = SubmitField("同梱物登録")
+
+
+# 金種登録クラス
+class MoneyForm(FlaskForm):
+    # 金種情報
+    ten_thousand_yen = IntegerField("一万円")
+    five_thousand_yen = IntegerField("五千円")
+    two_thousand_yen = IntegerField("二千円")
+    one_thousand_yen = IntegerField("千円")
+    five_hundred_yen = IntegerField("五百円")
+    one_hundred_yen = IntegerField("百円")
+    fifty_yen = IntegerField("五十円")
+    ten_yen = IntegerField("十円")
+    five_yen = IntegerField("五円")
+    one_yen = IntegerField("一円")
+
+    # 記念硬貨
+    commemorative_coin_1 = StringField("記念硬貨名")
+    commemorative_coin_1_value = StringField("金額")
+    commemorative_coin_2 = StringField("記念硬貨名")
+    commemorative_coin_2_value = StringField("金額")
+    submit = SubmitField("金種登録")

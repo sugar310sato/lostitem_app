@@ -4,7 +4,7 @@ from flask import (Blueprint, current_app, redirect, render_template, request,
 from apps.app import db
 from apps.items.forms import SearchItems
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
-from apps.register.models import BundledItems, LostItem
+from apps.register.models import BundledItems, Denomination, LostItem
 
 items = Blueprint(
     "items",
@@ -58,7 +58,9 @@ def index():
 def detail(item_id):
     item = LostItem.query.filter_by(id=item_id).first()
     bundleditem = BundledItems.query.filter_by(lostitem_id=item_id).all()
-    return render_template("items/detail.html", item=item, bundleditem=bundleditem)
+    denomination = Denomination.query.filter_by(lostitem_id=item_id).all()
+    return render_template("items/detail.html", item=item, bundleditem=bundleditem,
+                           denomination=denomination)
 
 
 # 編集物選択画面（メインor同梱物）

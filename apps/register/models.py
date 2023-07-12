@@ -128,3 +128,4 @@ class Denomination(db.Model):
     commemorative_coin_1_value = db.Column(db.String)
     commemorative_coin_2 = db.Column(db.String)
     commemorative_coin_2_value = db.Column(db.String)
+    lostitem_id = db.Column(db.Integer, db.ForeignKey("lost_item.id"))

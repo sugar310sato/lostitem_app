@@ -1,0 +1,71 @@
+{% extends "register/base.html" %}
+{% block title %}金種登録{% endblock %}
+{% block content %}
+<h2>金種登録</h2>
+<form action="{{ url_for('bundleditems.money_register', item_id=lostitem.id) }}" method="post">
+    {{ form.csrf_token }}
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>一万円</th>
+                    <th>五千円</th>
+                    <th>二千円</th>
+                    <th>千円</th>
+                    <th>五百円</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>{{ form.ten_thousand_yen }}</th>
+                    <th>{{ form.five_thousand_yen }}</th>
+                    <th>{{ form.two_thousand_yen }}</th>
+                    <th>{{ form.one_thousand_yen }}</th>
+                    <th>{{ form.five_hundred_yen }}</th>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>百円</th>
+                    <th>五十円</th>
+                    <th>十円</th>
+                    <th>五円</th>
+                    <th>一円</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>{{ form.one_hundred_yen }}</th>
+                    <th>{{ form.fifty_yen }}</th>
+                    <th>{{ form.ten_yen }}</th>
+                    <th>{{ form.five_yen }}</th>
+                    <th>{{ form.one_yen }}</th>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>記念硬貨名</th>
+                    <th>金額</th>
+                    <th>記念硬貨名</th>
+                    <th>金額</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>{{ form.commemorative_coin_1 }}</th>
+                    <th>{{ form.commemorative_coin_1_value }}</th>
+                    <th>{{ form.commemorative_coin_2 }}</th>
+                    <th>{{ form.commemorative_coin_2_value }}</th>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+{% endblock %}
