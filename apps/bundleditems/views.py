@@ -112,6 +112,7 @@ def money_register(item_id):
             ten_yen=form.ten_yen.data,
             five_yen=form.five_yen.data,
             one_yen=form.one_yen.data,
+            total_yen=form.total_yen.data,
 
             # 記念硬貨
             commemorative_coin_1=form.commemorative_coin_1.data,
@@ -125,3 +126,33 @@ def money_register(item_id):
         return redirect(url_for("items.detail", item_id=denomination.lostitem_id))
     return render_template("bundleditems/register_money.html", form=form,
                            lostitem=lostitem)
+
+
+# 金種編集
+@bundleditems.route("/money/edit/<item_id>", methods=["POST", "GET"])
+def money_edit(item_id):
+    form = MoneyForm()
+    denomination = Denomination.query.filter_by(lostitem_id=item_id).first()
+    if form.submit.data:
+        denomination.ten_thousand_yen = form.ten_thousand_yen.data
+        denomination.five_thousand_yen = form.five_thousand_yen.data
+        denomination.two_thousand_yen = form.two_thousand_yen.data
+        denomination.one_thousand_yen = form.one_thousand_yen.data
+        denomination.five_hundred_yen = form.five_hundred_yen.data
+        denomination.one_hundred_yen = form.one_hundred_yen.data
+        denomination.fifty_yen = form.fifty_yen.data
+        denomination.ten_yen = form.ten_yen.data
+        denomination.five_yen = form.five_yen.data
+        denomination.one_yen = form.one_yen.data
+        denomination.total_yen = form.total_yen.data
+
+        # 記念硬貨
+        denomination.commemorative_coin_1 = form.commemorative_coin_1.data
+        denomination.commemorative_coin_1_value = form.commemorative_coin_1_value.data
+        denomination.commemorative_coin_2 = form.commemorative_coin_2.data
+        denomination.commemorative_coin_2_value = form.commemorative_coin_2_value.data
+        db.session.add(denomination)
+        db.session.commit()
+        return redirect(url_for("items.detail", item_id=denomination.lostitem_id))
+    return render_template("bundleditems/money_edit.html", form=form,
+                           denomination=denomination)

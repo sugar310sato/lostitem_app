@@ -122,6 +122,7 @@ class Denomination(db.Model):
     ten_yen = db.Column(db.Integer)
     five_yen = db.Column(db.Integer)
     one_yen = db.Column(db.Integer)
+    total_yen = db.Column(db.Integer)
 
     # 記念硬貨
     commemorative_coin_1 = db.Column(db.String)

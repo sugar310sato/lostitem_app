@@ -140,6 +140,7 @@
                 <th>十円</th>
                 <th>五円</th>
                 <th>一円</th>
+                <th>合計</th>
             </tr>
         </thead>
         <tbody>
@@ -149,6 +150,7 @@
                 <td>{{ denomination.ten_yen }}</td>
                 <td>{{ denomination.five_yen }}</td>
                 <td>{{ denomination.one_yen }}</td>
+                <td>{{ denomination.total_yen }}</td>
             </tr>
         </tbody>
     </table>
@@ -174,8 +176,12 @@
     {% endif %}
 </div>
 <div class="text-center">
+    {% if denomination %}
+    <a class="btn btn-primary" href="{{url_for('bundleditems.money_edit', item_id=item.id)}}" role="button">金種編集/削除</a>
+    {% else %}
     <a class="btn btn-primary" href="{{ url_for('bundleditems.money_register', item_id=item.id) }}"
         role="button">金種登録</a>
+    {% endif %}
     <a class="btn btn-primary" href="{{ url_for('bundleditems.register', item_id=item.id) }}" role="button">同梱物登録</a>
     <a class="btn btn-primary" href="{{ url_for('items.edit_select', item_id=item.id) }}" role="button">編集/削除</a>
     <a class="btn btn-primary" href="{{ url_for('items.index') }}" role="button">戻る</a>
