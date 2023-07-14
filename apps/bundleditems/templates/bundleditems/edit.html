@@ -1210,7 +1210,7 @@
         </div>
         <div class="text-center">
             {{ form.submit(value="編集",class="btn btn-primary") }}
-            <a href="{{ url_for('items.delete', item_id=item.id) }}" class="btn btn-secondary">削除</a>
+            <a href="{{ url_for('bundleditems.delete_bundled', item_id=item.id) }}" class="btn btn-secondary">削除</a>
         </div>
     </div>
 </form>

@@ -670,7 +670,7 @@
         <div class="row mb-3">
             <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager }}</div>
         </div>
-        {{ form.submit }}
+        {{ form.submit(class="btn btn-primary") }}
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

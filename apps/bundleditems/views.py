@@ -156,3 +156,23 @@ def money_edit(item_id):
         return redirect(url_for("items.detail", item_id=denomination.lostitem_id))
     return render_template("bundleditems/money_edit.html", form=form,
                            denomination=denomination)
+
+
+# 金種削除
+@bundleditems.route("/delete/<item_id>", methods=["POST", "GET"])
+def delete(item_id):
+    denomination = Denomination.query.filter_by(id=item_id).first()
+    main_item_id = denomination.lostitem_id
+    db.session.delete(denomination)
+    db.session.commit()
+    return redirect(url_for("items.detail", item_id=main_item_id))
+
+
+# 同梱物削除
+@bundleditems.route("/delete/bundled/<item_id>", methods=["POST", "GET"])
+def delete_bundled(item_id):
+    bundleditem = BundledItems.query.filter_by(id=item_id).first()
+    main_item_id = bundleditem.lostitem_id
+    db.session.delete(bundleditem)
+    db.session.commit()
+    return redirect(url_for("items.detail", item_id=main_item_id))

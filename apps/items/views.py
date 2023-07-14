@@ -209,6 +209,15 @@ def item_search():
 @items.route("/delete/<item_id>", methods=["POST", "GET"])
 def delete(item_id):
     item = LostItem.query.filter_by(id=item_id).first()
+    bundleditems = BundledItems.query.filter_by(lostitem_id=item_id).all()
+    denomination = Denomination.query.filter_by(lostitem_id=item_id).first()
+    if bundleditems:
+        for bundleditem in bundleditems:
+            db.session.delete(bundleditem)
+
+    if denomination:
+        db.session.delete(denomination)
+
     db.session.delete(item)
     db.session.commit()
     return redirect(url_for("items.index"))
