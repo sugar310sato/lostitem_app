@@ -4,7 +4,10 @@
 <div class="text-center">
     <a href="{{ url_for('items.index') }}" class="btn btn-primary">一覧に戻る</a>
 </div>
-<h2>検索結果</h2>
+<div class="d-flex align-items-center">
+    <h2 class="mr-3">検索結果</h2>
+    <a href="{{ url_for('items.item_search_photo') }}" class="btn btn-secondary">写真の検索結果へ</a>
+</div>
 <table class=" table table-bordered table-striped">
     <thead>
         <tr>

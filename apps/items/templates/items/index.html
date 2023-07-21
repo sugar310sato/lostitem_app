@@ -646,7 +646,10 @@
         </div>
     </div>
 </form>
-<h2>拾得物一覧</h2>
+<div class="d-flex align-items-center">
+    <h2 class="mr-3">拾得物一覧</h2>
+    <a href="{{ url_for('items.photo_arange') }}" class="btn btn-secondary">写真一覧へ</a>
+</div>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>

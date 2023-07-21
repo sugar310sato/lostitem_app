@@ -122,7 +122,7 @@ def photo_arange():
         # 結果を取得
         search_results = query.all()
         session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("items.item_search"))
+        return redirect(url_for("items.item_search_photo"))
 
     all_lost_item = db.session.query(LostItem).all()
     return render_template("items/photo_arange.html", all_lost_item=all_lost_item,
@@ -278,6 +278,13 @@ def edit(item_id):
 def item_search():
     search_results = session.get('search_results', [])
     return render_template("items/search.html", search_results=search_results)
+
+
+# 検索結果の写真表示
+@items.route("/items/search/photo", methods=["POST", "GET"])
+def item_search_photo():
+    search_results = session.get('search_results', [])
+    return render_template("items/search_photo.html", search_results=search_results)
 
 
 # 拾得物の削除
