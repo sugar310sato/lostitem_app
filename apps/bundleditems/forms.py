@@ -1,6 +1,7 @@
 from flask_wtf.form import FlaskForm
-from wtforms.fields import (BooleanField, DateField, IntegerField, SelectField,
-                            StringField, SubmitField, TextAreaField)
+from wtforms.fields import (BooleanField, DateField, HiddenField, IntegerField,
+                            SelectField, StringField, SubmitField,
+                            TextAreaField)
 
 from apps.config import COLOR, MINUTE, STORAGE_PLACE, TIMES
 
@@ -67,3 +68,20 @@ class MoneyForm(FlaskForm):
     commemorative_coin_2 = StringField("記念硬貨名")
     commemorative_coin_2_value = StringField("金額")
     submit = SubmitField("金種登録")
+
+
+# カード会社連絡フォーム
+class CardNote(FlaskForm):
+    form_type = HiddenField(default="Main")
+    card_return = DateField("返還（還付）日")
+    card_item = DateField("連絡日")
+    card_item_hour = SelectField(
+        label="連絡時間",
+        choices=TIMES,
+    )
+    card_item_minute = SelectField(
+        label="連絡時間(分)",
+        choices=MINUTE,
+    )
+    card_manager = StringField("連絡担当者")
+    submit = SubmitField("連絡済みにする")

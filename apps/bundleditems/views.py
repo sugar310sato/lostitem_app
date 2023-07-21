@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 
 from apps.app import db
-from apps.bundleditems.forms import BundledItemForm, MoneyForm
+from apps.bundleditems.forms import BundledItemForm, CardNote, MoneyForm
 from apps.register.models import BundledItems, Denomination, LostItem
 
 bundleditems = Blueprint(
@@ -36,6 +36,7 @@ def register(item_id):
             item_money=form.item_money.data,
             item_remarks=form.item_remarks.data,
             lostitem_id=lostitem.id,
+            item_situation="保管中",
 
             # カードの場合は、カード情報の登録
             card_campany=form.card_campany.data,
@@ -53,6 +54,39 @@ def register(item_id):
         return redirect(url_for("items.detail", item_id=bundleditem.lostitem_id))
     return render_template("bundleditems/register_item.html", form=form,
                            lostitem=lostitem)
+
+
+# カード会社連絡
+@bundleditems.route("/card/<item_id>", methods=["POST", "GET"])
+def card(item_id):
+    lostitem = LostItem.query.filter_by(id=item_id).first()
+    bundleditems = BundledItems.query.filter_by(lostitem_id=item_id).all()
+    form = CardNote()
+    if form.submit.data:
+        renew_lostitem = request.form.getlist('main')
+        renew_bundleds = request.form.getlist('item')
+        if renew_lostitem:
+            lostitem.item_situation = "連絡済み"
+            lostitem.card_return = form.card_return.data
+            lostitem.card_item = form.card_item.data
+            lostitem.card_item_hour = form.card_item_hour.data
+            lostitem.card_item_minute = form.card_item_minute.data
+            lostitem.card_manager = form.card_manager.data
+            db.session.add(lostitem)
+            db.session.commit()
+        for renew_bundled in renew_bundleds:
+            renew_bundled = BundledItems.query.filter_by(id=renew_bundled).first()
+            renew_bundled.item_situation = "連絡済み"
+            renew_bundled.card_return = form.card_return.data
+            renew_bundled.card_item = form.card_item.data
+            renew_bundled.card_item_hour = form.card_item_hour.data
+            renew_bundled.card_item_minute = form.card_item_minute.data
+            renew_bundled.card_manager = form.card_manager.data
+            db.session.add(renew_bundled)
+            db.session.commit()
+        return redirect(url_for("bundleditems.card", item_id=item_id))
+    return render_template("/bundleditems/card.html", lostitem=lostitem,
+                           bundleditems=bundleditems, form=form)
 
 
 # 同梱物編集
@@ -113,6 +147,7 @@ def money_register(item_id):
             five_yen=form.five_yen.data,
             one_yen=form.one_yen.data,
             total_yen=form.total_yen.data,
+            item_situation="保管中",
 
             # 記念硬貨
             commemorative_coin_1=form.commemorative_coin_1.data,

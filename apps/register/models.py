@@ -49,7 +49,7 @@ class LostItem(db.Model):
     item_plice = db.Column(db.String)
     item_money = db.Column(db.String)
     item_remarks = db.Column(db.String)
-    item_situation = db.Column(db.Boolean, default=False)
+    item_situation = db.Column(db.String)
     item_image = db.Column(db.String)
     item_bundled = db.relationship("BundledItems", backref="bundled_item")
 
@@ -66,7 +66,7 @@ class LostItem(db.Model):
     card_tel = db.Column(db.String)
     card_name = db.Column(db.String)
     card_person = db.Column(db.String)
-    card_return = db.Column(db.String)
+    card_return = db.Column(db.DateTime)
     card_item = db.Column(db.DateTime)
     card_item_hour = db.Column(db.String)
     card_item_minute = db.Column(db.String)
@@ -93,6 +93,7 @@ class BundledItems(db.Model):
     item_plice = db.Column(db.String)
     item_money = db.Column(db.String)
     item_remarks = db.Column(db.String)
+    item_situation = db.Column(db.String)
     lostitem_id = db.Column(db.Integer, db.ForeignKey("lost_item.id"))
 
     # カードの場合の追加情報
@@ -100,7 +101,7 @@ class BundledItems(db.Model):
     card_tel = db.Column(db.String)
     card_name = db.Column(db.String)
     card_person = db.Column(db.String)
-    card_return = db.Column(db.String)
+    card_return = db.Column(db.DateTime)
     card_item = db.Column(db.DateTime)
     card_item_hour = db.Column(db.String)
     card_item_minute = db.Column(db.String)
@@ -123,6 +124,7 @@ class Denomination(db.Model):
     five_yen = db.Column(db.Integer)
     one_yen = db.Column(db.Integer)
     total_yen = db.Column(db.Integer)
+    item_situation = db.Column(db.String)
 
     # 記念硬貨
     commemorative_coin_1 = db.Column(db.String)

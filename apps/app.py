@@ -52,4 +52,8 @@ def create_app(config_key):
 
     app.register_blueprint(bundleditems_views.bundleditems, url_prefix="/bundled")
 
+    @app.template_filter('zip')
+    def zip_lists(a, b):
+        return zip(a, b)
+
     return app

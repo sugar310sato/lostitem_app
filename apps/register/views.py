@@ -139,10 +139,10 @@ def register_item(choice_finder):
                 item_plice=form.item_plice.data,
                 item_money=form.item_money.data,
                 item_remarks=form.item_remarks.data,
-                item_situation=form.item_situation.data,
                 item_image=moved_path,
                 finder_class=form.finder_class.data,
                 finder_affiliation=form.finder_affiliation.data,
+                item_situation="保管中",
 
                 # カードの場合は、カード情報の登録
                 card_campany=form.card_campany.data,
@@ -201,10 +201,10 @@ def register_item(choice_finder):
                 item_plice=form.item_plice.data,
                 item_money=form.item_money.data,
                 item_remarks=form.item_remarks.data,
-                item_situation=form.item_situation.data,
                 item_image=moved_path,
                 thirdparty_waiver=form.thirdparty_waiver.data,
                 thirdparty_name_note=form.thirdparty_name_note.data,
+                item_situation="保管中",
 
                 # カードの場合は、カード情報の登録
                 card_campany=form.card_campany.data,

@@ -75,9 +75,10 @@
         <div class="col-3">カード記載人名<br> <u>{{ item.card_person }}</u></div>
     </div>
     <div class="row mb-3">
-        <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}</u>
+        <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.card_item is not none else "" }}</u>
         </div>
-        <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.get_item is not none else "" }}</u>
+        <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.card_return is not none else ""
+                }}</u>
         </div>
         <div class="col-3">連絡時間 <u>{{ item.card_item_hour }}</u></div>
         <div class="col-3">連絡時間(分) <u>{{ item.card_item_minute }}</u></div>
@@ -182,6 +183,7 @@
     <a class="btn btn-primary" href="{{ url_for('bundleditems.money_register', item_id=item.id) }}"
         role="button">金種登録</a>
     {% endif %}
+    <a class="btn btn-primary" href="{{ url_for('bundleditems.card', item_id=item.id) }}">カード会社連絡</a>
     <a class="btn btn-primary" href="{{ url_for('bundleditems.register', item_id=item.id) }}" role="button">同梱物登録</a>
     <a class="btn btn-primary" href="{{ url_for('items.edit_select', item_id=item.id) }}" role="button">編集/削除</a>
     <a class="btn btn-primary" href="{{ url_for('items.index') }}" role="button">戻る</a>

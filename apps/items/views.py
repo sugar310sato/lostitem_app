@@ -117,7 +117,6 @@ def edit(item_id):
             item.item_plice = form.item_plice.data
             item.item_money = form.item_money.data
             item.item_remarks = form.item_remarks.data
-            item.item_situation = form.item_situation.data
 
             # カード情報
             item.card_campany = form.card_campany.data

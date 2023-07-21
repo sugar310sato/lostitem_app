@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 20225b1ec4f4
+Revision ID: 818d113bd19d
 Revises: 
-Create Date: 2023-07-12 21:45:00.057409
+Create Date: 2023-07-21 11:51:17.986067
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '20225b1ec4f4'
+revision = '818d113bd19d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -55,7 +55,7 @@ def upgrade():
     sa.Column('item_plice', sa.String(), nullable=True),
     sa.Column('item_money', sa.String(), nullable=True),
     sa.Column('item_remarks', sa.String(), nullable=True),
-    sa.Column('item_situation', sa.Boolean(), nullable=True),
+    sa.Column('item_situation', sa.String(), nullable=True),
     sa.Column('item_image', sa.String(), nullable=True),
     sa.Column('finder_class', sa.String(), nullable=True),
     sa.Column('finder_affiliation', sa.String(), nullable=True),
@@ -65,7 +65,7 @@ def upgrade():
     sa.Column('card_tel', sa.String(), nullable=True),
     sa.Column('card_name', sa.String(), nullable=True),
     sa.Column('card_person', sa.String(), nullable=True),
-    sa.Column('card_return', sa.String(), nullable=True),
+    sa.Column('card_return', sa.DateTime(), nullable=True),
     sa.Column('card_item', sa.DateTime(), nullable=True),
     sa.Column('card_item_hour', sa.String(), nullable=True),
     sa.Column('card_item_minute', sa.String(), nullable=True),
@@ -99,12 +99,13 @@ def upgrade():
     sa.Column('item_plice', sa.String(), nullable=True),
     sa.Column('item_money', sa.String(), nullable=True),
     sa.Column('item_remarks', sa.String(), nullable=True),
+    sa.Column('item_situation', sa.String(), nullable=True),
     sa.Column('lostitem_id', sa.Integer(), nullable=True),
     sa.Column('card_campany', sa.String(), nullable=True),
     sa.Column('card_tel', sa.String(), nullable=True),
     sa.Column('card_name', sa.String(), nullable=True),
     sa.Column('card_person', sa.String(), nullable=True),
-    sa.Column('card_return', sa.String(), nullable=True),
+    sa.Column('card_return', sa.DateTime(), nullable=True),
     sa.Column('card_item', sa.DateTime(), nullable=True),
     sa.Column('card_item_hour', sa.String(), nullable=True),
     sa.Column('card_item_minute', sa.String(), nullable=True),
@@ -125,6 +126,7 @@ def upgrade():
     sa.Column('five_yen', sa.Integer(), nullable=True),
     sa.Column('one_yen', sa.Integer(), nullable=True),
     sa.Column('total_yen', sa.Integer(), nullable=True),
+    sa.Column('item_situation', sa.String(), nullable=True),
     sa.Column('commemorative_coin_1', sa.String(), nullable=True),
     sa.Column('commemorative_coin_1_value', sa.String(), nullable=True),
     sa.Column('commemorative_coin_2', sa.String(), nullable=True),
