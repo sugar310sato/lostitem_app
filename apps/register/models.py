@@ -72,6 +72,9 @@ class LostItem(db.Model):
     card_item_minute = db.Column(db.String)
     card_manager = db.Column(db.String)
 
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 # 同梱物クラス
 class BundledItems(db.Model):

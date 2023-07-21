@@ -2,7 +2,7 @@
 {% block title %}拾得物一覧{% endblock %}
 {% block content %}
 <h2>検索項目</h2>
-<form action="{{ url_for('items.index') }}" method="post">
+<form action="{{ url_for('items.photo_arange') }}" method="post">
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
