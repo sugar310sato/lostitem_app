@@ -11,7 +11,7 @@
         <div class="col-3">通知 <u>{{ item.notify }}</u></div>
         <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
                 {{ item.get_item_hour }}{{ item.get_item_minute }}</u></div>
-        <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') if item.get_item is not none else ""}}
+        <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') if item.recep_item is not none else ""}}
                 {{ item.recep_item_hour }}{{ item.recep_item_minute }}</u></div>
     </div>
     <div class="row">
@@ -55,7 +55,7 @@
     <div class="row">
         <div class="col-3">メーカー <u>{{ item.item_maker }}</u></div>
         {% if item.item_expiration!=None %}
-        <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') if item.get_item is not none else
+        <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else
                 ""}}</u></div>
         {% endif %}
         <div class="col-3">数量 <u>{{ item.item_num }}</u></div>
@@ -185,7 +185,10 @@
     {% endif %}
     <a class="btn btn-primary" href="{{ url_for('bundleditems.card', item_id=item.id) }}">カード会社連絡</a>
     <a class="btn btn-primary" href="{{ url_for('bundleditems.register', item_id=item.id) }}" role="button">同梱物登録</a>
+    <a class="btn btn-primary" href="{{ url_for('return_item.item', item_id=item.id) }}" role="button">遺失者連絡/返還</a>
+</div>
+<div class="text-center">
     <a class="btn btn-primary" href="{{ url_for('items.edit_select', item_id=item.id) }}" role="button">編集/削除</a>
-    <a class="btn btn-primary" href="{{ url_for('items.index') }}" role="button">戻る</a>
+    <a class="btn btn-secondary" href="{{ url_for('items.index') }}" role="button">戻る</a>
 </div>
 {% endblock %}

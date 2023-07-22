@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 818d113bd19d
+Revision ID: a30563efde4a
 Revises: 
-Create Date: 2023-07-21 11:51:17.986067
+Create Date: 2023-07-22 12:36:11.489321
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '818d113bd19d'
+revision = 'a30563efde4a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -70,6 +70,28 @@ def upgrade():
     sa.Column('card_item_hour', sa.String(), nullable=True),
     sa.Column('card_item_minute', sa.String(), nullable=True),
     sa.Column('card_manager', sa.String(), nullable=True),
+    sa.Column('lost_date', sa.DateTime(), nullable=True),
+    sa.Column('lost_hour', sa.String(), nullable=True),
+    sa.Column('lost_minute', sa.String(), nullable=True),
+    sa.Column('lost_area', sa.String(), nullable=True),
+    sa.Column('lost_person', sa.String(), nullable=True),
+    sa.Column('lost_class', sa.String(), nullable=True),
+    sa.Column('lost_affiliation', sa.String(), nullable=True),
+    sa.Column('lost_tel1', sa.String(), nullable=True),
+    sa.Column('lost_tel2', sa.String(), nullable=True),
+    sa.Column('lost_post', sa.String(), nullable=True),
+    sa.Column('lost_address', sa.String(), nullable=True),
+    sa.Column('note_date', sa.DateTime(), nullable=True),
+    sa.Column('note_hour', sa.String(), nullable=True),
+    sa.Column('note_minute', sa.String(), nullable=True),
+    sa.Column('note_process', sa.String(), nullable=True),
+    sa.Column('note_manager', sa.String(), nullable=True),
+    sa.Column('response_date', sa.DateTime(), nullable=True),
+    sa.Column('response_hour', sa.String(), nullable=True),
+    sa.Column('response_minute', sa.String(), nullable=True),
+    sa.Column('response_expect', sa.DateTime(), nullable=True),
+    sa.Column('response_content', sa.String(), nullable=True),
+    sa.Column('response_remarks', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',

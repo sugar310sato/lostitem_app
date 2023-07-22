@@ -267,3 +267,4 @@ pyrightconfig.json
 local.sqlite
 config.py
 *jpg
+*pdf

@@ -52,4 +52,9 @@ def create_app(config_key):
 
     app.register_blueprint(bundleditems_views.bundleditems, url_prefix="/bundled")
 
+    # 返還関連アプリ
+    from apps.return_item import views as return_item_views
+
+    app.register_blueprint(return_item_views.return_item, url_prefix="/return_item")
+
     return app

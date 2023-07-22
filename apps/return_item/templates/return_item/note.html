@@ -1,0 +1,105 @@
+{% extends "register/base.html" %}
+{% block title %}遺失者連絡{% endblock %}
+{% block content %}
+<h2>遺失者連絡</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>管理番号(詳細)</th>
+            <th>拾得日時</th>
+            <th>拾得場所</th>
+            <th>拾得物名/特徴</th>
+            <th>色</th>
+            <th>保管施設/場所</th>
+            <th>状況</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <a href="{{ url_for('items.detail', item_id=lostitem.id) }}">{{ lostitem.id }}</a>
+            </td>
+            <td>{{ lostitem.get_item.strftime('%Y/%m/%d') if lostitem.get_item is not none else "" }} {{
+                lostitem.get_item_hour }}{{
+                lostitem.get_item_minute }}</td>
+            <td>{{ lostitem.find_area }}</td>
+            <td>{{ lostitem.item_feature }}</td>
+            <td>{{ lostitem.item_color }}</td>
+            <td>{{ lostitem.item_storage }}/{{ lostitem.item_storage_place }}</td>
+            <td>{{ lostitem.item_situation }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<form action="{{ url_for('return_item.note', item_id=lostitem.id) }}" , method="post">
+    {{ form.csrf_token }}
+    <h3>遺失者情報</h3>
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-4">{{ form.lost_date.label }} {{ form.lost_date(value=lostitem.lost_date) }}</div>
+            <div class="col-4">{{ form.lost_hour.label }} {{ form.lost_hour(value=lostitem.lost_hour) }}{{
+                form.lost_minute(value=lostitem.lost_minute) }}</div>
+            <div class="col-4">{{ form.lost_area.label }} {{ form.lost_area(value=lostitem.lost_area) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.recep_item.label }} {{ form.recep_item(value=lostitem.recep_item) }}</div>
+            <div class="col-4">{{ form.recep_item_hour.label }} {{ form.recep_item_hour(value=lostitem.recep_item_hour)
+                }}{{ form.recep_item_minute(value=lostitem.recep_item_minute) }}</div>
+            <div class="col-4">{{ form.recep_manager.label }} {{ form.recep_manager(value=lostitem.recep_manager) }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.lost_person.label }} {{ form.lost_person(value=lostitem.lost_person) }}</div>
+            <div class="col-4">{{ form.lost_class.label }} {{ form.lost_class(value=lostitem.lost_class) }}</div>
+            <div class="col-4">{{ form.lost_affiliation.label }} {{
+                form.lost_affiliation(value=lostitem.lost_affiliation) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">{{ form.lost_tel1.label }} {{ form.lost_tel1(value=lostitem.lost_tel1) }}</div>
+            <div class="col-6">{{ form.lost_tel2.label }} {{ form.lost_tel2(value=lostitem.lost_tel2) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">{{ form.lost_post.label }} {{ form.lost_post(value=lostitem.lost_post) }}</div>
+            <div class="col-6">{{ form.lost_address.label }} {{ form.lost_address(value=lostitem.lost_address) }}</div>
+        </div>
+    </div>
+
+    <h3>連絡状況</h3>
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-6">{{ form.note_date.label }} {{ form.note_date(value=lostitem.note_date) }}</div>
+            <div class="col-6">{{ form.note_hour.label }} {{ form.note_hour(value=lostitem.note_hour) }}{{
+                form.note_minute(value=lostitem.note_minute) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">{{ form.note_process.label }} {{ form.note_process(value=lostitem.note_process) }}</div>
+            <div class="col-6">{{ form.note_manager.label }} {{ form.note_manager(value=lostitem.note_manager) }}</div>
+        </div>
+    </div>
+
+    <h3>返答状況</h3>
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-4">{{ form.response_date.label }} {{ form.response_date(value=lostitem.response_date) }}
+            </div>
+            <div class="col-4">{{ form.response_hour.label }} {{ form.response_hour(value=lostitem.response_hour) }}{{
+                form.response_minute(value=lostitem.response_minute) }}</div>
+            <div class="col-4">{{ form.response_expect.label }} {{ form.response_expect(value=lostitem.response_expect)
+                }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">{{ form.response_content.label }} {{
+                form.response_content(value=lostitem.response_content) }}</div>
+            <div class="col-6">{{ form.response_remarks.label }} {{
+                form.response_remarks(value=lostitem.response_remarks) }}</div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('return_item.item', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
+    </div>
+</form>
+{% endblock %}

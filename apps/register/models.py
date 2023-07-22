@@ -72,6 +72,30 @@ class LostItem(db.Model):
     card_item_minute = db.Column(db.String)
     card_manager = db.Column(db.String)
 
+    # 返還、連絡関連
+    lost_date = db.Column(db.DateTime)
+    lost_hour = db.Column(db.String)
+    lost_minute = db.Column(db.String)
+    lost_area = db.Column(db.String)
+    lost_person = db.Column(db.String)
+    lost_class = db.Column(db.String)
+    lost_affiliation = db.Column(db.String)
+    lost_tel1 = db.Column(db.String)
+    lost_tel2 = db.Column(db.String)
+    lost_post = db.Column(db.String)
+    lost_address = db.Column(db.String)
+    note_date = db.Column(db.DateTime)
+    note_hour = db.Column(db.String)
+    note_minute = db.Column(db.String)
+    note_process = db.Column(db.String)
+    note_manager = db.Column(db.String)
+    response_date = db.Column(db.DateTime)
+    response_hour = db.Column(db.String)
+    response_minute = db.Column(db.String)
+    response_expect = db.Column(db.DateTime)
+    response_content = db.Column(db.String)
+    response_remarks = db.Column(db.String)
+
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
