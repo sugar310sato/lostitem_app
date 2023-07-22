@@ -1,10 +1,10 @@
 from flask_wtf.form import FlaskForm
 from wtforms.fields import DateField, SelectField, StringField, SubmitField
 
-from apps.config import MINUTE, TIMES
+from apps.config import DOCUMENT, MINUTE, TIMES
 
 
-# 遺失者返還フォーム
+# 遺失者連絡フォーム
 class LostNote(FlaskForm):
     lost_date = DateField("遺失日")
     lost_hour = SelectField(
@@ -57,3 +57,17 @@ class LostNote(FlaskForm):
     response_content = StringField("返答内容")
     response_remarks = StringField("備考")
     submit = SubmitField("連絡完了")
+
+
+# 返還フォーム
+class ReturnItemForm(FlaskForm):
+    return_date = DateField("返還日")
+    return_check = SelectField(
+        label="返答時間",
+        choices=DOCUMENT,
+    )
+    return_person = StringField("返還者")
+    return_address = StringField("住所")
+    return_tel = StringField("連絡先")
+    return_manager = StringField("返還担当者")
+    submit = SubmitField("返還")

@@ -674,13 +674,7 @@
             <td>{{ item.item_feature }}</td>
             <td>{{ item.item_color }}</td>
             <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
-            <td>
-                {% if item.item_situation %}
-                届出済み
-                {% else %}
-                届け出不要
-                {% endif %}
-            </td>
+            <td>{{ item.item_situation }}</td>
         </tr>
         {% endfor %}
     </tbody>

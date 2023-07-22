@@ -10,7 +10,7 @@ from reportlab.pdfgen import canvas
 
 from apps.app import db
 from apps.register.models import LostItem
-from apps.return_item.forms import LostNote
+from apps.return_item.forms import LostNote, ReturnItemForm
 
 basedir = Path(__file__).parent.parent
 UPLOAD_FOLDER = str(Path(basedir, "PDFfile"))
@@ -103,3 +103,20 @@ def note(item_id):
 
 
 # 返還処理
+@return_item.route("/item/<item_id>/return_item", methods=["POST", "GET"])
+def item_return(item_id):
+    lostitem = LostItem.query.filter_by(id=item_id).first()
+    form = ReturnItemForm()
+
+    if form.submit.data:
+        lostitem.item_situation = "返還済み"
+        lostitem.return_date = form.return_date.data
+        lostitem.return_check = form.return_check.data
+        lostitem.return_person = form.return_person.data
+        lostitem.return_address = form.return_address.data
+        lostitem.return_tel = form.return_tel.data
+        lostitem.return_manager = form.return_manager.data
+        db.session.add(lostitem)
+        db.session.commit()
+        return redirect(url_for('return_item.item', item_id=lostitem.id))
+    return render_template("return_item/return_item.html", lostitem=lostitem, form=form)

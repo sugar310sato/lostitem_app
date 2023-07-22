@@ -72,7 +72,7 @@ class LostItem(db.Model):
     card_item_minute = db.Column(db.String)
     card_manager = db.Column(db.String)
 
-    # 返還、連絡関連
+    # 遺失者連絡
     lost_date = db.Column(db.DateTime)
     lost_hour = db.Column(db.String)
     lost_minute = db.Column(db.String)
@@ -95,6 +95,14 @@ class LostItem(db.Model):
     response_expect = db.Column(db.DateTime)
     response_content = db.Column(db.String)
     response_remarks = db.Column(db.String)
+
+    # 返還
+    return_date = db.Column(db.DateTime)
+    return_check = db.Column(db.String)
+    return_person = db.Column(db.String)
+    return_address = db.Column(db.String)
+    return_tel = db.Column(db.String)
+    return_manager = db.Column(db.String)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

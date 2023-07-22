@@ -5,7 +5,7 @@
 <p>拾得物の遺失者への連絡業務や、返還業務を行います。</p>
 <div class="mb-3">
     <a href="{{ url_for('return_item.note', item_id=lostitem.id) }}" class="btn btn-primary">遺失者連絡</a>
-    <a href="{{ url_for('return_item.item', item_id=lostitem.id) }}" class="btn btn-primary">返還</a>
+    <a href="{{ url_for('return_item.item_return', item_id=lostitem.id) }}" class="btn btn-primary">返還</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
