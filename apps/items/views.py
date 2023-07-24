@@ -57,9 +57,8 @@ def index():
             query = query.filter(LostItem.find_area.ilike(f"%{find_area}%"))
         if item_color:
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
-        # SQLAlchemyに合わせているので==を使用
         if not item_value:
-            query = query.filter(LostItem.item_value == False)
+            query = query.filter(LostItem.item_value is False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
@@ -116,7 +115,7 @@ def photo_arange():
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         # SQLAlchemyに合わせているので==を使用
         if not item_value:
-            query = query.filter(LostItem.item_value == False)
+            query = query.filter(LostItem.item_value is False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得

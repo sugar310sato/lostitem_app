@@ -57,4 +57,9 @@ def create_app(config_key):
 
     app.register_blueprint(return_item_views.return_item, url_prefix="/return_item")
 
+    # 警察届出
+    from apps.police import views as police_views
+
+    app.register_blueprint(police_views.police, url_prefix="/police")
+
     return app
