@@ -5,12 +5,10 @@ from pathlib import Path
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfgen import canvas
 
 from apps.app import db
-from apps.police.forms import PoliceForm
+from apps.police.forms import MakeDocument, OptionDocument, PoliceForm
 from apps.register.models import Denomination, LostItem
 
 police = Blueprint(
@@ -52,6 +50,8 @@ def item():
                 query = query.filter(LostItem.choice_finder == "占有者")
             else:
                 query = query.filter(LostItem.choice_finder == "第三者")
+        # 警察未届けの物のみ
+        query = query.filter(LostItem.item_situation != "届出済み")
         search_results = query.all()
         session['search_results'] = [item.to_dict() for item in search_results]
         return redirect(url_for("police.item_search"))
@@ -59,20 +59,40 @@ def item():
 
 
 # 検索結果
-@police.route("/items/search")
+@police.route("/items/search", methods=["POST", "GET"])
 def item_search():
     search_results = session.get('search_results', [])
 
-    if request.method == 'POST':
-        return redirect(url_for('police.make_data'))
-    return render_template("police/search.html", search_results=search_results)
+    form = MakeDocument()
+    if form.submit.data:
+        item_ids = request.form.getlist('item_ids')
+        session['item_ids'] = item_ids
+        return redirect(url_for('police.choice_document'))
+    return render_template("police/search.html", search_results=search_results,
+                           form=form)
+
+
+# 作成書類選択
+@police.route("/choice/document", methods=["POST", "GET"])
+def choice_document():
+    form = OptionDocument()
+    if form.submit.data:
+        if form.document.data == "占有者拾得物提出書":
+            return redirect(url_for('police.make_data'))
+        else:
+            print("OMG")
+            return redirect(url_for('police.item'))
+    return render_template("police/choice_document.html", form=form)
 
 
 # 警察届出用データ作成
-@police.route("/make/data")
+@police.route("/make/data", methods=["POST", "GET"])
 def make_data():
-    lostitem = db.session.query(LostItem).all()
-    make_pdf_police(lostitem)
+    item_ids = session.get('item_ids', [])
+    item_ids = [int(i) for i in item_ids]
+    # Use in_ to filter rows where LostItem.id is in item_ids
+    items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
+    make_pdf_police(items)
     return "PDF receipt saved as "
 
 

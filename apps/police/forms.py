@@ -14,3 +14,21 @@ class PoliceForm(FlaskForm):
         choices=CHOICES_FINDER_POLICE,
     )
     submit = SubmitField("絞り込み")
+
+
+# 届出出力用フォーム
+class MakeDocument(FlaskForm):
+    submit = SubmitField("警察届出所出力")
+
+
+# 届出日、書類設定フォーム
+class OptionDocument(FlaskForm):
+    submit_date = DateField("警察届出日")
+    document = SelectField(
+        label="書類",
+        choices=[
+            ("占有者拾得物提出書", "占有者拾得物提出書"),
+            ("第三者拾得物提出書", "第三者拾得物提出書"),
+        ]
+    )
+    submit = SubmitField("提出書類の作成")

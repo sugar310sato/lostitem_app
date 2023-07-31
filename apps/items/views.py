@@ -58,7 +58,7 @@ def index():
         if item_color:
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         if not item_value:
-            query = query.filter(LostItem.item_value is False)
+            query = query.filter(LostItem.item_value == False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
@@ -115,11 +115,12 @@ def photo_arange():
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         # SQLAlchemyに合わせているので==を使用
         if not item_value:
-            query = query.filter(LostItem.item_value is False)
+            query = query.filter(LostItem.item_value == False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
         search_results = query.all()
+        print(search_results)
         session['search_results'] = [item.to_dict() for item in search_results]
         return redirect(url_for("items.item_search_photo"))
 
@@ -276,6 +277,7 @@ def edit(item_id):
 @items.route("/items/search", methods=["POST", "GET"])
 def item_search():
     search_results = session.get('search_results', [])
+    print(search_results)
     return render_template("items/search.html", search_results=search_results)
 
 
