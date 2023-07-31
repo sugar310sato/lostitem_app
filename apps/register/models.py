@@ -30,6 +30,7 @@ class LostItem(db.Model):
     finder_age = db.Column(db.Integer)
     finder_sex = db.Column(db.String)
     finder_post = db.Column(db.String)
+    finder_address = db.Column(db.String)
     finder_tel1 = db.Column(db.String)
     finder_tel2 = db.Column(db.String)
 

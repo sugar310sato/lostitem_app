@@ -119,6 +119,7 @@ def register_item(choice_finder):
                 finder_age=form.finder_age.data,
                 finder_sex=form.finder_sex.data,
                 finder_post=form.finder_post.data,
+                finder_address=form.finder_address.data,
                 finder_tel1=form.finder_tel1.data,
                 finder_tel2=form.finder_tel2.data,
 
@@ -181,6 +182,7 @@ def register_item(choice_finder):
                 finder_age=form.finder_age.data,
                 finder_sex=form.finder_sex.data,
                 finder_post=form.finder_post.data,
+                finder_address=form.finder_address.data,
                 finder_tel1=form.finder_tel1.data,
                 finder_tel2=form.finder_tel2.data,
 

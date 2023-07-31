@@ -1204,10 +1204,15 @@
             <div class="col-4">{{ form.finder_age.label }} {{ form.finder_age(value=item.finder_age) }}</div>
         </div>
         <div class="row mb-5">
-            <div class="col-3">{{ form.finder_sex.label }} {{ form.finder_sex(value=item.finder_sex) }}</div>
-            <div class="col-3">{{ form.finder_post.label }} {{ form.finder_post(value=item.finder_post) }}</div>
-            <div class="col-3">{{ form.finder_tel1.label }} {{ form.finder_tel1(value=item.finder_tel1) }}</div>
-            <div class="col-3">{{ form.finder_tel2.label }} {{ form.finder_tel2(value=item.finder_tel2) }}</div>
+            <div class="col-4">{{ form.finder_post.label }} {{ form.finder_post }}</div>
+            <div class="col-8">{{ form.finder_address.label }} {{ form.finder_address(value=item.finder_address,
+                style="width: 500px;") }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.finder_sex.label }} {{ form.finder_sex }}</div>
+            <div class="col-4">{{ form.finder_tel1.label }} {{ form.finder_tel1 }}</div>
+            <div class="col-4">{{ form.finder_tel2.label }} {{ form.finder_tel2 }}</div>
         </div>
         <div class="row mb-3">
             <div class="col-4">{{ form.item_value.label }} {{ form.item_value(value=item.item_value) }}</div>

@@ -56,6 +56,7 @@ class LostItemForm(FlaskForm):
         choices=SEX,
     )
     finder_post = IntegerField("郵便番号")
+    finder_address = StringField("住所")
     finder_tel1 = StringField("連絡先1")
     finder_tel2 = StringField("連絡先2")
 

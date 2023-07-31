@@ -41,10 +41,13 @@
         <div class="col-4">物件分類（小） <u>{{ item.item_class_S }}</u></div>
     </div>
     <div class="row">
-        <div class="col-3">郵便番号 <u>{{ item.finder_post }}</u></div>
-        <div class="col-3">連絡先1 <u>{{ item.finder_tel1 }}</u></div>
-        <div class="col-3">連絡先2 <u>{{ item.finder_tel2 }}</u></div>
-        <div class="col-3">貴重な物品に該当 <u>{{ item.item_value }}</u></div>
+        <div class="col-4">郵便番号 <u>{{ item.finder_post }}</u></div>
+        <div class="col-8">住所 <u>{{ item.finder_address }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-4">連絡先1 <u>{{ item.finder_tel1 }}</u></div>
+        <div class="col-4">連絡先2 <u>{{ item.finder_tel2 }}</u></div>
+        <div class="col-4">貴重な物品に該当 <u>{{ item.item_value }}</u></div>
     </div>
     <div class="row">
         <div class="col-3">物品の特徴 <u>{{ item.item_feature }}</u></div>

@@ -173,6 +173,7 @@ def edit(item_id):
             item.finder_age = form.finder_age.data
             item.finder_sex = form.finder_sex.data
             item.finder_post = form.finder_post.data
+            item.finder_address = form.finder_address.data
             item.finder_tel1 = form.finder_tel1.data
             item.finder_tel2 = form.finder_tel2.data
 
