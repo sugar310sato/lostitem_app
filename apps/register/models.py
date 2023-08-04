@@ -105,6 +105,9 @@ class LostItem(db.Model):
     return_tel = db.Column(db.String)
     return_manager = db.Column(db.String)
 
+    # 還付処理等
+    police_date = db.Column(db.DateTime)
+
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 

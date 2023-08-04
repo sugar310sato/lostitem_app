@@ -51,7 +51,7 @@ def item():
             else:
                 query = query.filter(LostItem.choice_finder == "第三者")
         # 警察未届けの物のみ
-        query = query.filter(LostItem.item_situation != "届出済み")
+        query = query.filter(LostItem.item_situation != "警察届出済み")
         search_results = query.all()
         session['search_results'] = [item.to_dict() for item in search_results]
         return redirect(url_for("police.item_search"))
@@ -77,10 +77,11 @@ def item_search():
 def choice_document():
     form = OptionDocument()
     if form.submit.data:
+        submit_date = form.submit_date.data
         if form.document.data == "占有者拾得物提出書":
-            return redirect(url_for('police.make_data'))
+            return redirect(url_for('police.make_data', submit_date=submit_date))
         else:
-            return redirect(url_for('police.make_data_third'))
+            return redirect(url_for('police.make_data_third', submit_date=submit_date))
     return render_template("police/choice_document.html", form=form)
 
 
@@ -91,7 +92,16 @@ def make_data():
     item_ids = [int(i) for i in item_ids]
     # Use in_ to filter rows where LostItem.id is in item_ids
     items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
-    make_pdf_police(items)
+    submit_date = request.args.get('submit_date')
+    for item in items:
+        if submit_date:
+            item.police_date = datetime.strptime(submit_date, "%Y-%m-%d")
+        else:
+            item.police_date = datetime.now()
+        item.item_situation = "警察届出済み"
+    db.session.commit()
+    submit_date = request.args.get('submit_date')
+    make_pdf_police(items, submit_date)
     print(len(items))
     return "making PDF!"
 
@@ -103,13 +113,21 @@ def make_data_third():
     item_ids = [int(i) for i in item_ids]
     # Use in_ to filter rows where LostItem.id is in item_ids
     items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
-    make_pdf_police_third(items)
+    submit_date = request.args.get('submit_date')
+    for item in items:
+        if submit_date:
+            item.police_date = datetime.strptime(submit_date, "%Y-%m-%d")
+        else:
+            item.police_date = datetime.now()
+        item.item_situation = "警察届出済み"
+    db.session.commit()
+    make_pdf_police_third(items, submit_date)
     print(len(items))
     return "making PDF!"
 
 
 # 警察届出用データ作成関数（占有者）
-def make_pdf_police(items):
+def make_pdf_police(items, submit_date):
     file_name = "police_" + '.pdf'
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     p = canvas.Canvas(file_path, pagesize=letter)
@@ -119,7 +137,11 @@ def make_pdf_police(items):
     p.setFont('HeiseiMin-W3', 10)
     p.drawString(20, 710, "遺失物法第4条又は第13条の規定により、次の通り物件を提出します。")
     p.drawString(250, 690, "警察署長殿")
-    p.drawRightString(550, 690, datetime.now().strftime("%Y年%m月%d日"))
+    if submit_date:
+        date_obj = datetime.strptime(submit_date, "%Y-%m-%d")
+        p.drawRightString(550, 690, date_obj.strftime("%Y年%m月%d日"))
+    else:
+        p.drawRightString(550, 690, datetime.now().strftime("%Y年%m月%d日"))
     p.drawString(250, 670, "氏名又は名称")
     p.drawString(250, 650, "住所又は所在地")
     p.drawString(250, 620, "電話番号　その他連絡先")
@@ -210,7 +232,7 @@ def make_pdf_police(items):
 
 
 # 警察届出用データ作成関数（第三者）
-def make_pdf_police_third(items):
+def make_pdf_police_third(items, submit_date):
     pages = 1
     for item in items:
         file_name = "test" + '.pdf'
@@ -222,7 +244,11 @@ def make_pdf_police_third(items):
         p.setFont('HeiseiMin-W3', 10)
         p.drawString(20, 710, "遺失物法第4条又は第13条の規定により、次の通り物件を提出します。")
         p.drawString(250, 690, "警察署長殿")
-        p.drawRightString(550, 690, datetime.now().strftime("%Y年%m月%d日"))
+        if submit_date:
+            date_obj = datetime.strptime(submit_date, "%Y-%m-%d")
+            p.drawRightString(550, 690, date_obj.strftime("%Y年%m月%d日"))
+        else:
+            p.drawRightString(550, 690, datetime.now().strftime("%Y年%m月%d日"))
         p.drawString(250, 670, "氏名又は名称")
         p.drawString(250, 650, "住所又は所在地")
         p.drawString(250, 620, "電話番号　その他連絡先")
@@ -304,10 +330,14 @@ def make_pdf_police_third(items):
         p.drawString(30, 60, "備考")
         p.rect(20, 20, 40, 90), p.rect(60, 20, 520, 90)
         p.drawString(70, 95, "氏名："), p.drawString(100, 95, item.finder_name)
-        if item.finder_post:
-            p.drawString(70, 80, "住所："), p.drawString(100, 80, item.finder_post)
+        if item.finder_address:
+            p.drawString(70, 80, "住所："), p.drawString(100, 80, item.finder_address)
+        else:
+            p.drawString(70, 80, "住所：不明")
         if item.finder_tel1:
             p.drawString(70, 65, "連絡先："), p.drawString(110, 65, item.finder_tel1)
+        else:
+            p.drawString(70, 65, "連絡先：不明")
         p.drawString(70, 50, "権利放棄：報労金の放棄"), p.drawString(70, 30, "告知区分：同意する")
 
         # Close the PDF object cleanly.

@@ -8,7 +8,7 @@
     <h2 class="mr-3">検索結果</h2>
     <a href="{{ url_for('items.item_search_photo') }}" class="btn btn-secondary">写真の検索結果へ</a>
 </div>
-<table class=" table table-bordered table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>管理番号(詳細)</th>
@@ -26,18 +26,15 @@
             <td>
                 <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
             </td>
-            <td>{{ item.get_item.strftime('%Y/%m/%d') }} {{ item.get_item_hour }}{{ item.get_item_minute }}</td>
+            <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour }}{{
+                item.get_item_minute }}</td>
             <td>{{ item.find_area }}</td>
-            <td>{{ item.item_feature }}</td>
+            <td>{{ item.item_class_S }}
+                <br>{{ item.item_feature }}
+            </td>
             <td>{{ item.item_color }}</td>
             <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
-            <td>
-                {% if item.item_situation %}
-                届出済み
-                {% else %}
-                届け出不要
-                {% endif %}
-            </td>
+            <td>{{ item.item_situation }}</td>
         </tr>
         {% endfor %}
     </tbody>

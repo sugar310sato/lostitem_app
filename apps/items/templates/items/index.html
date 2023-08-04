@@ -671,7 +671,9 @@
             <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour }}{{
                 item.get_item_minute }}</td>
             <td>{{ item.find_area }}</td>
-            <td>{{ item.item_feature }}</td>
+            <td>{{ item.item_class_S }}
+                <br>{{ item.item_feature }}
+            </td>
             <td>{{ item.item_color }}</td>
             <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
             <td>{{ item.item_situation }}</td>
