@@ -62,4 +62,9 @@ def create_app(config_key):
 
     app.register_blueprint(police_views.police, url_prefix="/police")
 
+    # 還付処理
+    from apps.refund import views as refund_views
+
+    app.register_blueprint(refund_views.refund, url_prefix="/refund")
+
     return app
