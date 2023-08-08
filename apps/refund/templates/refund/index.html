@@ -2,4 +2,58 @@
 {% block title %}届出受理番号登録{% endblock %}
 {% block content %}
 <h2>届出受理番号登録</h2>
+<!-- 検索用フォーム -->
+<form action="{{ url_for('refund.register_num') }}" method="post" class="mb-3">
+    {{ form.csrf_token }}
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
+            <div class="col-4">{{ form.finder_choice.label }} {{ form.finder_choice }}</div>
+            <div class="col-4">{{ form.waiver.label }} {{ form.waiver }}</div>
+        </div>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+
+<!-- 拾得物の一覧 -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>管理番号</th>
+            <th>警察届出日</th>
+            <th>受理番号</th>
+            <th>拾得日時</th>
+            <th>拾得物件名/特徴</th>
+            <th>金額</th>
+            <th>還付予定日</th>
+            <th>権利</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in all_lost_item %}
+        <tr>
+            <td>
+                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+            </td>
+            <td>{{ item.police_date.strftime('%Y/%m/%d') if item.police_date is not none else "" }}</td>
+            <td>{{ item.receiptnumber }}</td>
+            <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
+                <br>{{ item.get_item_hour }}{{ item.get_item_minute }}
+            </td>
+            <td>{{ item.item_class_S }}
+                <br>{{ item.item_feature }}
+            </td>
+            <td>{{ item.money }}</td>
+            <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
+            {% if item.choice_finder == "占有者拾得" %}
+            <td>{{ item.own_waiver }}</td>
+            {% else %}
+            <td>{{ item.thirdparty_waiver }}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

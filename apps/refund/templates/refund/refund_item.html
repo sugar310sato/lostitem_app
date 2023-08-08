@@ -1,0 +1,55 @@
+{% extends "register/base.html" %}
+{% block title %}還付{% endblock %}
+{% block content %}
+<h2>還付</h2>
+<form action="{{ url_for('refund.refund_item') }}" , method="post">
+    {{ form.csrf_token }}
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-4">{{ form.receiptnumber.label }} {{ form.receiptnumber }}</div>
+            <div class="col-3">{{ form.refund_expect.label }} {{ form.refund_expect }}</div>
+            <div class="col-5">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.returned.label }} {{ form.returned }}</div>
+            <div class="col-3">{{ form.item_plice.label }} {{ form.item_plice }}</div>
+            <div class="col-5">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+        </div>
+        <div class="text-center mb-3">
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('refund.register_num') }}" class="btn btn-secondary">戻る</a>
+        </div>
+    </div>
+</form>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>管理番号<br>受理番号</th>
+            <th>還付予定日</th>
+            <th>還付日</th>
+            <th>拾得日時</th>
+            <th>拾得物件名/特徴</th>
+            <th>金額</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in all_lostitem %}
+        <tr>
+            <td>
+                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+                <br>{{ item.receiptnumber }}
+            </td>
+            <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
+            <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
+            <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
+                <br>{{ item.get_item_hour }}時{{ item.get_item_minute }}分
+            </td>
+            <td>{{ item.item_class_S }}
+                <br>{{ item.item_feature }}
+            </td>
+            <td>{{ item.item_money }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

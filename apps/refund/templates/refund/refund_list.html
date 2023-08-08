@@ -1,0 +1,46 @@
+{% extends "register/base.html" %}
+{% block title %}還付請求一覧印刷{% endblock %}
+{% block content %}
+<h2>還付請求一覧印刷</h2>
+<form action="{{ url_for('refund.refund_list') }}" , method="post">
+    {{ form.csrf_token }}
+    <div class="containrt mb-3">
+        <div class="row">
+            <div class="col-4">{{ form.refund_expect_year.label }} {{ form.refund_expect_year }}</div>
+            <div class="col-4">{{ form.refund_situation.label }} {{ form.refund_situation }}</div>
+        </div>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('refund.refund_list') }}" class="btn btn-secondary">戻る</a>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>管理番号</th>
+                <th>警察届出日</th>
+                <th>受理番号</th>
+                <th>拾得物件名/特徴</th>
+                <th>還付予定日</th>
+                <th>還付日</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in all_lost_item %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+                </td>
+                <td>{{ item.police_date.strftime('%Y/%m/%d') if item.police_date is not none else "" }}</td>
+                <td>{{ item.receiptnumber }}</td>
+                <td>{{ item.item_class_S }}
+                    <br>{{ item.item_feature }}
+                </td>
+                <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
+                <td>{{ item.refund_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}

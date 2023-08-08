@@ -107,6 +107,11 @@ class LostItem(db.Model):
 
     # 還付処理等
     police_date = db.Column(db.DateTime)
+    receiptnumber = db.Column(db.Integer)
+    refund_expect = db.Column(db.DateTime)
+    refund_date = db.Column(db.DateTime)
+    refund_situation = db.Column(db.String)
+    refund_manager = db.Column(db.String)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
