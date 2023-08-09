@@ -1,19 +1,27 @@
 {% extends "register/base.html" %}
-{% block title %}還付検索結果{% endblock %}
+{% block title %}還付済物件処理{% endblock %}
 {% block content %}
-<h2>還付検索結果</h2>
-<form action="{{ url_for('refund.refund_item_search') }}" , method="post">
+<h2>還付済物件処理</h2>
+<form action="{{ url_for('refund.refunded') }}" , method="post">
+    <!-- 検索フォーム -->
     {{ form.csrf_token }}
-    <div class="containrt mb-3">
-        <div class="text-center mb-3">
-            {{ form.submit(class="btn btn-primary", value="登録") }}
-            <a href="{{ url_for('refund.refund_item') }}" class="btn btn-secondary">戻る</a>
-        </div>
+    <div class="container mb-3">
         <div class="row mb-3">
             <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date }}</div>
-            <div class="col-4">{{ form.refund_manager.label }} {{ form.refund_manager }}</div>
+            <div class="col-4">{{ form.police_date.label }} {{ form.police_date }}</div>
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">{{ form.refunded_process.label }} {{ form.refunded_process }}</div>
+            <div class="col-4">{{ form.refunded_bool.label }} {{ form.refunded_bool }}</div>
+        </div>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit2(class="btn btn-primary") }}
         </div>
     </div>
+    <!-- 還付済物件処理フォーム -->
+    <hr>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -21,7 +29,6 @@
                 <th>管理番号<br>受理番号</th>
                 <th>還付予定日</th>
                 <th>還付日</th>
-                <th>警察<br>返還</th>
                 <th>拾得日時</th>
                 <th>拾得物件名/特徴</th>
                 <th>金額</th>
@@ -38,7 +45,6 @@
                 </td>
                 <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
                 <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
-                <td><input type="checkbox" name="police_item_ids" value="{{ item.id }}"></td>
                 <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
                     <br>{{ item.get_item_hour }}時{{ item.get_item_minute }}分
                 </td>

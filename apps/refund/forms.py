@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import (BooleanField, DateField, IntegerField, SelectField,
-                            StringField, SubmitField)
+from wtforms.fields import (BooleanField, DateField, IntegerField, RadioField,
+                            SelectField, StringField, SubmitField)
+
+from apps.config import REFUNDED_PROCESS
 
 
 # 届出受理番号登録フォーム
@@ -38,6 +40,22 @@ class PoliceRefundForm(FlaskForm):
     refund_date = DateField("還付日")
     refund_manager = StringField("担当者")
     submit = SubmitField("登録")
+
+
+# 還付済物件処理用フォーム
+class RefundedForm(FlaskForm):
+    refund_date = DateField("還付日")
+    police_date = DateField("警察届出日")
+    start_date = DateField("拾得日")
+    end_date = DateField("拾得日")
+    refunded_process = SelectField(
+        label="還付後処理",
+        choices=REFUNDED_PROCESS,
+    )
+    refunded_bool = BooleanField("処理済も表示")
+    refund_manager = StringField("担当者")
+    submit = SubmitField("検索")
+    submit2 = SubmitField("登録")
 
 
 # 還付検索フォーム
