@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import (BooleanField, DateField, IntegerField, RadioField,
-                            SelectField, StringField, SubmitField)
+from wtforms.fields import (BooleanField, DateField, IntegerField, SelectField,
+                            StringField, SubmitField)
 
 from apps.config import REFUNDED_PROCESS
 
@@ -56,6 +56,7 @@ class RefundedForm(FlaskForm):
     refund_manager = StringField("担当者")
     submit = SubmitField("検索")
     submit2 = SubmitField("登録")
+    submit3 = SubmitField("印刷")
 
 
 # 還付検索フォーム

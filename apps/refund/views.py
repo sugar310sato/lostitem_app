@@ -87,38 +87,35 @@ def refund_item():
     all_lostitem = db.session.query(LostItem).all()
 
     if form.submit.data:
-        if 'submit' in request.form:
-            start_date = form.start_date.data
-            end_date = form.end_date.data
-            receiptnumber = form.receiptnumber.data
-            refund_expect = form.refund_expect.data
-            returned = form.returned.data
-            item_plice = form.item_plice.data
-            item_feature = form.item_feature.data
-            # クエリの生成
-            query = db.session.query(LostItem)
-            if start_date and end_date:
-                query = query.filter(LostItem.get_item.between(start_date, end_date))
-            elif start_date:
-                query = query.filter(LostItem.get_item >= start_date)
-            elif end_date:
-                query = query.filter(LostItem.get_item <= end_date)
-            if receiptnumber:
-                query = query.filter(LostItem.receiptnumber == receiptnumber)
-            if refund_expect:
-                query = query.filter(func.date(LostItem.refund_expect) == refund_expect)
-            if not returned:
-                query = query.filter(LostItem.refund_situation == "還付予定")
-            if item_plice:
-                query = query.filter(LostItem.item_value is True)
-            if item_feature:
-                query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
-            search_results = query.all()
-            print(refund_expect)
-            session['search_results'] = [item.to_dict() for item in search_results]
-            return redirect(url_for("refund.refund_item_search"))
-        if 'submit2' in request.form:
-            print("submit2")
+        start_date = form.start_date.data
+        end_date = form.end_date.data
+        receiptnumber = form.receiptnumber.data
+        refund_expect = form.refund_expect.data
+        returned = form.returned.data
+        item_plice = form.item_plice.data
+        item_feature = form.item_feature.data
+        # クエリの生成
+        query = db.session.query(LostItem)
+        if start_date and end_date:
+            query = query.filter(LostItem.get_item.between(start_date, end_date))
+        elif start_date:
+            query = query.filter(LostItem.get_item >= start_date)
+        elif end_date:
+            query = query.filter(LostItem.get_item <= end_date)
+        if receiptnumber:
+            query = query.filter(LostItem.receiptnumber == receiptnumber)
+        if refund_expect:
+            query = query.filter(func.date(LostItem.refund_expect) == refund_expect)
+        if not returned:
+            query = query.filter(LostItem.refund_situation == "還付予定")
+        if item_plice:
+            query = query.filter(LostItem.item_value is True)
+        if item_feature:
+            query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
+        search_results = query.all()
+        print(refund_expect)
+        session['search_results'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("refund.refund_item_search"))
     return render_template("refund/refund_item.html",
                            form=form, all_lostitem=all_lostitem)
 
@@ -189,6 +186,19 @@ def refunded():
         search_results = query.all()
         session['search_results'] = [item.to_dict() for item in search_results]
         return redirect(url_for("refund.refunded"))
+    if form.submit2.data:
+        item_ids = request.form.getlist('item_ids')
+        items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
+        for item in items:
+            select_value = request.form.get(f'item_select_{item.id}')
+            item.refunded_process = select_value
+        db.session.commit()
+        return redirect(url_for('refund.refunded'))
+    if form.submit3.data:
+        item_ids = request.form.getlist('item_ids')
+        items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
+        make_refunded_list(items)
+        return redirect(url_for('refund.refunded'))
     return render_template("refund/refunded.html", form=form,
                            search_results=search_results)
 
@@ -278,10 +288,75 @@ def make_pdf_refund_items(items):
             p.drawCentredString(300, start_num+10, "")
         p.drawCentredString(380, start_num+10, str(item.id))
         p.drawCentredString(580, start_num+17, item.item_class_S)
-        p.drawCentredString(580, start_num+5, str(item.id))
+        p.drawCentredString(580, start_num+5, item.item_feature)
         if denomination is not None:
             p.drawCentredString(780, start_num+10, str(denomination.total_yen))
         start_num -= 30
+
+    # Close the PDF object cleanly.
+    p.showPage()
+    p.save()
+
+    return "PDF receipt saved as " + file_name
+
+
+# 還付済物件処理一覧
+def make_refunded_list(items):
+    file_name = "refunded" + '.pdf'
+    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    p = canvas.Canvas(file_path, pagesize=landscape(A4))
+    # ヘッダー部分(表までのテンプレ)
+    p.setFont('HeiseiMin-W3', 20)
+    p.drawString(350, 550, "還付済物件処理一覧")
+    p.setFont('HeiseiMin-W3', 10)
+    p.drawString(750, 520, datetime.now().strftime("%Y年%m月%d日"))
+
+    # 表の部分
+    p.rect(20, 480, 80, 20), p.rect(100, 480, 80, 20), p.rect(180, 480, 80, 20)
+    p.rect(260, 480, 80, 20), p.rect(340, 480, 80, 20), p.rect(420, 480, 320, 20)
+    p.rect(740, 480, 80, 20)
+    p.drawCentredString(60, 485, "還付日"), p.drawCentredString(140, 485, "受理番号")
+    p.drawCentredString(220, 485, "処理担当者"), p.drawCentredString(300, 485, "拾得日時")
+    p.drawCentredString(380, 485, "金額"), p.drawCentredString(580, 485, "物件の種類及び特徴")
+    p.drawCentredString(780, 485, "還付後処理")
+
+    start_num = 450
+    total_money = 0
+    # 拾得物の内容記載
+    for item in items:
+        p.rect(20, start_num, 80, 30), p.rect(100, start_num, 80, 30)
+        p.rect(180, start_num, 80, 30), p.rect(260, start_num, 80, 30)
+        p.rect(340, start_num, 80, 30), p.rect(420, start_num, 320, 30)
+        p.rect(740, start_num, 80, 30)
+
+        denomination = Denomination.query.filter_by(lostitem_id=item.id).first()
+        if item.refund_date:
+            p.drawCentredString(60, start_num+10,
+                                item.refund_date.strftime('%Y/%m/%d'))
+        else:
+            p.drawCentredString(60, start_num+10, "")
+        p.drawCentredString(140, start_num+10, str(item.receiptnumber))
+        p.drawCentredString(220, start_num+10, item.refund_manager)
+        if item.get_item:
+            p.drawCentredString(300, start_num+10, item.get_item.strftime('%Y/%m/%d'))
+        else:
+            p.drawCentredString(300, start_num+10, "")
+        if denomination is not None:
+            p.drawCentredString(380, start_num+10, str(denomination.total_yen))
+        p.drawCentredString(580, start_num+17, item.item_class_S)
+        p.drawCentredString(580, start_num+5, item.item_feature)
+        if item.refunded_process:
+            p.drawCentredString(780, start_num+10, item.refunded_process)
+        else:
+            p.drawCentredString(780, start_num+10, "")
+        if denomination is not None:
+            total_money += denomination.total_yen
+        start_num -= 30
+
+    # 合計金額の記載
+    p.drawString(580, start_num, "合計金額")
+    p.drawString(625, start_num, str(total_money) + "円")
+    p.line(580, start_num-3, 680, start_num-3)
 
     # Close the PDF object cleanly.
     p.showPage()

@@ -18,6 +18,7 @@
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}
             {{ form.submit2(class="btn btn-primary") }}
+            {{ form.submit3(class="btn btn-primary") }}
         </div>
     </div>
     <!-- 還付済物件処理フォーム -->
@@ -33,6 +34,7 @@
                 <th>拾得物件名/特徴</th>
                 <th>金額</th>
                 <th>担当者</th>
+                <th>処理</th>
             </tr>
         </thead>
         <tbody>
@@ -53,6 +55,17 @@
                 </td>
                 <td>{{ item.item_money }}</td>
                 <td>{{ item.refund_manager }}</td>
+                <td>
+                    <select name="item_select_{{ item.id }}">
+                        <option value=""></option>
+                        <option value="店長">店長</option>
+                        <option value="廃棄">廃棄</option>
+                        <option value="入金">入金</option>
+                        <option value="本部">本部</option>
+                        <option value="保留">保留</option>
+                        <option value="警処">警処</option>
+                    </select>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
