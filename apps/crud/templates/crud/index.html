@@ -1,12 +1,11 @@
-{% extends "crud/base.html" %}
+{% extends "register/base.html" %}
 {% block title %}ユーザー一覧{% endblock %}
 {% block content %}
 
 <body>
     <h2>ユーザー一覧</h2>
     <a href="{{ url_for('crud.create_user') }}">ユーザー新規作成</a>
-
-    <table>
+    <table class="table table-bordered table-striped">
         <tr>
             <th>ユーザーID</th>
             <th>ユーザー名</th>
