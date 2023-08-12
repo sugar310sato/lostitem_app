@@ -67,4 +67,9 @@ def create_app(config_key):
 
     app.register_blueprint(refund_views.refund, url_prefix="/refund")
 
+    # 廃棄処理
+    from apps.disposal import views as disposal_views
+
+    app.register_blueprint(disposal_views.disposal, url_prefix="/disposal")
+
     return app

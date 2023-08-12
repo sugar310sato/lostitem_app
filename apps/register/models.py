@@ -114,6 +114,10 @@ class LostItem(db.Model):
     refund_manager = db.Column(db.String)
     refunded_process = db.Column(db.String)
 
+    # 廃棄処理
+    disposal_date = db.Column(db.DateTime)
+    selling_price = db.Column(db.Integer)
+
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 

@@ -156,7 +156,6 @@ def refund_item_search():
 def refunded():
     form = RefundedForm()
     search_results = session.get('search_results', None)
-    print(search_results)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
 
@@ -336,7 +335,8 @@ def make_refunded_list(items):
         else:
             p.drawCentredString(60, start_num+10, "")
         p.drawCentredString(140, start_num+10, str(item.receiptnumber))
-        p.drawCentredString(220, start_num+10, item.refund_manager)
+        if item.refund_manager:
+            p.drawCentredString(220, start_num+10, item.refund_manager)
         if item.get_item:
             p.drawCentredString(300, start_num+10, item.get_item.strftime('%Y/%m/%d'))
         else:
