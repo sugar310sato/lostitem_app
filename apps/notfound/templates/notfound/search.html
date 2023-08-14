@@ -633,6 +633,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
+            <div class="col-4">{{ form.taiou_bool.label }} {{ form.taiou_bool }}</div>
         </div>
         <div class="row mb-3">
             <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date }}-{{
@@ -642,6 +643,7 @@
         <div class="text-center mb-3">
             {{ form.submit(class="btn btn-primary") }}
             <hr>
+            {{ form.submit_taiou(class="btn btn-primary") }}
         </div>
     </div>
     <!-- 還付済物件処理フォーム -->
@@ -649,6 +651,7 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
+                <th>選択</th>
                 <th>管理番号</th>
                 <th>遺失日時</th>
                 <th>消費期限</th>
@@ -658,8 +661,9 @@
         <tbody>
             {% for item in search_results %}
             <tr>
+                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
                 <td>
-                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+                    <a href="{{ url_for('notfound.detail', item_id=item.id) }}">{{ item.id }}</a>
                 </td>
                 <td>{{ item.lost_item.strftime('%Y/%m/%d') if item.lost_item is not none else "" }}
                     <br>{{ item.lost_item_hour }}時{{ item.lost_item_minute }}分

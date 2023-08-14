@@ -79,4 +79,6 @@ class SearchNotFoundForm(FlaskForm):
     item_feature = StringField("特徴")
     start_expiration_date = DateField("消費期限")
     end_expiration_date = DateField("消費期限")
+    taiou_bool = BooleanField("対応済も表示")
     submit = SubmitField("検索")
+    submit_taiou = SubmitField("対応済にする")

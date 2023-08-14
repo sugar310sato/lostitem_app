@@ -1,0 +1,77 @@
+{% extends "register/base.html" %}
+{% block title %}拾得物詳細画面{% endblock %}
+{% block content %}
+<h2>拾得物詳細画面</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-3">遺失日時 <u>{{ item.lost_item.strftime('%Y/%m/%d') if item.lost_item is not none else "" }}
+                {{ item.lost_item_hour }}{{ item.lost_item_minute }}</u></div>
+        <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') if item.recep_item is not none else ""}}
+                {{ item.recep_item_hour }}{{ item.recep_item_minute }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">受付者 <u>{{ item.recep_manager }}</u></div>
+        <div class="col-3">遺失場所 <u>{{ item.lost_area }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">遺失者氏名 <u>{{ item.lost_name }}</u></div>
+        <div class="col-3">年齢 <u>{{ item.lost_age }}</u></div>
+        <div class="col-3">性別 <u>{{ item.lost_sex }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-4">物件分類（大） <u>{{ item.item_class_L }}</u></div>
+        <div class="col-4">物件分類（中） <u>{{ item.item_class_M }}</u></div>
+        <div class="col-4">物件分類（小） <u>{{ item.item_class_S }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-4">郵便番号 <u>{{ item.lost_post }}</u></div>
+        <div class="col-8">住所 <u>{{ item.lost_address }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-4">連絡先1 <u>{{ item.lost_tel1 }}</u></div>
+        <div class="col-4">連絡先2 <u>{{ item.lost_tel2 }}</u></div>
+        <div class="col-4">貴重な物品に該当 <u>{{ item.item_value }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">物品の特徴 <u>{{ item.item_feature }}</u></div>
+        <div class="col-3">色 <u>{{ item.item_color }}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-3">メーカー <u>{{ item.item_maker }}</u></div>
+        {% if item.item_expiration!=None %}
+        <div class="col-3">消費期限 <u>{{ item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else
+                ""}}</u></div>
+        {% endif %}
+        <div class="col-3">数量 <u>{{ item.item_num }}</u></div>
+        <div class="col-3">単位 <u>{{ item.item_unit }}</u></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">値段 <u>{{ item.item_plice }}</u></div>
+        <div class="col-3">金額 <u>{{ item.item_money }}</u></div>
+        <div class="col-3">備考 <u>{{ item.item_remarks }}</u></div>
+    </div>
+    {% if item.item_class_L=="証明書類・カード類" %}
+    <div class="row mb-5">
+        <div class="col-3">カード発行会社名<br> <u>{{ item.card_campany }}</u></div>
+        <div class="col-3">カード発行会社連絡先<br> <u>{{ item.card_tel }}</u></div>
+        <div class="col-3">カード名<br> <u>{{ item.card_name }}</u></div>
+        <div class="col-3">カード記載人名<br> <u>{{ item.card_person }}</u></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.card_item is not none else "" }}</u>
+        </div>
+        <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.card_return is not none else ""
+                }}</u>
+        </div>
+        <div class="col-3">連絡時間 <u>{{ item.card_item_hour }}</u></div>
+        <div class="col-3">連絡時間(分) <u>{{ item.card_item_minute }}</u></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">連絡者 <u>{{ item.card_manager }}</u></div>
+    </div>
+    {% endif %}
+    <div class="text-center">
+        <a href="{{ url_for('notfound.notfound_search') }}" class="btn btn-secondary">戻る</a>
+    </div>
+</div>
+{% endblock %}

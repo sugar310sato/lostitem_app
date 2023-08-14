@@ -51,6 +51,7 @@ def notfound_register():
             item_plice=form.item_plice.data,
             item_money=form.item_money.data,
             item_remarks=form.item_remarks.data,
+            item_situation="未対応",
 
             # カードの場合は、カード情報の登録
             card_campany=form.card_campany.data,
@@ -83,6 +84,7 @@ def notfound_search():
         item_feature = form.item_feature.data
         start_expiration_date = form.start_expiration_date.data
         end_expiration_date = form.end_expiration_date.data
+        taiou_bool = form.taiou_bool.data
         # クエリの生成
         query = db.session.query(NotFound)
         if start_date and end_date:
@@ -102,8 +104,25 @@ def notfound_search():
         elif end_expiration_date:
             query = query.filter(func.date(NotFound.item_expiration) <=
                                  end_expiration_date)
+        if not taiou_bool:
+            query = query.filter(NotFound.item_situation != "対応済")
         search_results = query.all()
         session['search_results'] = [item.to_dict() for item in search_results]
         return redirect(url_for("notfound.notfound_search"))
+
+    if form.submit_taiou.data:
+        item_ids = request.form.getlist('item_ids')
+        items = db.session.query(NotFound).filter(NotFound.id.in_(item_ids)).all()
+        for item in items:
+            item.item_situation = "対応済"
+        db.session.commit()
+        return redirect(url_for("notfound.notfound_search"))
     return render_template("notfound/search.html", form=form,
                            search_results=search_results)
+
+
+# 詳細
+@notfound.route("/detail/<item_id>", methods=["POST", "GET"])
+def detail(item_id):
+    item = NotFound.query.filter_by(id=item_id).first()
+    return render_template("notfound/detail.html", item=item)

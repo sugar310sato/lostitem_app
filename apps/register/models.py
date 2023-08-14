@@ -221,6 +221,7 @@ class NotFound(db.Model):
     item_plice = db.Column(db.String)
     item_money = db.Column(db.String)
     item_remarks = db.Column(db.String)
+    item_situation = db.Column(db.String)
 
     # カードの場合の追加情報
     card_campany = db.Column(db.String)
