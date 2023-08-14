@@ -181,3 +181,57 @@ class Denomination(db.Model):
     commemorative_coin_2 = db.Column(db.String)
     commemorative_coin_2_value = db.Column(db.String)
     lostitem_id = db.Column(db.Integer, db.ForeignKey("lost_item.id"))
+
+
+# 遺失物クラス
+class NotFound(db.Model):
+    __tablename__ = "notfound"
+    id = db.Column(db.Integer, primary_key=True)
+    # 紛失日時
+    lost_item = db.Column(db.DateTime, default=datetime.now)
+    lost_item_hour = db.Column(db.String)
+    lost_item_minute = db.Column(db.String)
+    # 受付日時
+    recep_item = db.Column(db.DateTime, default=datetime.now)
+    recep_item_hour = db.Column(db.String)
+    recep_item_minute = db.Column(db.String)
+    recep_manager = db.Column(db.String)
+
+    # 拾得者情報等の管理
+    lost_area = db.Column(db.String)
+    lost_name = db.Column(db.String)
+    lost_age = db.Column(db.Integer)
+    lost_sex = db.Column(db.String)
+    lost_post = db.Column(db.String)
+    lost_address = db.Column(db.String)
+    lost_tel1 = db.Column(db.String)
+    lost_tel2 = db.Column(db.String)
+
+    # 拾得物の詳細情報
+    item_class_L = db.Column(db.String)
+    item_class_M = db.Column(db.String)
+    item_class_S = db.Column(db.String)
+    item_value = db.Column(db.Boolean, default=False)
+    item_feature = db.Column(db.String)
+    item_color = db.Column(db.String)
+    item_maker = db.Column(db.String)
+    item_expiration = db.Column(db.DateTime)
+    item_num = db.Column(db.Integer)
+    item_unit = db.Column(db.String)
+    item_plice = db.Column(db.String)
+    item_money = db.Column(db.String)
+    item_remarks = db.Column(db.String)
+
+    # カードの場合の追加情報
+    card_campany = db.Column(db.String)
+    card_tel = db.Column(db.String)
+    card_name = db.Column(db.String)
+    card_person = db.Column(db.String)
+    card_return = db.Column(db.DateTime)
+    card_item = db.Column(db.DateTime)
+    card_item_hour = db.Column(db.String)
+    card_item_minute = db.Column(db.String)
+    card_manager = db.Column(db.String)
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

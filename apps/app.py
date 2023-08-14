@@ -72,4 +72,9 @@ def create_app(config_key):
 
     app.register_blueprint(disposal_views.disposal, url_prefix="/disposal")
 
+    # 遺失物管理
+    from apps.notfound import views as notfound_views
+
+    app.register_blueprint(notfound_views.notfound, url_prefix="/notfound")
+
     return app

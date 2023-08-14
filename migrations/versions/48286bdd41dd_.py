@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 97ac841923f2
+Revision ID: 48286bdd41dd
 Revises: 
-Create Date: 2023-08-12 18:22:07.582574
+Create Date: 2023-08-14 16:30:25.410239
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '97ac841923f2'
+revision = '48286bdd41dd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -110,6 +110,47 @@ def upgrade():
     sa.Column('selling_price', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('notfound',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('lost_item', sa.DateTime(), nullable=True),
+    sa.Column('lost_item_hour', sa.String(), nullable=True),
+    sa.Column('lost_item_minute', sa.String(), nullable=True),
+    sa.Column('recep_item', sa.DateTime(), nullable=True),
+    sa.Column('recep_item_hour', sa.String(), nullable=True),
+    sa.Column('recep_item_minute', sa.String(), nullable=True),
+    sa.Column('recep_manager', sa.String(), nullable=True),
+    sa.Column('lost_area', sa.String(), nullable=True),
+    sa.Column('lost_name', sa.String(), nullable=True),
+    sa.Column('lost_age', sa.Integer(), nullable=True),
+    sa.Column('lost_sex', sa.String(), nullable=True),
+    sa.Column('lost_post', sa.String(), nullable=True),
+    sa.Column('lost_address', sa.String(), nullable=True),
+    sa.Column('lost_tel1', sa.String(), nullable=True),
+    sa.Column('lost_tel2', sa.String(), nullable=True),
+    sa.Column('item_class_L', sa.String(), nullable=True),
+    sa.Column('item_class_M', sa.String(), nullable=True),
+    sa.Column('item_class_S', sa.String(), nullable=True),
+    sa.Column('item_value', sa.Boolean(), nullable=True),
+    sa.Column('item_feature', sa.String(), nullable=True),
+    sa.Column('item_color', sa.String(), nullable=True),
+    sa.Column('item_maker', sa.String(), nullable=True),
+    sa.Column('item_expiration', sa.DateTime(), nullable=True),
+    sa.Column('item_num', sa.Integer(), nullable=True),
+    sa.Column('item_unit', sa.String(), nullable=True),
+    sa.Column('item_plice', sa.String(), nullable=True),
+    sa.Column('item_money', sa.String(), nullable=True),
+    sa.Column('item_remarks', sa.String(), nullable=True),
+    sa.Column('card_campany', sa.String(), nullable=True),
+    sa.Column('card_tel', sa.String(), nullable=True),
+    sa.Column('card_name', sa.String(), nullable=True),
+    sa.Column('card_person', sa.String(), nullable=True),
+    sa.Column('card_return', sa.DateTime(), nullable=True),
+    sa.Column('card_item', sa.DateTime(), nullable=True),
+    sa.Column('card_item_hour', sa.String(), nullable=True),
+    sa.Column('card_item_minute', sa.String(), nullable=True),
+    sa.Column('card_manager', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=True),
@@ -184,5 +225,6 @@ def downgrade():
         batch_op.drop_index(batch_op.f('ix_users_username'))
 
     op.drop_table('users')
+    op.drop_table('notfound')
     op.drop_table('lost_item')
     # ### end Alembic commands ###
