@@ -108,3 +108,34 @@ u {
     margin-top: 10px;
     /* 上部のマージンを追加 */
 }
+
+/* メインページ */
+.dt-main {
+    width: 380px;
+    margin-top: 10px;
+}
+
+.dt-main .card {
+    box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
+        0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
+    border-radius: 16px;
+}
+
+.dt-main .dt-login {
+    height: 300px !important;
+}
+
+.dt-main .dt-card {
+    height: 250px !important;
+}
+
+.dt-main header {
+    text-align: center;
+    margin: 10px 0 0 0;
+    font-size: 20px;
+}
+
+.dt-main section {
+    width: 300px;
+    margin: 10px auto;
+}

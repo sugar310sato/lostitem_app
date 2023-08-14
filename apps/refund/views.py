@@ -80,7 +80,7 @@ def search():
                            form=form)
 
 
-# 還付処理
+# 還付番号処理
 @refund.route("/refund_item", methods=["POST", "GET"])
 def refund_item():
     form = RefundItemForm()

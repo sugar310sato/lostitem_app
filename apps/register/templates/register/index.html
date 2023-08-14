@@ -5,37 +5,38 @@
 <div class="text-center">
     {% if current_user.is_authenticated %}
     <p>ようこそ。現在<strong>{{ current_user.username }}</strong>さんがログインしています。</p>
-    <p>メニューから操作を選択し、業務を行ってください。</p>
 
     <!-- 各種業務内容へ飛ぶメニュー -->
     <div class="card-deck">
-
-        <div class="card" style="width: 15rem;">
-            <img src="{{ url_for('register.image_file', filename='register_item.png') }}" class="card-img-top"
-                alt="拾得物の届出" width="30%" height="30%">
-            <div class="card-body">
-                <h5 class="card-title">拾得物登録</h5>
-                <p class="card-text">拾得物の登録を行います。拾得物を受け付けたら、こちらから登録してください。</p>
-                <a href="#" class="btn btn-primary">拾得物登録</a>
+        <div class="dt-main">
+            <div class="card dt-card">
+                <header>拾得物管理</header>
+                <section>
+                    <a href="{{ url_for('register.photo') }}" class="btn btn-md btn-light btn-block">拾得物登録</a>
+                    <a href="{{ url_for('items.index') }}" class="btn btn-md btn-light btn-block">拾得物一覧</a>
+                    <a href="{{ url_for('disposal.dis_list') }}" class="btn btn-md btn-light btn-block">保管物件情報一覧</a>
+                </section>
             </div>
         </div>
-        <div class="card" style="width: 15rem;">
-            <img src="..." class="card-img-top" alt="拾得物検索">
-            <div class="card-body">
-                <h5 class="card-title">拾得物検索</h5>
-                <p class="card-text">拾得物の検索を行います。お客様からの問い合わせがあった場合、こちらを利用してください。</p>
-                <a href="#" class="btn btn-primary">拾得物検索</a>
+        <div class="dt-main">
+            <div class="card dt-card">
+                <header>警察届出処理</header>
+                <section>
+                    <a href="{{ url_for('police.item') }}" class="btn btn-md btn-light btn-block">届出対象情報一覧</a>
+                </section>
             </div>
         </div>
-        <div class="card" style="width: 15rem;">
-            <img src="..." class="card-img-top" alt="警察への届出">
-            <div class="card-body">
-                <h5 class="card-title">警察届出</h5>
-                <p class="card-text">警察への届出の書類の印刷等を行います。</p>
-                <a href="#" class="btn btn-primary">警察届出</a>
+        <div class="dt-main">
+            <div class="card dt-card">
+                <header>還付管理</header>
+                <section>
+                    <a href="{{ url_for('refund.register_num') }}" class="btn btn-md btn-light btn-block">届出受理番号登録</a>
+                    <a href="{{ url_for('refund.refund_item') }}" class="btn btn-md btn-light btn-block">還付</a>
+                    <a href="{{ url_for('refund.refund_list') }}" class="btn btn-md btn-light btn-block">還付請求一覧印刷</a>
+                    <a href="{{ url_for('refund.refunded') }}" class="btn btn-md btn-light btn-block">還付済物件処理</a>
+                </section>
             </div>
         </div>
-
     </div>
     {% else %}
     <p>拾得物の管理を行うアプリです。下記のボタンからログインしてください。</p>
