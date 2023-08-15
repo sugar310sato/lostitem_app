@@ -285,7 +285,7 @@ def make_pdf_refund_items(items):
             p.drawCentredString(300, start_num+10, item.get_item.strftime('%Y/%m/%d'))
         else:
             p.drawCentredString(300, start_num+10, "")
-        p.drawCentredString(380, start_num+10, str(item.id))
+        p.drawCentredString(380, start_num+10, str(item.main_id))
         p.drawCentredString(580, start_num+17, item.item_class_S)
         p.drawCentredString(580, start_num+5, item.item_feature)
         if denomination is not None:
@@ -314,7 +314,7 @@ def make_refunded_list(items):
     p.rect(20, 480, 80, 20), p.rect(100, 480, 80, 20), p.rect(180, 480, 80, 20)
     p.rect(260, 480, 80, 20), p.rect(340, 480, 80, 20), p.rect(420, 480, 320, 20)
     p.rect(740, 480, 80, 20)
-    p.drawCentredString(60, 485, "還付日"), p.drawCentredString(140, 485, "受理番号")
+    p.drawCentredString(60, 485, "還付日"), p.drawCentredString(140, 485, "管理・受理番号")
     p.drawCentredString(220, 485, "処理担当者"), p.drawCentredString(300, 485, "拾得日時")
     p.drawCentredString(380, 485, "金額"), p.drawCentredString(580, 485, "物件の種類及び特徴")
     p.drawCentredString(780, 485, "還付後処理")
@@ -334,7 +334,8 @@ def make_refunded_list(items):
                                 item.refund_date.strftime('%Y/%m/%d'))
         else:
             p.drawCentredString(60, start_num+10, "")
-        p.drawCentredString(140, start_num+10, str(item.receiptnumber))
+        p.drawCentredString(140, start_num+17, str(item.main_id))
+        p.drawCentredString(140, start_num+5, str(item.receiptnumber))
         if item.refund_manager:
             p.drawCentredString(220, start_num+10, item.refund_manager)
         if item.get_item:

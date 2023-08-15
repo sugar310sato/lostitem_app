@@ -666,7 +666,7 @@
         {% for item in all_lost_item %}
         <tr>
             <td>
-                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
             </td>
             <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour }}{{
                 item.get_item_minute }}</td>

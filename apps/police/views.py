@@ -19,7 +19,7 @@ police = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER = str(Path(basedir, "PDFfile"))
+UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "police_pdf"))
 
 
 # 警察届出
@@ -216,7 +216,7 @@ def make_pdf_police(items, submit_date):
         else:
             p.drawString(370, start_num+55, "")
         p.drawString(370, start_num+40, item.find_area)
-        p.drawString(520, start_num+55, str(item.id))
+        p.drawString(520, start_num+55, str(item.main_id))
         start_num -= 70
 
     # 備考欄
@@ -323,7 +323,7 @@ def make_pdf_police_third(items, submit_date):
         else:
             p.drawString(370, start_num+55, "")
         p.drawString(370, start_num+40, item.find_area)
-        p.drawString(520, start_num+55, str(item.id))
+        p.drawString(520, start_num+55, str(item.main_id))
         start_num -= 70
 
         # 備考欄

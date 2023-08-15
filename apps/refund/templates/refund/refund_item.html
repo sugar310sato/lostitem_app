@@ -35,7 +35,7 @@
         {% for item in all_lostitem %}
         <tr>
             <td>
-                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+                <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
                 <br>{{ item.receiptnumber }}
             </td>
             <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>

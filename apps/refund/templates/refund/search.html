@@ -28,7 +28,7 @@
             {% for item in search_results %}
             <tr>
                 <td>
-                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.id }}</a>
+                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
                 </td>
                 <td>{{ item.police_date.strftime('%Y/%m/%d') if item.police_date is not none else "" }}</td>
                 <td>{{ item.receiptnumber }}</td>
