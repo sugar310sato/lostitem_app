@@ -2,10 +2,12 @@ import base64
 import os
 import shutil
 import uuid
+from datetime import datetime
 from pathlib import Path
 
 from flask import (Blueprint, current_app, redirect, render_template, request,
                    send_from_directory, url_for)
+from sqlalchemy import func
 
 from apps.app import db
 from apps.register.forms import (ChoicesFinderForm, OwnerLostItemForm,
@@ -94,13 +96,15 @@ def choices_finder():
 # 拾得物の情報登録
 @register.route("/register_item/<choice_finder>", methods=["POST", "GET"])
 def register_item(choice_finder):
+    current_year = datetime.now().year % 100
+    main_id = generate_main_id(choice_finder, current_year)
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
-        # form.validate_on_submit()だとNULLをうまく受け付けてくれない
-        # submit.dataとすることで、入力がない場合にも対応できる
         if form.submit.data:
             moved_path = save_image()
             ownerlostitem = LostItem(
+                main_id=main_id,
+                current_year=current_year,
                 choice_finder=choice_finder,
                 track_num=form.track_num.data,
                 notify=form.notify.data,
@@ -164,6 +168,8 @@ def register_item(choice_finder):
         if form.submit.data:
             moved_path = save_image()
             thirdpartylostitem = LostItem(
+                main_id=main_id,
+                current_year=current_year,
                 choice_finder=choice_finder,
                 track_num=form.track_num.data,
                 notify=form.notify.data,
@@ -224,6 +230,19 @@ def register_item(choice_finder):
             return redirect(url_for("items.detail", item_id=thirdpartylostitem.id))
     return render_template("register/register_item.html", choice_finder=choice_finder,
                            form=form)
+
+
+# 識別番号の生成関数
+def generate_main_id(choice_finder, current_year):
+    # choice_finderとcurrent_yearが一致するレコードの数をカウント
+    count = db.session.query(func.count(LostItem.id)
+                             ).filter(LostItem.choice_finder == choice_finder,
+                                      LostItem.current_year == current_year).scalar()
+    if choice_finder == "占有者拾得":
+        identifier = f"1{current_year:02}{count+1:05}"
+    else:
+        identifier = f"2{current_year:02}{count+1:05}"
+    return identifier
 
 
 # 画像の表示

@@ -74,7 +74,7 @@ def notfound_register():
 @notfound.route("/search", methods=["POST", "GET"])
 def notfound_search():
     form = SearchNotFoundForm()
-    search_results = session.get('search_results', None)
+    search_results = session.get('notfound_search', None)
     if search_results is None:
         search_results = db.session.query(NotFound).all()
 
@@ -107,7 +107,7 @@ def notfound_search():
         if not taiou_bool:
             query = query.filter(NotFound.item_situation != "対応済")
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
+        session['notfound_search'] = [item.to_dict() for item in search_results]
         return redirect(url_for("notfound.notfound_search"))
 
     if form.submit_taiou.data:

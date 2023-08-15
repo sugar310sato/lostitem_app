@@ -37,6 +37,17 @@
                 </section>
             </div>
         </div>
+        <div class="dt-main">
+            <div class="card dt-card">
+                <header>遺失物管理</header>
+                <section>
+                    <a href="{{ url_for('notfound.notfound_register') }}"
+                        class="btn btn-md btn-light btn-block">遺失物情報登録</a>
+                    <a href="{{ url_for('notfound.notfound_search') }}"
+                        class="btn btn-md btn-light btn-block">遺失物情報一覧</a>
+                </section>
+            </div>
+        </div>
     </div>
     {% else %}
     <p>拾得物の管理を行うアプリです。下記のボタンからログインしてください。</p>

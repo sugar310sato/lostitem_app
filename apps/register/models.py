@@ -8,6 +8,9 @@ from apps.app import db
 class LostItem(db.Model):
     __tablename__ = "lost_item"
     id = db.Column(db.Integer, primary_key=True)
+    main_id = db.Column(db.Integer)
+    current_year = db.Column(db.Integer)
+
     choice_finder = db.Column(db.String)
     track_num = db.Column(db.Integer)
     notify = db.Column(db.Boolean, default=False)
