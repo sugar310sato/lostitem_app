@@ -8,8 +8,8 @@
 
     <!-- 各種業務内容へ飛ぶメニュー -->
     <div class="card-deck">
-        <div class="dt-main">
-            <div class="card dt-card">
+        <div class="lostitem-main">
+            <div class="card lostitem-card">
                 <header>拾得物管理</header>
                 <section>
                     <a href="{{ url_for('register.photo') }}" class="btn btn-md btn-light btn-block">拾得物登録</a>
@@ -18,16 +18,18 @@
                 </section>
             </div>
         </div>
-        <div class="dt-main">
-            <div class="card dt-card">
+        <div class="lostitem-main">
+            <div class="card lostitem-card">
                 <header>警察届出処理</header>
                 <section>
                     <a href="{{ url_for('police.item') }}" class="btn btn-md btn-light btn-block">届出対象情報一覧</a>
+                    <a href="{{ url_for('police.submit_data') }}"
+                        class="btn btn-md btn-light btn-block">フレキシブルディスク提出</a>
                 </section>
             </div>
         </div>
-        <div class="dt-main">
-            <div class="card dt-card">
+        <div class="lostitem-main">
+            <div class="card lostitem-card">
                 <header>還付管理</header>
                 <section>
                     <a href="{{ url_for('refund.register_num') }}" class="btn btn-md btn-light btn-block">届出受理番号登録</a>
@@ -37,14 +39,22 @@
                 </section>
             </div>
         </div>
-        <div class="dt-main">
-            <div class="card dt-card">
+        <div class="lostitem-main">
+            <div class="card lostitem-card">
                 <header>遺失物管理</header>
                 <section>
                     <a href="{{ url_for('notfound.notfound_register') }}"
                         class="btn btn-md btn-light btn-block">遺失物情報登録</a>
                     <a href="{{ url_for('notfound.notfound_search') }}"
                         class="btn btn-md btn-light btn-block">遺失物情報一覧</a>
+                </section>
+            </div>
+        </div>
+        <div class="lostitem-main">
+            <div class="card lostitem-card">
+                <header>その他管理</header>
+                <section>
+                    <a href="{{ url_for('crud.users') }}" class="btn btn-md btn-light btn-block">ユーザー管理</a>
                 </section>
             </div>
         </div>

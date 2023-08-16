@@ -3,20 +3,20 @@
 {% block title %}ユーザ新規登録{% endblock %}
 
 {% block content %}
-<div class="mx-auto dt-auth-main">
-    <div class="card dt-auth-signup">
+<div class="mx-auto lostitem-app-main">
+    <div class="card lostitem-app-signup">
         <header>ユーザ新規登録</header>
         <section>
             <form method="post" action="{{ url_for('auth.signup', next=request.args.get('next')) }}"
                 class="form-signin">
                 {{ form.csrf_token }}
                 {% for message in get_flashed_messages() %}
-                <div class="dt-auth-flash">{{ message }}</div>
+                <div class="lostitem-app-flash">{{ message }}</div>
                 {% endfor %}
 
-                {{ form.username(size=30, class="form-control dt-auth-input", placeholder="ユーザー名") }}
-                {{ form.password(class="form-control dt-auth-input",placeholder="パスワード") }}
-                {{ form.submit(class="btn btn-md btn-primary btn-block dt-auth-btn") }}
+                {{ form.username(size=30, class="form-control lostitem-app-input", placeholder="ユーザー名") }}
+                {{ form.password(class="form-control lostitem-app-input",placeholder="パスワード") }}
+                {{ form.submit(class="btn btn-md btn-primary btn-block lostitem-app-btn") }}
             </form>
         </section>
     </div>

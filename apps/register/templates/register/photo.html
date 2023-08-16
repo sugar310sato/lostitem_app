@@ -3,9 +3,11 @@
 {% block content %}
 
 <body>
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="capture">撮影</button>
-    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+    <div class="lostitem-app-main" style="margin-left: 200px;">
+        <video id="video" width="640" height="480" autoplay class="card"></video><br>
+        <button id="capture" class="btn btn-primary" style="margin-left: 300px;">撮影</button>
+        <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+    </div>
 
     <script>
         // カメラのストリームを取得

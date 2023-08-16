@@ -4,11 +4,12 @@ from pathlib import Path
 
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import A4, letter
 from reportlab.pdfgen import canvas
 
 from apps.app import db
-from apps.police.forms import MakeDocument, OptionDocument, PoliceForm
+from apps.police.forms import (MakeDocument, OptionDocument, PoliceForm,
+                               SubmitData)
 from apps.register.models import Denomination, LostItem
 
 police = Blueprint(
@@ -70,6 +71,46 @@ def item_search():
         return redirect(url_for('police.choice_document'))
     return render_template("police/search.html", search_results=search_results,
                            form=form)
+
+
+# フレキシブルディスク提出票
+@police.route("/submit_data", methods=["POST", "GET"])
+def submit_data():
+    form = SubmitData()
+    if form.submit.data:
+        info = form.info.data
+        documents = form.documents.data
+        make_submit_data(info, documents)
+        return redirect(url_for("police.submit_data"))
+    return render_template("police/submit_data.html", form=form)
+
+
+def make_submit_data(info, documents):
+    file_name = "submit_data" + '.pdf'
+    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    p = canvas.Canvas(file_path, pagesize=A4)
+    p.setFont('HeiseiMin-W3', 20)
+    p.drawString(220, 800, "フレキシブルディスク提出票")
+    p.setFont('HeiseiMin-W3', 10)
+    p.drawString(20, 770,
+                 "遺失物法施行規則第26条の規定により提出すべき書類に記載することとされている事項を記録したフレキシブルディスクを")
+    p.drawString(20, 760, "次のとおり提出します。")
+    p.drawString(20, 750, "本票に添付されているフレキシブルディスクに記録された事項は、事実に相違ありません。")
+    p.drawRightString(550, 730, datetime.now().strftime("%Y年%m月%d日"))
+    p.drawString(200, 710, "殿")
+    p.drawString(250, 670, "氏名又は名称")
+    p.drawString(250, 650, "住所又は所在地")
+    p.drawString(250, 620, "電話番号 その他連絡先")
+
+    p.drawString(30, 500, "1 フレキシブルディスクに記載された事項")
+    p.drawString(30, 490, info)
+    p.drawString(30, 300, "2 フレキシブルディスクと併せて提出される書類")
+    p.drawString(30, 290, documents)
+
+    p.showPage()
+    p.save()
+
+    return "making PDF"
 
 
 # 作成書類選択

@@ -10,90 +10,83 @@ input[type="search"] {
     background-color: #f5f5f5;
 }
 
-.dt-auth-main {
+.lostitem-app-main {
     width: 400px;
     margin-top: 45px;
 }
 
-.dt-auth-main .card {
+.lostitem-app-main .card {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 16px;
 }
 
-.dt-auth-main .dt-auth-login {
+.lostitem-app-main .lostitem-app-login {
     height: 300px !important;
 }
 
-.dt-auth-main .dt-auth-signup {
+.lostitem-app-main .lostitem-app-signup {
     height: 340px !important;
 }
 
-.dt-auth-main header {
+.lostitem-app-main header {
     text-align: center;
     margin: 30px 0 0 0;
     font-size: 24px;
 }
 
-.dt-auth-main section {
+.lostitem-app-main section {
     width: 300px;
     margin: 10px auto;
 }
 
-.dt-auth-flash {
+.lostitem-app-flash {
     font-size: 14px;
     color: #9c1a1c;
 }
 
-.dt-auth-input {
+.lostitem-app-input {
     margin-top: 10px;
 }
 
-.dt-auth-btn {
+.lostitem-app-btn {
     margin: 30px 0 0 0;
 }
 
-.dt-search {
+.lostitem-app-search {
     height: 28px !important;
 }
 
-.dt-image-content {
+.lostitem-app-image {
     margin: 20px auto;
     padding: 0;
 }
 
-.dt-image-username {
+.lostitem-app-username {
     padding-top: 15px;
 }
 
-.dt-image-register-btn {
+.lostitem-app-register-btn {
     padding: 10px 47px 0 0;
 }
 
-.dt-image-content header {
+.lostitem-app-image header {
     padding: 10px 10px 0 10px;
 }
 
-.dt-image-content section {
+.lostitem-app-image section {
     padding: 10px 0;
     margin: auto;
 }
 
-.dt-image-content footer {
+.lostitem-app-image footer {
     padding: 10px;
 }
 
-.dt-image-content section img {
+.lostitem-app-image section img {
     width: 100%;
 }
 
-.dt-image-file {
-    display: none;
-}
-
-.dt-image-submit {
-    margin-left: 10px;
-}
 
 u {
     color: dimgray;
@@ -110,32 +103,32 @@ u {
 }
 
 /* メインページ */
-.dt-main {
+.lostitem-main {
     width: 380px;
     margin-top: 10px;
 }
 
-.dt-main .card {
+.lostitem-main .card {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 16px;
 }
 
-.dt-main .dt-login {
+.lostitem-main .lostitem-login {
     height: 300px !important;
 }
 
-.dt-main .dt-card {
+.lostitem-main .lostitem-card {
     height: 250px !important;
 }
 
-.dt-main header {
+.lostitem-main header {
     text-align: center;
     margin: 10px 0 0 0;
     font-size: 20px;
 }
 
-.dt-main section {
+.lostitem-main section {
     width: 300px;
     margin: 10px auto;
 }

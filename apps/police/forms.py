@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import BooleanField, DateField, SelectField, SubmitField
+from wtforms.fields import (BooleanField, DateField, SelectField, SubmitField,
+                            TextAreaField)
 
 from apps.config import CHOICES_FINDER_POLICE
 
@@ -32,3 +33,10 @@ class OptionDocument(FlaskForm):
         ]
     )
     submit = SubmitField("提出書類の作成")
+
+
+# フレキシブルディスク提出票用フォーム
+class SubmitData(FlaskForm):
+    info = TextAreaField("フレキシブルディスクに記載された事項")
+    documents = TextAreaField("フレキシブルディスクとあわせて提出される書類")
+    submit = SubmitField("印刷")
