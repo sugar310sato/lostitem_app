@@ -60,7 +60,6 @@ class MoneyForm(FlaskForm):
     ten_yen = IntegerField("十円")
     five_yen = IntegerField("五円")
     one_yen = IntegerField("一円")
-    total_yen = IntegerField("合計金額")
 
     # 記念硬貨
     commemorative_coin_1 = StringField("記念硬貨名")

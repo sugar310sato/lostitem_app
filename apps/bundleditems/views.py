@@ -135,6 +135,18 @@ def money_register(item_id):
     form = MoneyForm()
     lostitem = LostItem.query.filter_by(id=item_id).first()
     if form.submit.data:
+        total_yen = (
+            (form.ten_thousand_yen.data or 0) * 10000 +
+            (form.five_thousand_yen.data or 0) * 5000 +
+            (form.two_thousand_yen.data or 0) * 2000 +
+            (form.one_thousand_yen.data or 0) * 1000 +
+            (form.five_hundred_yen.data or 0) * 500 +
+            (form.one_hundred_yen.data or 0) * 100 +
+            (form.fifty_yen.data or 0) * 50 +
+            (form.ten_yen.data or 0) * 10 +
+            (form.five_yen.data or 0) * 5 +
+            (form.one_yen.data or 0) * 1
+        )
         denomination = Denomination(
             ten_thousand_yen=form.ten_thousand_yen.data,
             five_thousand_yen=form.five_thousand_yen.data,
@@ -146,7 +158,7 @@ def money_register(item_id):
             ten_yen=form.ten_yen.data,
             five_yen=form.five_yen.data,
             one_yen=form.one_yen.data,
-            total_yen=form.total_yen.data,
+            total_yen=total_yen,
             item_situation="保管中",
 
             # 記念硬貨
@@ -169,6 +181,18 @@ def money_edit(item_id):
     form = MoneyForm()
     denomination = Denomination.query.filter_by(lostitem_id=item_id).first()
     if form.submit.data:
+        total_yen = (
+            (form.ten_thousand_yen.data or 0) * 10000 +
+            (form.five_thousand_yen.data or 0) * 5000 +
+            (form.two_thousand_yen.data or 0) * 2000 +
+            (form.one_thousand_yen.data or 0) * 1000 +
+            (form.five_hundred_yen.data or 0) * 500 +
+            (form.one_hundred_yen.data or 0) * 100 +
+            (form.fifty_yen.data or 0) * 50 +
+            (form.ten_yen.data or 0) * 10 +
+            (form.five_yen.data or 0) * 5 +
+            (form.one_yen.data or 0) * 1
+        )
         denomination.ten_thousand_yen = form.ten_thousand_yen.data
         denomination.five_thousand_yen = form.five_thousand_yen.data
         denomination.two_thousand_yen = form.two_thousand_yen.data
@@ -179,7 +203,7 @@ def money_edit(item_id):
         denomination.ten_yen = form.ten_yen.data
         denomination.five_yen = form.five_yen.data
         denomination.one_yen = form.one_yen.data
-        denomination.total_yen = form.total_yen.data
+        denomination.total_yen = total_yen
 
         # 記念硬貨
         denomination.commemorative_coin_1 = form.commemorative_coin_1.data
