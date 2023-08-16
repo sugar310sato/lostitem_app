@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 from flask import Blueprint, redirect, render_template, url_for
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfgen import canvas
@@ -22,37 +22,68 @@ return_item = Blueprint(
     static_folder="static",
 )
 
+basedir = Path(__file__).parent.parent
+UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "return_item_pdf"))
+
 pdfmetrics.registerFont(UnicodeCIDFont('HeiseiMin-W3'))
 
 
-# PDFの作成
-@return_item.route("/makepdf/<item_id>")
+# 受領書印刷
+@return_item.route("/makepdf/<item_id>", methods=["POST", "GET"])
 def make_pdf(item_id):
-    item = LostItem.query.filter_by(id=item_id).first()
+    lostitem = LostItem.query.filter_by(id=item_id).first()
+    make_return_pdf(lostitem)
+    return redirect(url_for("return_item.item", item_id=lostitem.id))
 
-    file_name = datetime.now().strftime("%Y%m%d_%H%M%S") + '.pdf'
+
+def make_return_pdf(item):
+    file_name = "refunded" + '.pdf'
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
-    p = canvas.Canvas(file_path, pagesize=letter)
+    p = canvas.Canvas(file_path, pagesize=A4)
+    p.setFont('HeiseiMin-W3', 20)
+    p.drawString(220, 800, "遺失物受領確認書")
+    p.setFont('HeiseiMin-W3', 10)
+    p.drawString(225, 790, "Confirmation receipt of Lost article")
+    p.drawString(20, 770, "下記の遺失物確かに受領いたしました。")
+    p.drawString(20, 758, "[I received the following lost article]")
+    p.drawString(20, 730, "問い合わせ番号"), p.drawString(20, 718, "[Inquiry number]")
+    p.drawString(30, 700, "受領日（返還日）"), p.drawString(30, 688,
+                                                    "[Date recieved(Date of return)]")
+    p.drawString(200, 695, "______年 ______月 ______日 ( ______ 曜日 )")
+    p.drawString(30, 670, "受領時間"), p.drawString(30, 658, "[Time recieved]")
+    p.drawString(200, 665, "______時 ______分")
+    p.drawString(30, 640, "氏名"), p.drawString(30, 628, "[Name]")
+    p.drawString(200, 635, "_______________________様       印")
+    p.drawString(30, 610, "郵便番号"), p.drawString(30, 598, "[Post code]")
+    p.drawString(200, 605, "〒_________ー_________")
+    p.drawString(30, 580, "住所"), p.drawString(30, 568, "[Address]")
+    p.drawString(200, 575, "__________________________________________________________")
+    p.drawString(30, 550, "電話番号"), p.drawString(30, 538, "[Telephone number]")
+    p.drawString(200, 545, "__________________________________")
 
-    # ここからPDF
-    textobject = p.beginText()
-    textobject.setTextOrigin(50, 500)
+    # 拾得物詳細
+    p.drawString(20, 500, "拾得物詳細")
+    p.drawString(30, 480, "管理No"), p.drawString(100, 480, str(item.main_id))
+    p.drawString(30, 460, "拾得日")
+    if item.get_item:
+        p.drawString(100, 460, item.get_item.strftime('%Y/%m/%d'))
+    p.drawString(30, 440, "拾得時間"), p.drawString(100, 440, item.get_item_hour)
+    p.drawString(120, 440, item.get_item_minute)
+    p.drawString(30, 420, "拾得場所"), p.drawString(100, 420, item.find_area)
+    p.drawString(30, 400, "拾得物名"), p.drawString(100, 400, item.item_class_L + " " +
+                                                item.item_class_M + " " +
+                                                item.item_class_S)
 
-    textobject.setFont('HeiseiMin-W3', 12)
+    p.drawString(20, 300, "※記載された個人情報は、お客様へのご連絡以外の目的には利用いたしません。")
 
-    textobject.textLine("遺失物受領確認書")
-    textobject.textLine("受領者: " + item.recep_manager)
-    textobject.textLine("アイテム名: " + item.item_class_S)
-    textobject.textLine("アイテムの詳細: " + item.item_feature)
-    textobject.textLine("発見日: " + str(item.get_item))
-
-    p.drawText(textobject)
-
-    # Close the PDF object cleanly.
+    # 担当者記入欄
+    p.drawString(20, 120, "担当者記入欄")
+    p.drawString(30, 95, "本人確認書類    □運転免許証   □パスポート   □保険証   □その他(______________)")
+    p.drawString(30, 70, "返還担当者署名    ______________________________________     印")
     p.showPage()
     p.save()
 
-    return "PDF receipt saved as " + file_name
+    return "making PDF"
 
 
 # 拾得物の返還/遺失者連絡
