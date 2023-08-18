@@ -25,21 +25,10 @@ class RegisterItem(FlaskForm):
             ("権利放棄", "権利放棄"),
         ]
     )
-    submit = SubmitField("検索")
-
-
-# 受理番号登録フォーム
-class RefundForm(FlaskForm):
     receiptnumber = IntegerField("受理番号")
     refund_expect = DateField("還付予定日")
-    submit = SubmitField("登録")
-
-
-# 還付処理フォーム
-class PoliceRefundForm(FlaskForm):
-    refund_date = DateField("還付日")
-    refund_manager = StringField("担当者")
-    submit = SubmitField("登録")
+    submit_register = SubmitField("登録")
+    submit = SubmitField("検索")
 
 
 # 還付済物件処理用フォーム
@@ -68,6 +57,9 @@ class RefundItemForm(FlaskForm):
     returned = BooleanField("還付済・警察返還済も表示")
     item_plice = BooleanField("貴重品のみ表示")
     item_feature = StringField("特徴")
+    refund_date = DateField("還付日")
+    refund_manager = StringField("担当者")
+    submit_register = SubmitField("登録")
     submit = SubmitField("検索")
 
 
@@ -82,3 +74,4 @@ class RefundList(FlaskForm):
         ]
     )
     submit = SubmitField("検索")
+    submit_list = SubmitField("印刷")

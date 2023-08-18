@@ -15,11 +15,7 @@ class PoliceForm(FlaskForm):
         choices=CHOICES_FINDER_POLICE,
     )
     submit = SubmitField("絞り込み")
-
-
-# 届出出力用フォーム
-class MakeDocument(FlaskForm):
-    submit = SubmitField("警察届出所出力")
+    submit_output = SubmitField("警察届出所出力")
 
 
 # 届出日、書類設定フォーム

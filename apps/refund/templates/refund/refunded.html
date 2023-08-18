@@ -23,6 +23,7 @@
     </div>
     <!-- 還付済物件処理フォーム -->
     <hr>
+    <p>{{ pagination.info }}</p>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -58,17 +59,20 @@
                 <td>
                     <select name="item_select_{{ item.id }}">
                         <option value=""></option>
-                        <option value="店長">店長</option>
-                        <option value="廃棄">廃棄</option>
-                        <option value="入金">入金</option>
-                        <option value="本部">本部</option>
-                        <option value="保留">保留</option>
-                        <option value="警処">警処</option>
+                        <option value="店長" {% if item.refunded_process=="店長" %}selected{% endif %}>店長</option>
+                        <option value="廃棄" {% if item.refunded_process=="廃棄" %}selected{% endif %}>廃棄</option>
+                        <option value="入金" {% if item.refunded_process=="入金" %}selected{% endif %}>入金</option>
+                        <option value="本部" {% if item.refunded_process=="本部" %}selected{% endif %}>本部</option>
+                        <option value="保留" {% if item.refunded_process=="保留" %}selected{% endif %}>保留</option>
+                        <option value="警処" {% if item.refunded_process=="警処" %}selected{% endif %}>警処</option>
                     </select>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <div class="container">
+        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    </div>
 </form>
 {% endblock %}

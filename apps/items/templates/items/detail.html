@@ -3,8 +3,9 @@
 {% block content %}
 <h2>拾得物詳細画面</h2>
 <div class="container">
-    <div class="row">
-        <img src="{{ url_for('items.image_file', item_id=item.id) }}" alt="拾得物の画像" width="25%" height="auto">
+    <div class="text-center">
+        <img src="{{ url_for('items.image_file', item_id=item.id) }}" alt="拾得物の画像" width="25%" height="auto"
+            class="photo mb-3">
     </div>
     <div class="row">
         <div class="col-3">管理番号 <u>{{ item.track_num }}</u></div>

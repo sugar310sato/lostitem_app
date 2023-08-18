@@ -4,12 +4,12 @@ from pathlib import Path
 
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
+from flask_paginate import Pagination, get_page_parameter
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.pdfgen import canvas
 
 from apps.app import db
-from apps.police.forms import (MakeDocument, OptionDocument, PoliceForm,
-                               SubmitData)
+from apps.police.forms import OptionDocument, PoliceForm, SubmitData
 from apps.register.models import Denomination, LostItem
 
 police = Blueprint(
@@ -28,8 +28,16 @@ UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "police_pdf"))
 def item():
     # 一応返還済みでないすべての物品を出しています
     # 遺失者連絡済みの物を除外するためのFormなどは用意してあります
-    all_lostitem = db.session.query(LostItem).all()
     form = PoliceForm()
+    search_results = session.get('search_police', None)
+    if search_results is None:
+        search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
 
     if form.submit.data:
         start_date = form.start_date.data
@@ -54,23 +62,15 @@ def item():
         # 警察未届けの物のみ
         query = query.filter(LostItem.item_situation != "警察届出済み")
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("police.item_search"))
-    return render_template("police/index.html", all_lostitem=all_lostitem, form=form)
+        session['search_police'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("police.item"))
 
-
-# 検索結果
-@police.route("/items/search", methods=["POST", "GET"])
-def item_search():
-    search_results = session.get('search_results', [])
-
-    form = MakeDocument()
-    if form.submit.data:
+    if form.submit_output.data:
         item_ids = request.form.getlist('item_ids')
         session['item_ids'] = item_ids
         return redirect(url_for('police.choice_document'))
-    return render_template("police/search.html", search_results=search_results,
-                           form=form)
+    return render_template("police/index.html", all_lostitem=rows, form=form,
+                           pagination=pagination)
 
 
 # フレキシブルディスク提出票
@@ -144,7 +144,7 @@ def make_data():
     submit_date = request.args.get('submit_date')
     make_pdf_police(items, submit_date)
     print(len(items))
-    return "making PDF!"
+    return redirect(url_for("police.item"))
 
 
 # 警察届出用データ作成（第三者）
@@ -164,7 +164,7 @@ def make_data_third():
     db.session.commit()
     make_pdf_police_third(items, submit_date)
     print(len(items))
-    return "making PDF!"
+    return redirect(url_for("police.item"))
 
 
 # 警察届出用データ作成関数（占有者）

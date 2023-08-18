@@ -11,9 +11,10 @@
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}
-            <a href="{{ url_for('refund.refund_list') }}" class="btn btn-secondary">戻る</a>
+            {{ form.submit_list(class="btn btn-primary") }}
         </div>
     </div>
+    <p>{{ pagination.info }}</p>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -23,10 +24,11 @@
                 <th>拾得物件名/特徴</th>
                 <th>還付予定日</th>
                 <th>還付日</th>
+                <th>選択</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in all_lost_item %}
+            {% for item in search_results %}
             <tr>
                 <td>
                     <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
@@ -37,10 +39,14 @@
                     <br>{{ item.item_feature }}
                 </td>
                 <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
-                <td>{{ item.refund_date }}</td>
+                <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
+                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <div class="container">
+        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    </div>
 </form>
 {% endblock %}

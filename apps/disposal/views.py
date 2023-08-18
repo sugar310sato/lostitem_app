@@ -4,6 +4,7 @@ from pathlib import Path
 
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
+from flask_paginate import Pagination, get_page_parameter
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfgen import canvas
 from sqlalchemy import func
@@ -28,6 +29,13 @@ UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "disposal_pdf"))
 def dis_list():
     form = GroceriesForm()
     search_results = session.get('search_results', None)
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
     if search_results is None:
         search_results = db.session.query(LostItem).all()
 
@@ -109,7 +117,7 @@ def dis_list():
             db.session.commit()
         return redirect(url_for('disposal.dis_list'))
     return render_template("disposal/dis_list.html", form=form,
-                           search_results=search_results)
+                           search_results=rows, pagination=pagination)
 
 
 # PDFの作成

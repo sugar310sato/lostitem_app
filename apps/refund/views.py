@@ -4,13 +4,14 @@ from pathlib import Path
 
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
+from flask_paginate import Pagination, get_page_parameter
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfgen import canvas
 from sqlalchemy import extract, func
 
 from apps.app import db
-from apps.refund.forms import (PoliceRefundForm, RefundedForm, RefundForm,
-                               RefundItemForm, RefundList, RegisterItem)
+from apps.refund.forms import (RefundedForm, RefundItemForm, RefundList,
+                               RegisterItem)
 from apps.register.models import Denomination, LostItem
 
 refund = Blueprint(
@@ -28,7 +29,15 @@ UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "refund_list_pdf"))
 @refund.route("/register_num", methods=["POST", "GET"])
 def register_num():
     form = RegisterItem()
-    all_lost_item = db.session.query(LostItem).all()
+    search_results = session.get('search_register_num', None)
+    if search_results is None:
+        search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
 
     if form.submit.data:
         start_date = form.start_date.data
@@ -51,19 +60,14 @@ def register_num():
             query = query.filter(LostItem.own_waiver == "放棄しない")
         elif waiver == "権利放棄":
             query = query.filter(LostItem.own_waiver == "一切放棄")
+        query = query.filter(LostItem.refund_situation != "処理済")
+        query = query.filter(LostItem.refund_situation != "還付済")
+        query = query.filter(LostItem.refund_situation != "対応済")
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("refund.search"))
+        session['search_register_num'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("refund.register_num"))
 
-    return render_template("refund/index.html", all_lost_item=all_lost_item, form=form)
-
-
-# 検索結果
-@refund.route("/search", methods=["POST", "GET"])
-def search():
-    search_results = session.get('search_results', [])
-    form = RefundForm()
-    if form.submit.data:
+    if form.submit_register.data:
         item_ids = request.form.getlist('item_ids')
         session['item_ids'] = item_ids
         items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
@@ -76,15 +80,23 @@ def search():
                 item.refund_situation = ""
         db.session.commit()
         return redirect(url_for("refund.register_num"))
-    return render_template("refund/search.html", search_results=search_results,
-                           form=form)
+    return render_template("refund/index.html", all_lost_item=rows, form=form,
+                           pagination=pagination)
 
 
-# 還付番号処理
+# 還付処理
 @refund.route("/refund_item", methods=["POST", "GET"])
 def refund_item():
     form = RefundItemForm()
-    all_lostitem = db.session.query(LostItem).all()
+    search_results = session.get('search_refund_item', None)
+    if search_results is None:
+        search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
 
     if form.submit.data:
         start_date = form.start_date.data
@@ -107,26 +119,19 @@ def refund_item():
         if refund_expect:
             query = query.filter(func.date(LostItem.refund_expect) == refund_expect)
         if not returned:
-            query = query.filter(LostItem.refund_situation == "還付予定")
+            query = query.filter(LostItem.refund_situation != "対応済")
+            query = query.filter(LostItem.refund_situation != "還付済")
+        else:
+            query = query.filter(LostItem.refund_situation != "NULL")
         if item_plice:
             query = query.filter(LostItem.item_value is True)
         if item_feature:
             query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
         search_results = query.all()
-        print(refund_expect)
-        session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("refund.refund_item_search"))
-    return render_template("refund/refund_item.html",
-                           form=form, all_lostitem=all_lostitem)
+        session['search_refund_item'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("refund.refund_item"))
 
-
-# 還付処理、検索結果
-@refund.route("/refund_item_search", methods=["POST", "GET"])
-def refund_item_search():
-    search_results = session.get('search_results', [])
-    form = PoliceRefundForm()
-
-    if form.submit.data:
+    if form.submit_register.data:
         item_ids = request.form.getlist('item_ids')
         session['item_ids'] = item_ids
         police_item_ids = request.form.getlist('police_item_ids')
@@ -147,17 +152,23 @@ def refund_item_search():
             item.refund_situation = "対応済"
         db.session.commit()
         return redirect(url_for("refund.refund_item"))
-    return render_template("refund/refund_item_search.html",
-                           search_results=search_results, form=form)
+    return render_template("refund/refund_item.html",
+                           form=form, search_results=rows, pagination=pagination)
 
 
 # 還付済物件処理
 @refund.route("/refunded", methods=["POST", "GET"])
 def refunded():
     form = RefundedForm()
-    search_results = session.get('search_results', None)
+    search_results = session.get('search_refunded', None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
 
     if form.submit.data:
         start_date = form.start_date.data
@@ -182,14 +193,17 @@ def refunded():
             query = query.filter(LostItem.refunded_process == refunded_process)
         if not refunded_bool:
             query = query.filter(LostItem.refund_situation != "処理済")
+        else:
+            query = query.filter(LostItem.refund_situation != "NULL")
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
+        session['search_refunded'] = [item.to_dict() for item in search_results]
         return redirect(url_for("refund.refunded"))
     if form.submit2.data:
         item_ids = request.form.getlist('item_ids')
         items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
         for item in items:
             select_value = request.form.get(f'item_select_{item.id}')
+            item.refund_situation = "処理済"
             item.refunded_process = select_value
         db.session.commit()
         return redirect(url_for('refund.refunded'))
@@ -199,13 +213,22 @@ def refunded():
         make_refunded_list(items)
         return redirect(url_for('refund.refunded'))
     return render_template("refund/refunded.html", form=form,
-                           search_results=search_results)
+                           search_results=rows, pagination=pagination)
 
 
 # 還付請求一覧
 @refund.route("/refund_list", methods=["POST", "GET"])
 def refund_list():
-    all_lost_item = db.session.query(LostItem).all()
+    search_results = session.get('search_refund_list', None)
+    if search_results is None:
+        search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
     form = RefundList()
     if form.submit.data:
         refund_expect_year = form.refund_expect_year.data
@@ -218,27 +241,19 @@ def refund_list():
         if refund_situation == "還付予定":
             query = query.filter(LostItem.refund_situation == "還付予定")
         else:
-            query = query.filter(LostItem.refund_situation == "還付済み")
+            query = query.filter(LostItem.refund_situation == "還付済")
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("refund.print_list"))
-    return render_template("refund/refund_list.html", all_lost_item=all_lost_item,
-                           form=form)
+        session['search_refund_list'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("refund.refund_list"))
 
-
-# 一覧表の印刷
-@refund.route("/print_list", methods=["POST", "GET"])
-def print_list():
-    search_results = session.get('search_results', [])
-    form = RefundList()
-    if form.submit.data:
+    if form.submit_list.data:
         item_ids = request.form.getlist('item_ids')
         session['item_ids'] = item_ids
         items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
         make_pdf_refund_items(items)
         return redirect(url_for("refund.refund_list", items=items))
-    return render_template("refund/print_list.html", form=form,
-                           search_results=search_results)
+    return render_template("refund/refund_list.html", search_results=rows,
+                           form=form, pagination=pagination)
 
 
 def make_pdf_refund_items(items):
