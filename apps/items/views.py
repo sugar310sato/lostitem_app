@@ -1,5 +1,6 @@
 from flask import (Blueprint, current_app, redirect, render_template, request,
                    send_from_directory, session, url_for)
+from flask_paginate import Pagination, get_page_parameter
 
 from apps.app import db
 from apps.items.forms import SearchItems
@@ -19,6 +20,15 @@ items = Blueprint(
 def index():
     # すべての拾得物を表示
     form = SearchItems()
+    search_results = session.get('search_items', None)
+    if search_results is None:
+        search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
 
     if form.submit.data:
         id = form.id.data
@@ -58,16 +68,16 @@ def index():
         if item_color:
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         if not item_value:
-            query = query.filter(LostItem.item_value == False)
+            query = query.filter(LostItem.item_value is False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("items.item_search"))
+        session['search_items'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("items.index"))
 
-    all_lost_item = db.session.query(LostItem).all()
-    return render_template("items/index.html", all_lost_item=all_lost_item, form=form)
+    return render_template("items/index.html", all_lost_item=rows, form=form,
+                           pagination=pagination)
 
 
 # 拾得物一覧画面
@@ -75,6 +85,15 @@ def index():
 def photo_arange():
     # すべての拾得物を表示
     form = SearchItems()
+    search_results = session.get('search_items', None)
+    if search_results is None:
+        search_results = db.session.query(LostItem).all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
 
     if form.submit.data:
         id = form.id.data
@@ -115,18 +134,16 @@ def photo_arange():
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         # SQLAlchemyに合わせているので==を使用
         if not item_value:
-            query = query.filter(LostItem.item_value == False)
+            query = query.filter(LostItem.item_value is False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
         search_results = query.all()
-        print(search_results)
-        session['search_results'] = [item.to_dict() for item in search_results]
-        return redirect(url_for("items.item_search_photo"))
+        session['search_items'] = [item.to_dict() for item in search_results]
+        return redirect(url_for("items.photo_arange"))
 
-    all_lost_item = db.session.query(LostItem).all()
-    return render_template("items/photo_arange.html", all_lost_item=all_lost_item,
-                           form=form)
+    return render_template("items/photo_arange.html", all_lost_item=rows,
+                           form=form, pagination=pagination)
 
 
 # 詳細画面
@@ -272,21 +289,6 @@ def edit(item_id):
             return redirect(url_for("items.detail", item_id=item.id))
     return render_template("items/edit.html", form=form, item=item,
                            choice_finder=item.choice_finder)
-
-
-# 拾得物の検索
-@items.route("/items/search", methods=["POST", "GET"])
-def item_search():
-    search_results = session.get('search_results', [])
-    print(search_results)
-    return render_template("items/search.html", search_results=search_results)
-
-
-# 検索結果の写真表示
-@items.route("/items/search/photo", methods=["POST", "GET"])
-def item_search_photo():
-    search_results = session.get('search_results', [])
-    return render_template("items/search_photo.html", search_results=search_results)
 
 
 # 拾得物の削除

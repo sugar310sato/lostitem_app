@@ -649,6 +649,7 @@
 <div class="d-flex align-items-center">
     <h2 class="mr-3">拾得物一覧</h2>
     <a href="{{ url_for('items.photo_arange') }}" class="btn btn-secondary">写真一覧へ</a>
+    {{ pagination.info }}
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -681,5 +682,8 @@
         {% endfor %}
     </tbody>
 </table>
+<div class="container">
+    <div style="margin-left: 45%;">{{ pagination.links }}</div>
+</div>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}
