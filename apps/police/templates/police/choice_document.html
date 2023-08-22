@@ -6,8 +6,8 @@
     {{ form.csrf_token }}
     <div class="container text-center">
         <div class="row mb-3">
-            <div class="col-4">{{ form.submit_date.label }} {{ form.submit_date }}</div>
-            <div class="col-4">{{ form.document.label }} {{ form.document }}</div>
+            <div class="col-4">{{ form.submit_date.label }} {{ form.submit_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.document.label }} {{ form.document(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}

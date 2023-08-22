@@ -37,14 +37,15 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color }}</div>
-            <div class="col-4">{{ form.find_area.label }} {{ form.find_area }}</div>
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                form.end_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_color.label }} {{ form.item_color(class="form-set") }}</div>
+            <div class="col-4">{{ form.find_area.label }} {{ form.find_area(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
-            <div class="col-4">{{ form.item_value.label }} {{ form.item_value }}</div>
-            <div class="col-4">{{ form.item_not_yet.label }} {{ form.item_not_yet }}</div>
+            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_value.label }} {{ form.item_value(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_not_yet.label }} {{ form.item_not_yet(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}

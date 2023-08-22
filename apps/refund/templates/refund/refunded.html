@@ -7,13 +7,14 @@
     {{ form.csrf_token }}
     <div class="container mb-3">
         <div class="row mb-3">
-            <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date }}</div>
-            <div class="col-4">{{ form.police_date.label }} {{ form.police_date }}</div>
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
+            <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.police_date.label }} {{ form.police_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                form.end_date(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.refunded_process.label }} {{ form.refunded_process }}</div>
-            <div class="col-4">{{ form.refunded_bool.label }} {{ form.refunded_bool }}</div>
+            <div class="col-4">{{ form.refunded_process.label }} {{ form.refunded_process(class="form-set") }}</div>
+            <div class="col-4">{{ form.refunded_bool.label }} {{ form.refunded_bool(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}

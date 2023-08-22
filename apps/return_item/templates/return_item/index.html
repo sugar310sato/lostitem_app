@@ -7,6 +7,7 @@
     <a href="{{ url_for('return_item.note', item_id=lostitem.id) }}" class="btn btn-primary">遺失者連絡</a>
     <a href="{{ url_for('return_item.item_return', item_id=lostitem.id) }}" class="btn btn-primary">返還</a>
     <a href="{{ url_for('return_item.make_pdf', item_id=lostitem.id) }}" class="btn btn-primary">受領確認書印刷</a>
+    <a href="{{ url_for('items.detail', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>

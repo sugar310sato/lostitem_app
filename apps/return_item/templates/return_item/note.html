@@ -38,62 +38,81 @@
     <h3>遺失者情報</h3>
     <div class="container">
         <div class="row mb-3">
-            <div class="col-4">{{ form.lost_date.label }} {{ form.lost_date(value=lostitem.lost_date) }}</div>
-            <div class="col-4">{{ form.lost_hour.label }} {{ form.lost_hour(value=lostitem.lost_hour) }}{{
-                form.lost_minute(value=lostitem.lost_minute) }}</div>
-            <div class="col-4">{{ form.lost_area.label }} {{ form.lost_area(value=lostitem.lost_area) }}</div>
+            <div class="col-4">{{ form.lost_date.label }} {{ form.lost_date(value=lostitem.lost_date, class="form-set")
+                }}</div>
+            <div class="col-4">{{ form.lost_hour.label }} {{ form.lost_hour(value=lostitem.lost_hour, class="form-set")
+                }}{{
+                form.lost_minute(value=lostitem.lost_minute, class="form-set") }}</div>
+            <div class="col-4">{{ form.lost_area.label }} {{ form.lost_area(value=lostitem.lost_area, class="form-set")
+                }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.recep_item.label }} {{ form.recep_item(value=lostitem.recep_item) }}</div>
-            <div class="col-4">{{ form.recep_item_hour.label }} {{ form.recep_item_hour(value=lostitem.recep_item_hour)
-                }}{{ form.recep_item_minute(value=lostitem.recep_item_minute) }}</div>
-            <div class="col-4">{{ form.recep_manager.label }} {{ form.recep_manager(value=lostitem.recep_manager) }}
+            <div class="col-4">{{ form.recep_item.label }} {{ form.recep_item(value=lostitem.recep_item,
+                class="form-set") }}</div>
+            <div class="col-4">{{ form.recep_item_hour.label }} {{ form.recep_item_hour(value=lostitem.recep_item_hour,
+                class="form-set")
+                }}{{ form.recep_item_minute(value=lostitem.recep_item_minute, class="form-set") }}</div>
+            <div class="col-4">{{ form.recep_manager.label }} {{ form.recep_manager(value=lostitem.recep_manager,
+                class="form-set") }}
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.lost_person.label }} {{ form.lost_person(value=lostitem.lost_person) }}</div>
-            <div class="col-4">{{ form.lost_class.label }} {{ form.lost_class(value=lostitem.lost_class) }}</div>
+            <div class="col-4">{{ form.lost_person.label }} {{ form.lost_person(value=lostitem.lost_person,
+                class="form-set") }}</div>
+            <div class="col-4">{{ form.lost_class.label }} {{ form.lost_class(value=lostitem.lost_class,
+                class="form-set") }}</div>
             <div class="col-4">{{ form.lost_affiliation.label }} {{
-                form.lost_affiliation(value=lostitem.lost_affiliation) }}</div>
+                form.lost_affiliation(value=lostitem.lost_affiliation, class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-6">{{ form.lost_tel1.label }} {{ form.lost_tel1(value=lostitem.lost_tel1) }}</div>
-            <div class="col-6">{{ form.lost_tel2.label }} {{ form.lost_tel2(value=lostitem.lost_tel2) }}</div>
+            <div class="col-6">{{ form.lost_tel1.label }} {{ form.lost_tel1(value=lostitem.lost_tel1, class="form-set")
+                }}</div>
+            <div class="col-6">{{ form.lost_tel2.label }} {{ form.lost_tel2(value=lostitem.lost_tel2, class="form-set")
+                }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-6">{{ form.lost_post.label }} {{ form.lost_post(value=lostitem.lost_post) }}</div>
-            <div class="col-6">{{ form.lost_address.label }} {{ form.lost_address(value=lostitem.lost_address) }}</div>
+            <div class="col-6">{{ form.lost_post.label }} {{ form.lost_post(value=lostitem.lost_post, class="form-set")
+                }}</div>
+            <div class="col-6">{{ form.lost_address.label }} {{ form.lost_address(value=lostitem.lost_address,
+                class="form-set") }}</div>
         </div>
     </div>
 
     <h3>連絡状況</h3>
     <div class="container">
         <div class="row mb-3">
-            <div class="col-6">{{ form.note_date.label }} {{ form.note_date(value=lostitem.note_date) }}</div>
-            <div class="col-6">{{ form.note_hour.label }} {{ form.note_hour(value=lostitem.note_hour) }}{{
-                form.note_minute(value=lostitem.note_minute) }}</div>
+            <div class="col-6">{{ form.note_date.label }} {{ form.note_date(value=lostitem.note_date, class="form-set")
+                }}</div>
+            <div class="col-6">{{ form.note_hour.label }} {{ form.note_hour(value=lostitem.note_hour, class="form-set")
+                }}{{
+                form.note_minute(value=lostitem.note_minute, class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-6">{{ form.note_process.label }} {{ form.note_process(value=lostitem.note_process) }}</div>
-            <div class="col-6">{{ form.note_manager.label }} {{ form.note_manager(value=lostitem.note_manager) }}</div>
+            <div class="col-6">{{ form.note_process.label }} {{ form.note_process(value=lostitem.note_process,
+                class="form-set") }}</div>
+            <div class="col-6">{{ form.note_manager.label }} {{ form.note_manager(value=lostitem.note_manager,
+                class="form-set") }}</div>
         </div>
     </div>
 
     <h3>返答状況</h3>
     <div class="container">
         <div class="row mb-3">
-            <div class="col-4">{{ form.response_date.label }} {{ form.response_date(value=lostitem.response_date) }}
+            <div class="col-4">{{ form.response_date.label }} {{ form.response_date(value=lostitem.response_date,
+                class="form-set") }}
             </div>
-            <div class="col-4">{{ form.response_hour.label }} {{ form.response_hour(value=lostitem.response_hour) }}{{
-                form.response_minute(value=lostitem.response_minute) }}</div>
-            <div class="col-4">{{ form.response_expect.label }} {{ form.response_expect(value=lostitem.response_expect)
+            <div class="col-4">{{ form.response_hour.label }} {{ form.response_hour(value=lostitem.response_hour,
+                class="form-set") }}{{
+                form.response_minute(value=lostitem.response_minute, class="form-set") }}</div>
+            <div class="col-4">{{ form.response_expect.label }} {{ form.response_expect(value=lostitem.response_expect,
+                class="form-set")
                 }}</div>
         </div>
         <div class="row mb-3">
             <div class="col-6">{{ form.response_content.label }} {{
-                form.response_content(value=lostitem.response_content) }}</div>
+                form.response_content(value=lostitem.response_content, class="form-set") }}</div>
             <div class="col-6">{{ form.response_remarks.label }} {{
-                form.response_remarks(value=lostitem.response_remarks) }}</div>
+                form.response_remarks(value=lostitem.response_remarks, class="form-set") }}</div>
         </div>
     </div>
 

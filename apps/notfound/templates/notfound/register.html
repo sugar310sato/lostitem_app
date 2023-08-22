@@ -6,15 +6,17 @@
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
-            <div class="col-4">{{ form.lost_item.label }} {{ form.lost_item }}</div>
-            <div class="col-4">{{ form.lost_item_hour.label }} {{ form.lost_item_hour }}</div>
-            <div class="col-4">{{ form.lost_item_minute.label }} {{ form.lost_item_minute }}</div>
+            <div class="col-4">{{ form.lost_item.label }} {{ form.lost_item(class="form-set") }}</div>
+            <div class="col-4">{{ form.lost_item_hour.label }} {{ form.lost_item_hour(class="form-set") }}{{
+                form.lost_item_minute(class="form-set") }}
+            </div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item }}</div>
-            <div class="col-3">{{ form.recep_item_hour.label }} {{ form.recep_item_hour }}</div>
-            <div class="col-3">{{ form.recep_item_minute.label }} {{ form.recep_item_minute }}</div>
-            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager }}</div>
+            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item(class="form-set") }}</div>
+            <div class="col-3">{{ form.recep_item_hour.label }} {{ form.recep_item_hour(class="form-set") }}{{
+                form.recep_item_minute(class="form-set") }}
+            </div>
+            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
             <div class="col-4">
@@ -48,40 +50,50 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.lost_area.label }} {{ form.lost_area }}</div>
+            <div class="col-4">{{ form.lost_area.label }} {{ form.lost_area(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.lost_name.label }} {{ form.lost_name }}</div>
-            <div class="col-4">{{ form.lost_age.label }} {{ form.lost_age }}</div>
+            <div class="col-4">{{ form.lost_name.label }} {{ form.lost_name(class="form-set") }}</div>
+            <div class="col-4">{{ form.lost_age.label }} {{ form.lost_age(class="form-set") }}</div>
         </div>
         <div class="row mb-5">
-            <div class="col-4">{{ form.lost_post.label }} {{ form.lost_post }}</div>
-            <div class="col-8">{{ form.lost_address.label }} {{ form.lost_address(style="width: 500px;") }}</div>
+            <div class="col-4">{{ form.lost_post.label }} {{ form.lost_post(class="form-set") }}</div>
+            <div class="col-8">{{ form.lost_address.label }} {{ form.lost_address(style="width: 500px;",
+                class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.lost_sex.label }} {{ form.lost_sex }}</div>
-            <div class="col-4">{{ form.lost_tel1.label }} {{ form.lost_tel1 }}</div>
-            <div class="col-4">{{ form.lost_tel2.label }} {{ form.lost_tel2 }}</div>
+            <div class="col-4">
+                <div class="row">
+                    {{ form.lost_sex.label }}
+                    {% for subfield in form.lost_sex %}
+                    <div class="col-3">{{ subfield }} {{ subfield.label }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-4">{{ form.lost_tel1.label }} {{ form.lost_tel1(class="form-set") }}</div>
+            <div class="col-4">{{ form.lost_tel2.label }} {{ form.lost_tel2(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_value.label }} {{ form.item_value }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color }}</div>
+            <div class="col-4">{{ form.item_value.label }} {{ form.item_value(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_color.label }} {{ form.item_color(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration }}</div>
+            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker }}</div>
-            <div class="col-4">{{ form.item_num.label }} {{ form.item_num }}</div>
-            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit }}</div>
+            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_num.label }} {{ form.item_num(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice }}</div>
-            <div class="col-4">{{ form.item_money.label }} {{ form.item_money }}</div>
+            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_money.label }} {{ form.item_money(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks }}</div>
-            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+            <div class="col-6">{{ form.item_remarks.label }} <br>{{ form.item_remarks(class="form-set", style="width:
+                70%;") }}</div>
+            <div class="col-6">{{ form.item_feature.label }} <br>{{ form.item_feature(class="form-set", style="width:
+                70%px;") }}</div>
         </div>
         <p>
             <hr>
@@ -89,19 +101,20 @@
             同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
         </p>
         <div class="row mb-5">
-            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany }}</div>
-            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel }}</div>
-            <div class="col-3">{{ form.card_name.label }} {{ form.card_name }}</div>
-            <div class="col-3">{{ form.card_person.label }} {{ form.card_person }}</div>
+            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany(class="form-set") }}</div>
+            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel(class="form-set") }}</div>
+            <div class="col-3">{{ form.card_name.label }} {{ form.card_name(class="form-set") }}</div>
+            <div class="col-3">{{ form.card_person.label }} {{ form.card_person(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.card_item.label }} {{ form.card_item }}</div>
-            <div class="col-3">{{ form.card_return.label }} {{ form.card_return }}</div>
-            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour }}</div>
-            <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute }}</div>
+            <div class="col-3">{{ form.card_item.label }} {{ form.card_item(class="form-set") }}</div>
+            <div class="col-3">{{ form.card_return.label }} {{ form.card_return(class="form-set") }}</div>
+            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour(class="form-set") }}{{
+                form.card_item_minute(class="form-set") }}
+            </div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager }}</div>
+            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}

@@ -6,8 +6,9 @@
     {{ form.csrf_token }}
     <div class="containrt mb-3">
         <div class="row">
-            <div class="col-4">{{ form.refund_expect_year.label }} {{ form.refund_expect_year }}年</div>
-            <div class="col-4">{{ form.refund_situation.label }} {{ form.refund_situation }}</div>
+            <div class="col-4">{{ form.refund_expect_year.label }} {{ form.refund_expect_year(class="form-set") }}年
+            </div>
+            <div class="col-4">{{ form.refund_situation.label }} {{ form.refund_situation(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}

@@ -71,7 +71,6 @@ def item():
             'item_plice': form.item_plice.data,
             'item_finder': form.item_finder.data,
         }
-        print(session['search_polices'])
         return redirect(url_for("police.item"))
 
     if form.submit_output.data:

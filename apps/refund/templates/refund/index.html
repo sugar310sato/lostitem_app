@@ -7,9 +7,10 @@
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
-            <div class="col-4">{{ form.finder_choice.label }} {{ form.finder_choice }}</div>
-            <div class="col-4">{{ form.waiver.label }} {{ form.waiver }}</div>
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                form.end_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.finder_choice.label }} {{ form.finder_choice(class="form-set") }}</div>
+            <div class="col-4">{{ form.waiver.label }} {{ form.waiver(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}
@@ -18,8 +19,8 @@
     <hr>
     <div class="containrt mb-3">
         <div class="row">
-            <div class="col-4">{{ form.receiptnumber.label }} {{ form.receiptnumber }}</div>
-            <div class="col-4">{{ form.refund_expect.label }} {{ form.refund_expect }}</div>
+            <div class="col-4">{{ form.receiptnumber.label }} {{ form.receiptnumber(class="form-set") }}</div>
+            <div class="col-4">{{ form.refund_expect.label }} {{ form.refund_expect(class="form-set") }}</div>
             <div class="col-4">{{ form.submit_register(class="btn btn-primary") }}</div>
         </div>
     </div>

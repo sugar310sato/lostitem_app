@@ -36,14 +36,14 @@
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
-            <div class="col-4">{{ form.return_date.label }} {{ form.return_date }}</div>
-            <div class="col-4">{{ form.return_check.label }} {{ form.return_check }}</div>
-            <div class="col-4">{{ form.return_person.label }} {{ form.return_person }}</div>
+            <div class="col-4">{{ form.return_date.label }} {{ form.return_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.return_check.label }} {{ form.return_check(class="form-set") }}</div>
+            <div class="col-4">{{ form.return_person.label }} {{ form.return_person(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.return_address.label }} {{ form.return_address }}</div>
-            <div class="col-4">{{ form.return_tel.label }} {{ form.return_tel }}</div>
-            <div class="col-4">{{ form.return_manager.label }} {{ form.return_manager }}</div>
+            <div class="col-4">{{ form.return_address.label }} {{ form.return_address(class="form-set") }}</div>
+            <div class="col-4">{{ form.return_tel.label }} {{ form.return_tel(class="form-set") }}</div>
+            <div class="col-4">{{ form.return_manager.label }} {{ form.return_manager(class="form-set") }}</div>
         </div>
     </div>
     <div class="text-center">

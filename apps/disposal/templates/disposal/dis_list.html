@@ -37,21 +37,26 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
-            <div class="col-5">{{ form.start_disposal_date.label }} {{ form.start_disposal_date }}-{{
-                form.end_disposal_date }}
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                form.end_date(class="form-set") }}</div>
+            <div class="col-5">{{ form.start_disposal_date.label }} {{ form.start_disposal_date(class="form-set") }}-{{
+                form.end_disposal_date(class="form-set") }}
             </div>
 
         </div>
         <div class="row mb-3">
-            <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date }}-{{
-                form.end_expiration_date }}</div>
-            <div class="col-7">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+            <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date(class="form-set")
+                }}-{{
+                form.end_expiration_date(class="form-set") }}</div>
+            <div class="col-7">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-6">{{ form.start_id.label }} {{ form.start_id }}-{{ form.end_id }}</div>
-            <div class="col-3">{{ form.item_situation_sale.label }} {{ form.item_situation_sale }}</div>
-            <div class="col-3">{{ form.item_situation_disposal.label }} {{ form.item_situation_disposal }}</div>
+            <div class="col-6">{{ form.start_id.label }} {{ form.start_id(class="form-set") }}-{{
+                form.end_id(class="form-set") }}</div>
+            <div class="col-3">{{ form.item_situation_sale.label }} {{ form.item_situation_sale(class="form-set") }}
+            </div>
+            <div class="col-3">{{ form.item_situation_disposal.label }} {{
+                form.item_situation_disposal(class="form-set") }}</div>
         </div>
         <div class="text-center mb-3">
             {{ form.submit(class="btn btn-primary") }}
@@ -60,10 +65,10 @@
         <div class="container">
             <div class="row mb-3">
                 <div class="col-2">{{ form.submit_print(class="btn btn-primary") }}</div>
-                <div class="col-4">{{ form.disposal_date.label }} {{ form.disposal_date }}
+                <div class="col-4">{{ form.disposal_date.label }} {{ form.disposal_date(class="form-set") }}
                     {{ form.submit_disposal(class="btn btn-primary") }}</div>
-                <div class="col-6">{{ form.selling_price.label }} {{ form.selling_price }}
-                    売却日 {{ form.selling_date }}
+                <div class="col-6">{{ form.selling_price.label }} {{ form.selling_price(class="form-set") }}
+                    売却日 {{ form.selling_date(class="form-set") }}
                     {{ form.submit_register(class="btn btn-primary") }}</div>
             </div>
         </div>

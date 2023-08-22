@@ -6,9 +6,9 @@
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">1. {{ form.info.label }}</div>
-        <div class="row mb-3">{{ form.info(style="width: 70%;") }}</div>
+        <div class="row mb-3">{{ form.info(style="width: 70%;", class="form-set") }}</div>
         <div class="row mb-3">2. {{ form.documents.label }}</div>
-        <div class="row mb-3">{{ form.documents(style="width: 70%;") }}</div>
+        <div class="row mb-3">{{ form.documents(style="width: 70%;", class="form-set") }}</div>
         <div style="margin-left: 350px;">{{ form.submit(class=" btn btn-primary") }}</div>
     </div>
 </form>

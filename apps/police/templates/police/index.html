@@ -6,9 +6,10 @@
     {{ form.csrf_token }}
     <div class="container mb-3">
         <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
-            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice }}</div>
-            <div class="col-4">{{ form.item_finder.label }} {{ form.item_finder }}</div>
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                form.end_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
+            <div class="col-4">{{ form.item_finder.label }} {{ form.item_finder(class="form-set") }}</div>
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}

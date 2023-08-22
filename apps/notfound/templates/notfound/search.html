@@ -37,13 +37,15 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date }}-{{ form.end_date }}</div>
-            <div class="col-4">{{ form.taiou_bool.label }} {{ form.taiou_bool }}</div>
+            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                form.end_date(class="form-set") }}</div>
+            <div class="col-4">{{ form.taiou_bool.label }} {{ form.taiou_bool(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date }}-{{
-                form.end_expiration_date }}</div>
-            <div class="col-7">{{ form.item_feature.label }} {{ form.item_feature }}</div>
+            <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date(class="form-set")
+                }}-{{
+                form.end_expiration_date(class="form-set") }}</div>
+            <div class="col-7">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
         </div>
         <div class="text-center mb-3">
             {{ form.submit(class="btn btn-primary") }}

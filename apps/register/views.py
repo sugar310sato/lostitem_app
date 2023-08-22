@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 from flask import (Blueprint, current_app, redirect, render_template, request,
-                   send_from_directory, url_for)
+                   send_from_directory, session, url_for)
 from sqlalchemy import func
 
 from apps.app import db
@@ -59,6 +59,16 @@ def save_image():
 # ホーム画面
 @register.route("/")
 def index():
+    session.pop('search_dislist', None)
+    session.pop('search_item', None)
+    session.pop('not_found_search', None)
+    session.pop('search_polices', None)
+    session.pop('item_ids', None)
+    session.pop('search_register_num', None)
+    session.pop('search_refund_item', None)
+    session.pop('police_item_ids', None)
+    session.pop('search_refunded', None)
+    session.pop('search_refund_list', None)
     return render_template("register/index.html")
 
 
