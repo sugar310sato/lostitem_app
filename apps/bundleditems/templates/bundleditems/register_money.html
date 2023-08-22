@@ -17,11 +17,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>{{ form.ten_thousand_yen }}</th>
-                    <th>{{ form.five_thousand_yen }}</th>
-                    <th>{{ form.two_thousand_yen }}</th>
-                    <th>{{ form.one_thousand_yen }}</th>
-                    <th>{{ form.five_hundred_yen }}</th>
+                    <th>{{ form.ten_thousand_yen(class="form-set") }}</th>
+                    <th>{{ form.five_thousand_yen(class="form-set") }}</th>
+                    <th>{{ form.two_thousand_yen(class="form-set") }}</th>
+                    <th>{{ form.one_thousand_yen(class="form-set") }}</th>
+                    <th>{{ form.five_hundred_yen(class="form-set") }}</th>
                 </tr>
             </tbody>
         </table>
@@ -37,11 +37,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>{{ form.one_hundred_yen }}</th>
-                    <th>{{ form.fifty_yen }}</th>
-                    <th>{{ form.ten_yen }}</th>
-                    <th>{{ form.five_yen }}</th>
-                    <th>{{ form.one_yen }}</th>
+                    <th>{{ form.one_hundred_yen(class="form-set") }}</th>
+                    <th>{{ form.fifty_yen(class="form-set") }}</th>
+                    <th>{{ form.ten_yen(class="form-set") }}</th>
+                    <th>{{ form.five_yen(class="form-set") }}</th>
+                    <th>{{ form.one_yen(class="form-set") }}</th>
                 </tr>
             </tbody>
         </table>
@@ -56,15 +56,16 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>{{ form.commemorative_coin_1 }}</th>
-                    <th>{{ form.commemorative_coin_1_value }}</th>
-                    <th>{{ form.commemorative_coin_2 }}</th>
-                    <th>{{ form.commemorative_coin_2_value }}</th>
+                    <th>{{ form.commemorative_coin_1(class="form-set") }}</th>
+                    <th>{{ form.commemorative_coin_1_value(class="form-set") }}</th>
+                    <th>{{ form.commemorative_coin_2(class="form-set") }}</th>
+                    <th>{{ form.commemorative_coin_2_value(class="form-set") }}</th>
                 </tr>
             </tbody>
         </table>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('items.detail', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
         </div>
     </div>
 </form>

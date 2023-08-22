@@ -10,6 +10,7 @@ from reportlab.pdfgen import canvas
 from sqlalchemy import func
 
 from apps.app import db
+from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
 from apps.disposal.forms import GroceriesForm
 from apps.register.models import Denomination, LostItem
 
@@ -28,47 +29,55 @@ UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "disposal_pdf"))
 @disposal.route("/dis_list", methods=["POST", "GET"])
 def dis_list():
     form = GroceriesForm()
-    search_results = session.get('search_results', None)
+    search_dis = session.get('search_dislist', None)
+    print(search_dis)
 
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
+    # ID情報が存在し、リストが空でない場合、それを使用してクエリを絞り込む
+    if search_dis:
+        start_date = search_dis['start_date']
+        end_date = search_dis['end_date']
+        item_feature = search_dis['item_feature']
+        start_disposal_date = search_dis['start_disposal_date']
+        end_disposal_date = search_dis['end_disposal_date']
+        start_expiration_date = search_dis['start_expiration_date']
+        end_expiration_date = search_dis['end_expiration_date']
+        start_id = search_dis['start_id']
+        end_id = search_dis['end_id']
+        item_situation_sale = search_dis['item_situation_sale']
+        item_situation_disposal = search_dis['item_situation_disposal']
+        item_class_L = search_dis['item_class_L']
+        item_class_M = search_dis['item_class_M']
+        item_class_S = search_dis['item_class_S']
 
-    if search_results is None:
-        search_results = db.session.query(LostItem).all()
-
-    if form.submit.data:
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        item_feature = form.item_feature.data
-        start_dispoal_date = form.start_dispoal_date.data
-        end_dispoal_date = form.end_dispoal_date.data
-        start_expiration_date = form.start_expiration_date.data
-        end_expiration_date = form.end_expiration_date.data
-        start_id = form.start_id.data
-        end_id = form.end_id.data
-        item_situation_sale = form.item_situation_sale.data
-        item_situation_disposal = form.item_situation_disposal.data
         # クエリの生成
         query = db.session.query(LostItem)
+        if item_class_L != "選択してください":
+            if item_class_L:
+                item_class = item_class_L
+                query = query.filter(LostItem.item_class_L == item_class)
+            if item_class_M:
+                item_class = item_class_M
+                query = query.filter(LostItem.item_class_M == item_class)
+            if item_class_S:
+                item_class = item_class_S
+                query = query.filter(LostItem.item_class_S == item_class)
+
         if start_date and end_date:
             query = query.filter(LostItem.get_item.between(start_date, end_date))
         elif start_date:
-            query = query.filter(func.date(LostItem.get_item) >= start_date)
+            query = query.filter(LostItem.get_item >= start_date)
         elif end_date:
             query = query.filter(func.date(LostItem.get_item) <= end_date)
         if item_feature:
             query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
-        if start_dispoal_date and end_dispoal_date:
-            query = query.filter(LostItem.disposal_date.between(start_dispoal_date,
-                                                                end_dispoal_date))
-        elif start_dispoal_date:
+        if start_disposal_date and end_disposal_date:
+            query = query.filter(LostItem.disposal_date.between(start_disposal_date,
+                                                                end_disposal_date))
+        elif start_disposal_date:
             query = query.filter(func.date(LostItem.disposal_date) >=
-                                 start_dispoal_date)
-        elif end_dispoal_date:
-            query = query.filter(func.date(LostItem.disposal_date) <= end_dispoal_date)
+                                 start_disposal_date)
+        elif end_disposal_date:
+            query = query.filter(func.date(LostItem.disposal_date) <= end_disposal_date)
         if start_expiration_date and end_expiration_date:
             query = query.filter(LostItem.item_expiration.between(start_expiration_date,
                                                                   end_expiration_date))
@@ -79,17 +88,50 @@ def dis_list():
             query = query.filter(func.date(LostItem.item_expiration) <=
                                  end_expiration_date)
         if start_id and end_id:
-            query = query.filter(LostItem.id.between(start_id, end_id))
+            query = query.filter(LostItem.main_id.between(start_id, end_id))
         elif start_id:
-            query = query.filter(LostItem.id >= start_id)
+            query = query.filter(LostItem.main_id >= start_id)
         elif end_id:
-            query = query.filter(LostItem.id <= end_id)
+            query = query.filter(LostItem.main_id <= end_id)
         if not item_situation_sale:
             query = query.filter(LostItem.item_situation != "売却済")
         if not item_situation_disposal:
             query = query.filter(LostItem.item_situation != "廃棄済")
         search_results = query.all()
-        session['search_results'] = [item.to_dict() for item in search_results]
+        print(search_results)
+    else:
+        search_results = db.session.query(LostItem).all()
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        print(form.start_date)
+        session['search_dislist'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+            'item_feature': form.item_feature.data,
+            'start_disposal_date': form.start_disposal_date.data.strftime('%Y-%m-%d')
+            if form.start_disposal_date.data else None,
+            'end_disposal_date': form.end_disposal_date.data.strftime('%Y-%m-%d')
+            if form.end_disposal_date.data else None,
+            'start_expiration_date': form.start_expiration_date.data.strftime('%Y-%m-%d')
+            if form.start_expiration_date.data else None,
+            'end_expiration_date': form.end_expiration_date.data.strftime('%Y-%m-%d')
+            if form.end_expiration_date.data else None,
+            'start_id': form.start_id.data,
+            'end_id': form.end_id.data,
+            'item_situation_sale': form.item_situation_sale.data,
+            'item_situation_disposal': form.item_situation_disposal.data,
+            'item_class_L': request.form.get('item_class_L'),
+            'item_class_M': request.form.get('item_class_M'),
+            'item_class_S': request.form.get('item_class_S'),
+        }
         return redirect(url_for("disposal.dis_list"))
     if form.submit_print.data:
         item_ids = request.form.getlist('item_ids')
@@ -117,7 +159,9 @@ def dis_list():
             db.session.commit()
         return redirect(url_for('disposal.dis_list'))
     return render_template("disposal/dis_list.html", form=form,
-                           search_results=rows, pagination=pagination)
+                           search_results=rows, pagination=pagination,
+                           ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # PDFの作成

@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, request, url_for
 
 from apps.app import db
 from apps.bundleditems.forms import BundledItemForm, CardNote, MoneyForm
+from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
 from apps.register.models import BundledItems, Denomination, LostItem
 
 bundleditems = Blueprint(
@@ -53,7 +54,8 @@ def register(item_id):
         db.session.commit()
         return redirect(url_for("items.detail", item_id=bundleditem.lostitem_id))
     return render_template("bundleditems/register_item.html", form=form,
-                           lostitem=lostitem)
+                           lostitem=lostitem, ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # カード会社連絡
@@ -126,7 +128,9 @@ def edit(item_id):
         db.session.add(bundleditem)
         db.session.commit()
         return redirect(url_for("items.detail", item_id=bundleditem.lostitem_id))
-    return render_template("bundleditems/edit.html", form=form, item=bundleditem)
+    return render_template("bundleditems/edit.html", form=form, item=bundleditem,
+                           ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 金種登録

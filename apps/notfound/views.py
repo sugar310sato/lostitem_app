@@ -1,5 +1,6 @@
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
+from flask_paginate import Pagination, get_page_parameter
 from sqlalchemy import func
 
 from apps.app import db
@@ -78,6 +79,12 @@ def notfound_search():
     if search_results is None:
         search_results = db.session.query(NotFound).all()
 
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
     if form.submit.data:
         start_date = form.start_date.data
         end_date = form.end_date.data
@@ -118,7 +125,7 @@ def notfound_search():
         db.session.commit()
         return redirect(url_for("notfound.notfound_search"))
     return render_template("notfound/search.html", form=form,
-                           search_results=search_results)
+                           search_results=rows, pagination=pagination)
 
 
 # 詳細

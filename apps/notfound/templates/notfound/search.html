@@ -648,6 +648,7 @@
     </div>
     <!-- 還付済物件処理フォーム -->
     <hr>
+    <p>{{ pagination.info }}</p>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -676,5 +677,8 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="container">
+        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    </div>
 </form>
 {% endblock %}

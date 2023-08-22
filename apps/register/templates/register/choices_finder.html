@@ -4,15 +4,16 @@
 <h2>拾得者選択</h2>
 <p>拾得者を選択してください。</p>
 
-<section class="lostitem-app-main">
+<section>
     <form action="{{ url_for('register.choices_finder') }}" method="post">
         {{ form.csrf_token }}
+        <div class="row">
+            {% for subfield in form.choice_finder %}
+            <div class="col-3">{{ subfield }} {{ subfield.label }}</div>
+            {% endfor %}
+        </div>
         <p>
-            {{ form.choice_finder.label }}
-            {{ form.choice_finder(class="control") }}
-        </p>
-        <p>
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary", style="margin-left: 15%;") }}
         </p>
     </form>
 </section>

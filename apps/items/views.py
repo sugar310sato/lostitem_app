@@ -3,6 +3,7 @@ from flask import (Blueprint, current_app, redirect, render_template, request,
 from flask_paginate import Pagination, get_page_parameter
 
 from apps.app import db
+from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
 from apps.items.forms import SearchItems
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
 from apps.register.models import BundledItems, Denomination, LostItem
@@ -68,7 +69,7 @@ def index():
         if item_color:
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         if not item_value:
-            query = query.filter(LostItem.item_value is False)
+            query = query.filter(LostItem.item_value == False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
@@ -77,7 +78,8 @@ def index():
         return redirect(url_for("items.index"))
 
     return render_template("items/index.html", all_lost_item=rows, form=form,
-                           pagination=pagination)
+                           pagination=pagination, ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 拾得物一覧画面
@@ -134,7 +136,7 @@ def photo_arange():
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         # SQLAlchemyに合わせているので==を使用
         if not item_value:
-            query = query.filter(LostItem.item_value is False)
+            query = query.filter(LostItem.item_value == False)
         if item_not_yet:
             query = query.filter(LostItem.item_situation != "返還済み")
         # 結果を取得
@@ -288,7 +290,8 @@ def edit(item_id):
             db.session.commit()
             return redirect(url_for("items.detail", item_id=item.id))
     return render_template("items/edit.html", form=form, item=item,
-                           choice_finder=item.choice_finder)
+                           choice_finder=item.choice_finder, ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 拾得物の削除

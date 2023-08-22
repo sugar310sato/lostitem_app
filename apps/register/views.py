@@ -10,6 +10,7 @@ from flask import (Blueprint, current_app, redirect, render_template, request,
 from sqlalchemy import func
 
 from apps.app import db
+from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
 from apps.register.forms import (ChoicesFinderForm, OwnerLostItemForm,
                                  ThirdPartyLostItemForm)
 from apps.register.models import LostItem
@@ -229,7 +230,8 @@ def register_item(choice_finder):
             db.session.commit()
             return redirect(url_for("items.detail", item_id=thirdpartylostitem.id))
     return render_template("register/register_item.html", choice_finder=choice_finder,
-                           form=form)
+                           form=form, ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 識別番号の生成関数

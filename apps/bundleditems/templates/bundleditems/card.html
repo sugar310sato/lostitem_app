@@ -105,18 +105,18 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{ form.card_item }}</td>
-                <td>{{ form.card_item_hour }} {{ form.card_item_minute }}</td>
+                <td>{{ form.card_item(class="form-set") }}</td>
+                <td>{{ form.card_item_hour(class="form-set") }} {{ form.card_item_minute(class="form-set") }}</td>
             </tr>
             <tr>
-                <td>{{ form.card_return }}</td>
-                <td>{{ form.card_manager }}</td>
+                <td>{{ form.card_return(class="form-set") }}</td>
+                <td>{{ form.card_manager(class="form-set") }}</td>
             </tr>
         </tbody>
     </table>
     <div class="text-center">
         {{ form.submit(class="btn btn-primary") }}
-        <a class="btn btn-primary" href="{{ url_for('items.index') }}" role="button">戻る</a>
+        <a href="{{ url_for('items.detail', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
     </div>
 </form>
 {% endblock %}
