@@ -98,7 +98,6 @@ def dis_list():
         if not item_situation_disposal:
             query = query.filter(LostItem.item_situation != "廃棄済")
         search_results = query.all()
-        print(search_results)
     else:
         search_results = db.session.query(LostItem).all()
     # ページネーション処理
@@ -109,7 +108,6 @@ def dis_list():
 
     if form.submit.data:
         # セッション情報として絞り込み条件
-        print(form.start_date)
         session['search_dislist'] = {
             'start_date': form.start_date.data.strftime('%Y-%m-%d')
             if form.start_date.data else None,
@@ -120,8 +118,8 @@ def dis_list():
             if form.start_disposal_date.data else None,
             'end_disposal_date': form.end_disposal_date.data.strftime('%Y-%m-%d')
             if form.end_disposal_date.data else None,
-            'start_expiration_date': form.start_expiration_date.data.strftime('%Y-%m-%d')
-            if form.start_expiration_date.data else None,
+            'start_expiration_date': form.start_expiration_date.data.strftime
+            ('%Y-%m-%d') if form.start_expiration_date.data else None,
             'end_expiration_date': form.end_expiration_date.data.strftime('%Y-%m-%d')
             if form.end_expiration_date.data else None,
             'start_id': form.start_id.data,

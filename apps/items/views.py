@@ -145,7 +145,8 @@ def photo_arange():
         return redirect(url_for("items.photo_arange"))
 
     return render_template("items/photo_arange.html", all_lost_item=rows,
-                           form=form, pagination=pagination)
+                           form=form, pagination=pagination, ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 詳細画面

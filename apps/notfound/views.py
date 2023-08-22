@@ -4,6 +4,7 @@ from flask_paginate import Pagination, get_page_parameter
 from sqlalchemy import func
 
 from apps.app import db
+from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
 from apps.notfound.forms import NotFoundForm, SearchNotFoundForm
 from apps.register.models import NotFound
 
@@ -68,7 +69,9 @@ def notfound_register():
         db.session.add(item_data)
         db.session.commit()
         return redirect(url_for("notfound.notfound_search"))
-    return render_template("notfound/register.html", form=form)
+    return render_template("notfound/register.html", form=form,
+                           ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 一覧、検索
@@ -125,7 +128,9 @@ def notfound_search():
         db.session.commit()
         return redirect(url_for("notfound.notfound_search"))
     return render_template("notfound/search.html", form=form,
-                           search_results=rows, pagination=pagination)
+                           search_results=rows, pagination=pagination,
+                           ITEM_CLASS_L=ITEM_CLASS_L,
+                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
 
 
 # 詳細
