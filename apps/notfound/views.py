@@ -78,25 +78,33 @@ def notfound_register():
 @notfound.route("/search", methods=["POST", "GET"])
 def notfound_search():
     form = SearchNotFoundForm()
-    search_results = session.get('notfound_search', None)
+    search_results = session.get('not_found_search', None)
     if search_results is None:
         search_results = db.session.query(NotFound).all()
+    else:
+        start_date = search_results['start_date']
+        end_date = search_results['end_date']
+        item_feature = search_results['item_feature']
+        start_expiration_date = search_results['start_expiration_date']
+        end_expiration_date = search_results['end_expiration_date']
+        taiou_bool = search_results['taiou_bool']
+        item_class_L = search_results['item_class_L']
+        item_class_M = search_results['item_class_M']
+        item_class_S = search_results['item_class_S']
 
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
-
-    if form.submit.data:
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        item_feature = form.item_feature.data
-        start_expiration_date = form.start_expiration_date.data
-        end_expiration_date = form.end_expiration_date.data
-        taiou_bool = form.taiou_bool.data
         # クエリの生成
         query = db.session.query(NotFound)
+        if item_class_L != "選択してください":
+            if item_class_L:
+                item_class = item_class_L
+                query = query.filter(NotFound.item_class_L == item_class)
+            if item_class_M:
+                item_class = item_class_M
+                query = query.filter(NotFound.item_class_M == item_class)
+            if item_class_S:
+                item_class = item_class_S
+                query = query.filter(NotFound.item_class_S == item_class)
+
         if start_date and end_date:
             query = query.filter(NotFound.lost_item.between(start_date, end_date))
         elif start_date:
@@ -117,7 +125,30 @@ def notfound_search():
         if not taiou_bool:
             query = query.filter(NotFound.item_situation != "対応済")
         search_results = query.all()
-        session['notfound_search'] = [item.to_dict() for item in search_results]
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        session['not_found_search'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+            'item_feature': form.item_feature.data,
+            'start_expiration_date': form.start_expiration_date.data.strftime
+            ('%Y-%m-%d') if form.start_expiration_date.data else None,
+            'end_expiration_date': form.end_expiration_date.data.strftime('%Y-%m-%d')
+            if form.end_expiration_date.data else None,
+            'taiou_bool': form.taiou_bool.data,
+            'item_class_L': request.form.get('item_class_L'),
+            'item_class_M': request.form.get('item_class_M'),
+            'item_class_S': request.form.get('item_class_S'),
+        }
         return redirect(url_for("notfound.notfound_search"))
 
     if form.submit_taiou.data:

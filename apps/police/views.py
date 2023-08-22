@@ -29,22 +29,14 @@ def item():
     # 一応返還済みでないすべての物品を出しています
     # 遺失者連絡済みの物を除外するためのFormなどは用意してあります
     form = PoliceForm()
-    search_results = session.get('search_police', None)
+    search_results = session.get('search_polices', None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
-
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
-
-    if form.submit.data:
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        item_plice = form.item_plice.data
-        item_finder = form.item_finder.data
-
+    else:
+        start_date = search_results['start_date']
+        end_date = search_results['end_date']
+        item_plice = search_results['item_plice']
+        item_finder = search_results['item_finder']
         query = db.session.query(LostItem)
         if start_date and end_date:
             query = query.filter(LostItem.get_item.between(start_date, end_date))
@@ -55,14 +47,31 @@ def item():
         if item_plice is True:
             query = query.filter(LostItem.item_value is True)
         if item_finder != "すべて":
-            if item_finder == "占有者":
-                query = query.filter(LostItem.choice_finder == "占有者")
+            if item_finder == "占有者拾得":
+                query = query.filter(LostItem.choice_finder == "占有者拾得")
             else:
-                query = query.filter(LostItem.choice_finder == "第三者")
+                query = query.filter(LostItem.choice_finder == "第三者拾得")
         # 警察未届けの物のみ
         query = query.filter(LostItem.item_situation != "警察届出済み")
         search_results = query.all()
-        session['search_police'] = [item.to_dict() for item in search_results]
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        session['search_polices'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+            'item_plice': form.item_plice.data,
+            'item_finder': form.item_finder.data,
+        }
+        print(session['search_polices'])
         return redirect(url_for("police.item"))
 
     if form.submit_output.data:

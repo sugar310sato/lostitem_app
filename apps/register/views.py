@@ -149,6 +149,7 @@ def register_item(choice_finder):
                 finder_class=form.finder_class.data,
                 finder_affiliation=form.finder_affiliation.data,
                 item_situation="保管中",
+                refund_situation="未",
 
                 # カードの場合は、カード情報の登録
                 card_campany=form.card_campany.data,
@@ -214,6 +215,7 @@ def register_item(choice_finder):
                 thirdparty_waiver=form.thirdparty_waiver.data,
                 thirdparty_name_note=form.thirdparty_name_note.data,
                 item_situation="保管中",
+                refund_situation="未",
 
                 # カードの場合は、カード情報の登録
                 card_campany=form.card_campany.data,

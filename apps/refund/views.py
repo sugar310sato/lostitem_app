@@ -30,20 +30,14 @@ UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "refund_list_pdf"))
 def register_num():
     form = RegisterItem()
     search_results = session.get('search_register_num', None)
+    print(search_results)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
-
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
-
-    if form.submit.data:
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        finder_choice = form.finder_choice.data
-        waiver = form.waiver.data
+    else:
+        start_date = search_results['start_date']
+        end_date = search_results['end_date']
+        finder_choice = search_results['finder_choice']
+        waiver = search_results['waiver']
         # クエリの生成
         query = db.session.query(LostItem)
         if start_date and end_date:
@@ -64,7 +58,23 @@ def register_num():
         query = query.filter(LostItem.refund_situation != "還付済")
         query = query.filter(LostItem.refund_situation != "対応済")
         search_results = query.all()
-        session['search_register_num'] = [item.to_dict() for item in search_results]
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        session['search_register_num'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+            'finder_choice': form.finder_choice.data,
+            'waiver': form.waiver.data,
+        }
         return redirect(url_for("refund.register_num"))
 
     if form.submit_register.data:
@@ -91,21 +101,14 @@ def refund_item():
     search_results = session.get('search_refund_item', None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
-
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
-
-    if form.submit.data:
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        receiptnumber = form.receiptnumber.data
-        refund_expect = form.refund_expect.data
-        returned = form.returned.data
-        item_plice = form.item_plice.data
-        item_feature = form.item_feature.data
+    else:
+        start_date = search_results['start_date']
+        end_date = search_results['end_date']
+        receiptnumber = search_results['receiptnumber']
+        refund_expect = search_results['refund_expect']
+        returned = search_results['returned']
+        item_plice = search_results['item_plice']
+        item_feature = search_results['item_feature']
         # クエリの生成
         query = db.session.query(LostItem)
         if start_date and end_date:
@@ -128,7 +131,27 @@ def refund_item():
         if item_feature:
             query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
         search_results = query.all()
-        session['search_refund_item'] = [item.to_dict() for item in search_results]
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        session['search_refund_item'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+            'receiptnumber': form.receiptnumber.data,
+            'refund_expect': form.refund_expect.data.strftime('%Y-%m-%d')
+            if form.refund_expect.data else None,
+            'returned': form.returned.data,
+            'item_plice': form.item_plice.data,
+            'item_feature': form.item_feature.data,
+        }
         return redirect(url_for("refund.refund_item"))
 
     if form.submit_register.data:
@@ -163,20 +186,13 @@ def refunded():
     search_results = session.get('search_refunded', None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
-
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
-
-    if form.submit.data:
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        refund_date = form.refund_date.data
-        police_date = form.police_date.data
-        refunded_process = form.refunded_process.data
-        refunded_bool = form.refunded_bool.data
+    else:
+        start_date = search_results['start_date']
+        end_date = search_results['end_date']
+        refund_date = search_results['refund_date']
+        police_date = search_results['police_date']
+        refunded_process = search_results['refunded_process']
+        refunded_bool = search_results['refunded_bool']
         # クエリの生成
         query = db.session.query(LostItem)
         if start_date and end_date:
@@ -196,7 +212,27 @@ def refunded():
         else:
             query = query.filter(LostItem.refund_situation != "NULL")
         search_results = query.all()
-        session['search_refunded'] = [item.to_dict() for item in search_results]
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        session['search_refunded'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+            'refund_date': form.refund_date.data.strftime('%Y-%m-%d')
+            if form.refund_date.data else None,
+            'police_date': form.police_date.data.strftime('%Y-%m-%d')
+            if form.police_date.data else None,
+            'refunded_process': form.refunded_process.data,
+            'refunded_bool': form.refunded_bool.data,
+        }
         return redirect(url_for("refund.refunded"))
     if form.submit2.data:
         item_ids = request.form.getlist('item_ids')
@@ -222,17 +258,9 @@ def refund_list():
     search_results = session.get('search_refund_list', None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
-
-    # ページネーション処理
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
-
-    form = RefundList()
-    if form.submit.data:
-        refund_expect_year = form.refund_expect_year.data
-        refund_situation = form.refund_situation.data
+    else:
+        refund_expect_year = search_results['refund_expect_year']
+        refund_situation = search_results['refund_situation']
         # クエリの生成
         query = db.session.query(LostItem)
         if refund_expect_year:
@@ -243,7 +271,20 @@ def refund_list():
         else:
             query = query.filter(LostItem.refund_situation == "還付済")
         search_results = query.all()
-        session['search_refund_list'] = [item.to_dict() for item in search_results]
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    form = RefundList()
+    if form.submit.data:
+        # セッション情報として絞り込み条件
+        session['search_refund_list'] = {
+            'refund_expect_year': form.refund_expect_year.data,
+            'refund_situation': form.refund_situation.data,
+        }
         return redirect(url_for("refund.refund_list"))
 
     if form.submit_list.data:
