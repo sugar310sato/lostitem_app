@@ -20,9 +20,9 @@ police = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER_OWNER = str(Path(basedir, "PDFfile", "police_pdf", "owner"))
-UPLOAD_FOLDER_THIRD = str(Path(basedir, "PDFfile", "police_pdf", "third"))
-UPLOAD_FOLDER_DISK = str(Path(basedir, "PDFfile", "police_pdf", "disk"))
+UPLOAD_FOLDER_OWNER = str(Path(basedir, "PDFfile", "police_file", "owner"))
+UPLOAD_FOLDER_THIRD = str(Path(basedir, "PDFfile", "police_file", "third"))
+UPLOAD_FOLDER_DISK = str(Path(basedir, "PDFfile", "police_file", "disk"))
 
 
 # 警察届出

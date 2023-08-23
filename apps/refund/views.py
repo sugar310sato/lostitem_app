@@ -22,8 +22,9 @@ refund = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER_REFUNDED = str(Path(basedir, "PDFfile", "refund_list_pdf", "refunded"))
-UPLOAD_FOLDER_REFUND_ITEM = str(Path(basedir, "PDFfile", "refund_list_pdf", "refund_item"))
+UPLOAD_FOLDER_REFUNDED = str(Path(basedir, "PDFfile", "refund_list_file", "refunded"))
+UPLOAD_FOLDER_REFUND_ITEM = str(Path(basedir, "PDFfile", "refund_list_file",
+                                     "refund_item"))
 
 
 # 届出受理番号登録

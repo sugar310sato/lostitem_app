@@ -22,7 +22,7 @@ disposal = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "disposal_pdf"))
+UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "disposal_file"))
 
 
 # 保管物件情報一覧

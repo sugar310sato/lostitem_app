@@ -23,11 +23,6 @@ FLASK_DEBUG=1
 
 ### images、renamed_imagesの作成
 apps直下に、images、renamed_imagesフォルダを作ってください。
-[2023/08/23追記]
-apps直下にPDFFileというフォルダを作り、さらにその下に、
-disposal_pdf、police_pdf、refund_list_pdf、return_item_pdfというフォルダを作成してください。
-これらのフォルダには、作成したPDFファイルが格納されます。
-また、police_pdfの直下にはdisk,owner,thirdフォルダを、refund_list_pdfの直下にはrefund_item,refundedを追加してください。
 
 
 ### DBの作成

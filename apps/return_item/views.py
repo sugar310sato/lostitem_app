@@ -23,7 +23,7 @@ return_item = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "return_item_pdf"))
+UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "return_item_file"))
 
 pdfmetrics.registerFont(UnicodeCIDFont('HeiseiMin-W3'))
 
