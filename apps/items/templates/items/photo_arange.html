@@ -61,12 +61,15 @@
     <tbody>
         {% for i in range(0, all_lost_item|length, 5) %}
         <tr>
-            {% for lostitem in all_lost_item[i:i+5] %}
-            <td class="text-center">
-                <a href="{{ url_for('items.detail', item_id=lostitem.id) }}"><img
-                        src="{{ url_for('items.image_file', item_id=lostitem.id) }}" alt="Photo"
+            {% for j in range(5) %}
+            <td class="text-center" style="width: 20%;">
+                {% if i + j < all_lost_item|length %} <a
+                    href="{{ url_for('items.detail', item_id=all_lost_item[i + j].id) }}"><img
+                        src="{{ url_for('items.image_file', item_id=all_lost_item[i + j].id) }}" alt="Photo"
                         class="photo w-100"></a>
-                <p>{{ lostitem.get_item.strftime('%Y/%m/%d') if lostitem.get_item is not none else "" }}</p>
+                    <p>{{ all_lost_item[i + j].get_item.strftime('%Y/%m/%d') if all_lost_item[i + j].get_item is not
+                        none else "" }}</p>
+                    {% endif %}
             </td>
             {% endfor %}
         </tr>

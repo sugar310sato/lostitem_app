@@ -23,6 +23,10 @@ FLASK_DEBUG=1
 
 ### images、renamed_imagesの作成
 apps直下に、images、renamed_imagesフォルダを作ってください。
+[2023/08/23追記]
+apps直下にPDFFileというフォルダを作り、さらにその下に、
+disposal_pdf、police_pdf、refund_list_pdf、return_item_pdfというフォルダを作成してください。
+これらのフォルダには、作成したPDFファイルが格納されます。
 
 
 ### DBの作成
@@ -39,6 +43,5 @@ DBの作成がうまくいかない場合、migrationsフォルダを削除し�
 `flask db upgrade`  
 
 ### アプリの実行
-以下のコマンドでアプリを実行してください。アプリが実行できたら、urlの最後に/photoや/itemsなどをつけることで各機能にアクセスできます。
-機能の実装を優先しているので、今後修正する予定です。  
+以下のコマンドでアプリを実行してください。
 `flask run`
