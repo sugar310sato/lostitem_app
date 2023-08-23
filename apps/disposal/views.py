@@ -164,7 +164,8 @@ def dis_list():
 
 # PDFの作成
 def make_disposal_PDF(items):
-    file_name = "refunded" + '.pdf'
+    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = "disposal" + current_time + '.pdf'
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     p = canvas.Canvas(file_path, pagesize=landscape(A4))
     # ヘッダー部分(表までのテンプレ)

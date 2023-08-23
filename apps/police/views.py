@@ -20,7 +20,9 @@ police = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "police_pdf"))
+UPLOAD_FOLDER_OWNER = str(Path(basedir, "PDFfile", "police_pdf", "owner"))
+UPLOAD_FOLDER_THIRD = str(Path(basedir, "PDFfile", "police_pdf", "third"))
+UPLOAD_FOLDER_DISK = str(Path(basedir, "PDFfile", "police_pdf", "disk"))
 
 
 # 警察届出
@@ -94,8 +96,9 @@ def submit_data():
 
 
 def make_submit_data(info, documents):
-    file_name = "submit_data" + '.pdf'
-    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = "submit_data" + current_time + '.pdf'
+    file_path = os.path.join(UPLOAD_FOLDER_DISK, file_name)
     p = canvas.Canvas(file_path, pagesize=A4)
     p.setFont('HeiseiMin-W3', 20)
     p.drawString(220, 800, "フレキシブルディスク提出票")
@@ -177,8 +180,9 @@ def make_data_third():
 
 # 警察届出用データ作成関数（占有者）
 def make_pdf_police(items, submit_date):
-    file_name = "police_" + '.pdf'
-    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = "owner" + current_time + '.pdf'
+    file_path = os.path.join(UPLOAD_FOLDER_OWNER, file_name)
     p = canvas.Canvas(file_path, pagesize=letter)
     # ヘッダー部分(表までのテンプレ)
     p.setFont('HeiseiMin-W3', 20)
@@ -284,8 +288,9 @@ def make_pdf_police(items, submit_date):
 def make_pdf_police_third(items, submit_date):
     pages = 1
     for item in items:
-        file_name = "test" + '.pdf'
-        file_path = os.path.join(UPLOAD_FOLDER, file_name)
+        current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = str(pages) + "third" + current_time + '.pdf'
+        file_path = os.path.join(UPLOAD_FOLDER_THIRD, file_name)
         p = canvas.Canvas(file_path, pagesize=letter)
         # ヘッダー部分(表までのテンプレ)
         p.setFont('HeiseiMin-W3', 20)
@@ -394,4 +399,4 @@ def make_pdf_police_third(items, submit_date):
         p.save()
         pages += 1
 
-    return "PDF receipt saved as " + file_name
+    return "PDF receipt saved as "

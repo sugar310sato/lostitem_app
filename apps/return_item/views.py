@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from pathlib import Path
 
 from flask import Blueprint, redirect, render_template, url_for
@@ -36,7 +37,8 @@ def make_pdf(item_id):
 
 
 def make_return_pdf(item):
-    file_name = "refunded" + '.pdf'
+    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = "return" + current_time + '.pdf'
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     p = canvas.Canvas(file_path, pagesize=A4)
     p.setFont('HeiseiMin-W3', 20)

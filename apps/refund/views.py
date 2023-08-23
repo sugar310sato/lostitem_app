@@ -22,7 +22,8 @@ refund = Blueprint(
 )
 
 basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "refund_list_pdf"))
+UPLOAD_FOLDER_REFUNDED = str(Path(basedir, "PDFfile", "refund_list_pdf", "refunded"))
+UPLOAD_FOLDER_REFUND_ITEM = str(Path(basedir, "PDFfile", "refund_list_pdf", "refund_item"))
 
 
 # 届出受理番号登録
@@ -298,8 +299,9 @@ def refund_list():
 
 
 def make_pdf_refund_items(items):
-    file_name = "refund_item" + '.pdf'
-    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = "refund_item" + current_time + '.pdf'
+    file_path = os.path.join(UPLOAD_FOLDER_REFUND_ITEM, file_name)
     p = canvas.Canvas(file_path, pagesize=landscape(A4))
     # ヘッダー部分(表までのテンプレ)
     p.setFont('HeiseiMin-W3', 20)
@@ -357,8 +359,9 @@ def make_pdf_refund_items(items):
 
 # 還付済物件処理一覧
 def make_refunded_list(items):
-    file_name = "refunded" + '.pdf'
-    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = "refunded" + current_time + '.pdf'
+    file_path = os.path.join(UPLOAD_FOLDER_REFUNDED, file_name)
     p = canvas.Canvas(file_path, pagesize=landscape(A4))
     # ヘッダー部分(表までのテンプレ)
     p.setFont('HeiseiMin-W3', 20)
