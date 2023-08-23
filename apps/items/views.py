@@ -62,7 +62,7 @@ def index():
             query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
         if find_area:
             query = query.filter(LostItem.find_area.ilike(f"%{find_area}%"))
-        if item_color:
+        if item_color != "未選択":
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         if not item_value:
             query = query.filter(LostItem.item_value == False)
@@ -147,7 +147,7 @@ def photo_arange():
             query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
         if find_area:
             query = query.filter(LostItem.find_area.ilike(f"%{find_area}%"))
-        if item_color:
+        if item_color != "未選択":
             query = query.filter(LostItem.item_color.ilike(f"%{item_color}%"))
         if not item_value:
             query = query.filter(LostItem.item_value == False)
