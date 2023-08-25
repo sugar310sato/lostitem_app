@@ -8,7 +8,7 @@
             class="photo mb-3">
     </div>
     <div class="row">
-        <div class="col-3">管理番号 <u>{{ item.track_num }}</u></div>
+        <div class="col-3">管理番号 <u>{{ item.main_id }}</u></div>
         <div class="col-3">通知 <u>{{ item.notify }}</u></div>
         <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
                 {{ item.get_item_hour }}{{ item.get_item_minute }}</u></div>
