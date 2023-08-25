@@ -25,6 +25,10 @@
     <!-- 還付済物件処理フォーム -->
     <hr>
     <p>{{ pagination.info }}</p>
+    <p>
+        <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
+        <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
+    </p>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -76,4 +80,5 @@
         <div style="margin-left: 45%;">{{ pagination.links }}</div>
     </div>
 </form>
+<script src="{{ url_for('static', filename='js/choice.js') }}"></script>
 {% endblock %}

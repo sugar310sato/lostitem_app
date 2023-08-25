@@ -32,9 +32,13 @@ UPLOAD_FOLDER_REFUND_ITEM = str(Path(basedir, "PDFfile", "refund_list_file",
 def register_num():
     form = RegisterItem()
     search_results = session.get('search_register_num', None)
-    print(search_results)
     if search_results is None:
-        search_results = db.session.query(LostItem).all()
+        # 処理済みの物は最初から出さない
+        query = db.session.query(LostItem)
+        query = query.filter(LostItem.refund_situation != "処理済")
+        query = query.filter(LostItem.refund_situation != "還付済")
+        query = query.filter(LostItem.refund_situation != "対応済")
+        search_results = query.all()
     else:
         start_date = search_results['start_date']
         end_date = search_results['end_date']
