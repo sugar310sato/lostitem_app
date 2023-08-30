@@ -9,6 +9,7 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfgen import canvas
 
 from apps.app import db
+from apps.crud.models import User
 from apps.register.models import LostItem
 from apps.return_item.forms import LostNote, ReturnItemForm
 
@@ -98,7 +99,13 @@ def item(item_id):
 @return_item.route("/item/<item_id>/note", methods=["POST", "GET"])
 def note(item_id):
     lostitem = LostItem.query.filter_by(id=item_id).first()
+
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
     form = LostNote()
+    form.recep_manager.choices = user_choice
+    form.note_manager.choices = user_choice
 
     if form.submit.data:
         lostitem.item_situation = "遺失者連絡済み"
@@ -138,7 +145,11 @@ def note(item_id):
 @return_item.route("/item/<item_id>/return_item", methods=["POST", "GET"])
 def item_return(item_id):
     lostitem = LostItem.query.filter_by(id=item_id).first()
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
     form = ReturnItemForm()
+    form.return_manager.choices = user_choice
 
     if form.submit.data:
         lostitem.item_situation = "返還済み"

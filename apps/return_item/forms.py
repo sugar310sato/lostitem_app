@@ -25,7 +25,7 @@ class LostNote(FlaskForm):
         label="受付時間(分)",
         choices=MINUTE,
     )
-    recep_manager = StringField("受付者")
+    recep_manager = SelectField("受付者", choices=[])
     lost_person = StringField("遺失者氏名")
     lost_class = StringField("遺失者属性")
     lost_affiliation = StringField("遺失者所属")
@@ -43,7 +43,7 @@ class LostNote(FlaskForm):
         choices=MINUTE,
     )
     note_process = StringField("連絡手段/相手")
-    note_manager = StringField("連絡担当者")
+    note_manager = SelectField("連絡担当者", choices=[])
     response_date = DateField("返答日")
     response_hour = SelectField(
         label="返答時間",
@@ -66,8 +66,8 @@ class ReturnItemForm(FlaskForm):
         label="返答時間",
         choices=DOCUMENT,
     )
-    return_person = StringField("返還者")
+    return_person = StringField("返還者名")
     return_address = StringField("住所")
     return_tel = StringField("連絡先")
-    return_manager = StringField("返還担当者")
+    return_manager = SelectField("返還担当者", choices=[])
     submit = SubmitField("返還")

@@ -58,7 +58,9 @@ class RefundItemForm(FlaskForm):
     item_plice = BooleanField("貴重品のみ表示")
     item_feature = StringField("特徴")
     refund_date = DateField("還付日")
-    refund_manager = StringField("担当者")
+    refund_manager = SelectField(
+        "担当者",
+        choices=[])
     submit_register = SubmitField("登録")
     submit = SubmitField("検索")
 

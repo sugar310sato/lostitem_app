@@ -82,5 +82,5 @@ class CardNote(FlaskForm):
         label="連絡時間(分)",
         choices=MINUTE,
     )
-    card_manager = StringField("連絡担当者")
+    card_manager = SelectField("連絡担当者", choices=[])
     submit = SubmitField("連絡済みにする")

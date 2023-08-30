@@ -115,7 +115,7 @@ def register_item(choice_finder):
     main_id = generate_main_id(choice_finder, current_year)
     # Userの一覧取得
     users = User.query.all()
-    user_choice = [(str(user.id), user.username) for user in users]
+    user_choice = [(user.username) for user in users]
 
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()

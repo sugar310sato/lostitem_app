@@ -10,6 +10,7 @@ from reportlab.pdfgen import canvas
 from sqlalchemy import extract, func
 
 from apps.app import db
+from apps.crud.models import User
 from apps.refund.forms import (RefundedForm, RefundItemForm, RefundList,
                                RegisterItem)
 from apps.register.models import Denomination, LostItem
@@ -103,7 +104,11 @@ def register_num():
 # 還付処理
 @refund.route("/refund_item", methods=["POST", "GET"])
 def refund_item():
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
     form = RefundItemForm()
+    form.refund_manager.choices = [("選択してください")] + user_choice
     search_results = session.get('search_refund_item', None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
@@ -161,26 +166,32 @@ def refund_item():
         return redirect(url_for("refund.refund_item"))
 
     if form.submit_register.data:
-        item_ids = request.form.getlist('item_ids')
-        session['item_ids'] = item_ids
-        police_item_ids = request.form.getlist('police_item_ids')
-        session['police_item_ids'] = police_item_ids
-        items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
-        police_items = (
-            db.session.query(LostItem)
-            .filter(LostItem.id.in_(police_item_ids)).all()
-            )
-        for item in items:
-            item.refund_situation = "還付済"
-            item.refund_date = form.refund_date.data
-            item.refund_manager = form.refund_manager.data
-        db.session.commit()
-        for item in police_items:
-            item.refund_date = form.refund_date.data
-            item.refund_manager = form.refund_manager.data
-            item.refund_situation = "対応済"
-        db.session.commit()
-        return redirect(url_for("refund.refund_item"))
+        if form.refund_manager.data != "選択してください":
+            item_ids = request.form.getlist('item_ids')
+            session['item_ids'] = item_ids
+            police_item_ids = request.form.getlist('police_item_ids')
+            session['police_item_ids'] = police_item_ids
+            items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
+            police_items = (
+                db.session.query(LostItem)
+                .filter(LostItem.id.in_(police_item_ids)).all()
+                )
+            for item in items:
+                item.refund_situation = "還付済"
+                item.refund_date = form.refund_date.data
+                item.refund_manager = form.refund_manager.data
+            db.session.commit()
+            for item in police_items:
+                item.refund_date = form.refund_date.data
+                item.refund_manager = form.refund_manager.data
+                item.refund_situation = "対応済"
+            db.session.commit()
+            return redirect(url_for("refund.refund_item"))
+        else:
+            errors = "担当者を選択してください"
+            return render_template("refund/refund_item.html",
+                                   form=form, search_results=rows,
+                                   pagination=pagination, errors=errors)
     return render_template("refund/refund_item.html",
                            form=form, search_results=rows, pagination=pagination)
 

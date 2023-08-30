@@ -3,6 +3,7 @@ from flask import Blueprint, redirect, render_template, request, url_for
 from apps.app import db
 from apps.bundleditems.forms import BundledItemForm, CardNote, MoneyForm
 from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
+from apps.crud.models import User
 from apps.register.models import BundledItems, Denomination, LostItem
 
 bundleditems = Blueprint(
@@ -63,7 +64,11 @@ def register(item_id):
 def card(item_id):
     lostitem = LostItem.query.filter_by(id=item_id).first()
     bundleditems = BundledItems.query.filter_by(lostitem_id=item_id).all()
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
     form = CardNote()
+    form.card_manager.choices = user_choice
     if form.submit.data:
         renew_lostitem = request.form.getlist('main')
         renew_bundleds = request.form.getlist('item')

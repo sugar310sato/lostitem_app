@@ -22,6 +22,9 @@
     </div>
     <hr>
     <div class="containrt mb-3">
+        {% if errors %}
+        <span style="color: red;">{{ errors }}</span>
+        {% endif %}
         <div class="row mb-3">
             <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date(class="form-set") }}</div>
             <div class="col-4">{{ form.refund_manager.label }} {{ form.refund_manager(class="form-set") }}</div>
