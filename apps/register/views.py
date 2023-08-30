@@ -11,6 +11,7 @@ from sqlalchemy import func
 
 from apps.app import db
 from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
+from apps.crud.models import User
 from apps.register.forms import (ChoicesFinderForm, OwnerLostItemForm,
                                  ThirdPartyLostItemForm)
 from apps.register.models import LostItem
@@ -27,33 +28,36 @@ register = Blueprint(
 
 # 画像の保存処理
 def save_image():
-    # 画像取得元
     source_folder = Path(current_app.root_path, "images")
-    # 画像移動先フォルダ
     destination_folder = Path(current_app.root_path, "renamed_images")
 
-    # ファイル名と拡張子を取得、ファイル名をuuidに
-    originnl_filename = "captured_image.jpg"
+    original_filename = "captured_image.jpg"
     new_filename = str(uuid.uuid4())
-    _, file_extention = os.path.splitext(originnl_filename)
-    new_filename = new_filename + file_extention
-    send_file = new_filename
-    originnl_filename = os.path.join(source_folder, originnl_filename)
-    new_filename = os.path.join(source_folder, new_filename)
-    os.rename(originnl_filename, new_filename)
+    _, file_extension = os.path.splitext(original_filename)
+    new_filename = new_filename + file_extension
 
-    # 画像の移動
-    for file in os.listdir(source_folder):
-        file_path = os.path.join(source_folder, new_filename)
-        shutil.move(file_path, destination_folder)
+    original_filepath = os.path.join(source_folder, original_filename)
+    new_filepath = os.path.join(source_folder, new_filename)
 
-    # imagesに登録されている写真の削除
-    sourcefoder = Path(current_app.root_path, "images")
-    for filename in os.listdir(sourcefoder):
-        file_path = os.path.join(sourcefoder, filename)
+    # Rename the file
+    os.rename(original_filepath, new_filepath)
+
+    # Check if file with the same name exists in the destination folder
+    destination_filepath = os.path.join(destination_folder, new_filename)
+    if os.path.exists(destination_filepath):
+        os.remove(destination_filepath)
+
+    # Move the file
+    shutil.move(new_filepath, destination_folder)
+
+    # Delete all files in the source folder, except .gitkeep
+    for filename in os.listdir(source_folder):
+        if filename == ".gitkeep":
+            continue  # Skip .gitkeep file
+        file_path = os.path.join(source_folder, filename)
         os.unlink(file_path)
 
-    return send_file
+    return new_filename
 
 
 # ホーム画面
@@ -109,8 +113,13 @@ def choices_finder():
 def register_item(choice_finder):
     current_year = datetime.now().year % 100
     main_id = generate_main_id(choice_finder, current_year)
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(str(user.id), user.username) for user in users]
+
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
+        form.recep_manager.choices = user_choice
         if form.submit.data:
             moved_path = save_image()
             ownerlostitem = LostItem(
@@ -177,6 +186,7 @@ def register_item(choice_finder):
             return redirect(url_for("items.detail", item_id=ownerlostitem.id))
     elif choice_finder == "第三者拾得":
         form = ThirdPartyLostItemForm()
+        form.recep_manager.choices = user_choice
         if form.submit.data:
             moved_path = save_image()
             thirdpartylostitem = LostItem(

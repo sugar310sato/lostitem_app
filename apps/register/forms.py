@@ -38,7 +38,7 @@ class LostItemForm(FlaskForm):
         label="受付時間(分)",
         choices=MINUTE,
     )
-    recep_manager = StringField("受付者")
+    recep_manager = SelectField("受付担当者", choices=[])
     find_area = StringField("拾得場所")
     find_area_police = StringField("警察届出用拾得場所")
     own_waiver = SelectField(
