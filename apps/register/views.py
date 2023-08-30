@@ -39,18 +39,18 @@ def save_image():
     original_filepath = os.path.join(source_folder, original_filename)
     new_filepath = os.path.join(source_folder, new_filename)
 
-    # Rename the file
+    # ファイルの名前を変更
     os.rename(original_filepath, new_filepath)
 
-    # Check if file with the same name exists in the destination folder
+    # ファイルが存在する場合、移動
     destination_filepath = os.path.join(destination_folder, new_filename)
     if os.path.exists(destination_filepath):
         os.remove(destination_filepath)
 
-    # Move the file
+    # 移動
     shutil.move(new_filepath, destination_folder)
 
-    # Delete all files in the source folder, except .gitkeep
+    # .gitkeepファイル以外を削除
     for filename in os.listdir(source_folder):
         if filename == ".gitkeep":
             continue  # Skip .gitkeep file
