@@ -50,7 +50,19 @@ class RefundedForm(FlaskForm):
         choices=[])
     submit = SubmitField("検索")
     submit2 = SubmitField("登録")
+    choice_refunded_process = SelectField(
+        label="還付後処理",
+        choices=REFUNDED_PROCESS,
+    )
     submit3 = SubmitField("印刷")
+
+
+# 還付済物件印刷
+class RefundedPrint(FlaskForm):
+    start_date = DateField("拾得日")
+    end_date = DateField("拾得日")
+    submit = SubmitField("印刷")
+    submit_search = SubmitField("検索")
 
 
 # 還付検索フォーム

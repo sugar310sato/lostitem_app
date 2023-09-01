@@ -16,9 +16,12 @@
             <div class="col-4">{{ form.refunded_process.label }} {{ form.refunded_process(class="form-set") }}</div>
             <div class="col-4">{{ form.refunded_bool.label }} {{ form.refunded_bool(class="form-set") }}</div>
         </div>
-        <div class="text-center">
+        <div class="text-center mb-3">
             {{ form.submit(class="btn btn-primary") }}
             {{ form.submit2(class="btn btn-primary") }}
+        </div>
+        <div class="text-center mb-3">
+            {{ form.choice_refunded_process.label }} {{ form.choice_refunded_process }}
             {{ form.submit3(class="btn btn-primary") }}
         </div>
     </div>

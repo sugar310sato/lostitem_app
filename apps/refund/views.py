@@ -11,8 +11,8 @@ from sqlalchemy import extract, func, or_
 
 from apps.app import db
 from apps.crud.models import User
-from apps.refund.forms import (RefundedForm, RefundItemForm, RefundList,
-                               RegisterItem)
+from apps.refund.forms import (RefundedForm, RefundedPrint, RefundItemForm,
+                               RefundList, RegisterItem)
 from apps.register.models import Denomination, LostItem
 
 refund = Blueprint(
@@ -285,12 +285,59 @@ def refunded():
             flash("担当者を入力してください")
             return redirect(url_for('refund.refunded'))
     if form.submit3.data:
-        item_ids = request.form.getlist('item_ids')
-        items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
-        make_refunded_list(items)
+        if form.choice_refunded_process.data != "":
+            session['choice_process'] = form.choice_refunded_process.data
+            return redirect(url_for('refund.refunded_print'))
         return redirect(url_for('refund.refunded'))
     return render_template("refund/refunded.html", form=form,
                            search_results=rows, pagination=pagination)
+
+
+# 印刷選択画面
+# 還付後処理によって印刷する書類を分ける
+@refund.route("/refunded/print", methods=["POST", "GET"])
+def refunded_print():
+    choice_process = session.get('choice_process', None)
+    form = RefundedPrint()
+    search_results = session.get('search_print', None)
+    if search_results is None:
+        # クエリの生成
+        query = db.session.query(LostItem)
+        query = query.filter(LostItem.refunded_process == choice_process)
+        search_results = query.all()
+    else:
+        start_date = search_results['start_date']
+        end_date = search_results['end_date']
+        # クエリの生成
+        query = db.session.query(LostItem)
+        if start_date and end_date:
+            query = query.filter(LostItem.get_item.between(start_date, end_date))
+        elif start_date:
+            query = query.filter(LostItem.get_item >= start_date)
+        elif end_date:
+            query = query.filter(LostItem.get_item <= end_date)
+        query = query.filter(LostItem.refunded_process == choice_process)
+        search_results = query.all()
+
+    # ページネーション処理
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    rows = search_results[(page - 1)*50: page*50]
+    pagination = Pagination(page=page, total=len(search_results), per_page=50,
+                            css_framework='bootstrap5')
+
+    if form.submit_search.data:
+        session['search_print'] = {
+            'start_date': form.start_date.data.strftime('%Y-%m-%d')
+            if form.start_date.data else None,
+            'end_date': form.end_date.data.strftime('%Y-%m-%d')
+            if form.end_date.data else None,
+        }
+        return redirect(url_for("refund.refunded_print"))
+
+    if form.submit.data:
+        return redirect(url_for("refund.refunded_print"))
+    return render_template("refund/refunded_print.html", search_results=rows,
+                           form=form, pagination=pagination)
 
 
 # 還付請求一覧
