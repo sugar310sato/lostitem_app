@@ -28,12 +28,14 @@ UPLOAD_FOLDER_DISK = str(Path(basedir, "PDFfile", "police_file", "disk"))
 # 警察届出
 @police.route("/items", methods=["POST", "GET"])
 def item():
-    # 一応返還済みでないすべての物品を出しています
-    # 遺失者連絡済みの物を除外するためのFormなどは用意してあります
     form = PoliceForm()
     search_results = session.get('search_polices', None)
     if search_results is None:
-        search_results = db.session.query(LostItem).all()
+        query = db.session.query(LostItem)
+        # 警察未届けの物のみ
+        query = query.filter(LostItem.item_situation != "警察届出済み")
+        query = query.filter(LostItem.item_situation != "返還済み")
+        search_results = query.all()
     else:
         start_date = search_results['start_date']
         end_date = search_results['end_date']
@@ -55,6 +57,7 @@ def item():
                 query = query.filter(LostItem.choice_finder == "第三者拾得")
         # 警察未届けの物のみ
         query = query.filter(LostItem.item_situation != "警察届出済み")
+        query = query.filter(LostItem.item_situation != "返還済み")
         search_results = query.all()
 
     # ページネーション処理

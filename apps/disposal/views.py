@@ -30,7 +30,6 @@ UPLOAD_FOLDER = str(Path(basedir, "PDFfile", "disposal_file"))
 def dis_list():
     form = GroceriesForm()
     search_dis = session.get('search_dislist', None)
-    print(search_dis)
 
     # ID情報が存在し、リストが空でない場合、それを使用してクエリを絞り込む
     if search_dis:
@@ -97,9 +96,15 @@ def dis_list():
             query = query.filter(LostItem.item_situation != "売却済")
         if not item_situation_disposal:
             query = query.filter(LostItem.item_situation != "廃棄済")
+        query = query.filter(LostItem.item_situation != "返還済み")
         search_results = query.all()
     else:
-        search_results = db.session.query(LostItem).all()
+        # クエリの生成
+        query = db.session.query(LostItem)
+        query = query.filter(LostItem.item_situation != "売却済")
+        query = query.filter(LostItem.item_situation != "廃棄済")
+        query = query.filter(LostItem.item_situation != "返還済み")
+        search_results = query.all()
     # ページネーション処理
     page = request.args.get(get_page_parameter(), type=int, default=1)
     rows = search_results[(page - 1)*50: page*50]

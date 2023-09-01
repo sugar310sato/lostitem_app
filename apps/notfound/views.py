@@ -80,7 +80,10 @@ def notfound_search():
     form = SearchNotFoundForm()
     search_results = session.get('not_found_search', None)
     if search_results is None:
-        search_results = db.session.query(NotFound).all()
+        # クエリの生成
+        query = db.session.query(NotFound)
+        query = query.filter(NotFound.item_situation != "対応済")
+        search_results = query.all()
     else:
         start_date = search_results['start_date']
         end_date = search_results['end_date']

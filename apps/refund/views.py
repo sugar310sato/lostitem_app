@@ -7,7 +7,7 @@ from flask import (Blueprint, redirect, render_template, request, session,
 from flask_paginate import Pagination, get_page_parameter
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfgen import canvas
-from sqlalchemy import extract, func
+from sqlalchemy import extract, func, or_
 
 from apps.app import db
 from apps.crud.models import User
@@ -91,10 +91,7 @@ def register_num():
         for item in items:
             item.receiptnumber = form.receiptnumber.data
             item.refund_expect = form.refund_expect.data
-            if form.refund_expect:
-                item.refund_situation = "還付予定"
-            else:
-                item.refund_situation = ""
+            item.refund_situation = "還付予定"
         db.session.commit()
         return redirect(url_for("refund.register_num"))
     return render_template("refund/index.html", all_lost_item=rows, form=form,
@@ -111,7 +108,12 @@ def refund_item():
     form.refund_manager.choices = [("選択してください")] + user_choice
     search_results = session.get('search_refund_item', None)
     if search_results is None:
-        search_results = db.session.query(LostItem).all()
+        query = db.session.query(LostItem)
+        query = query.filter(LostItem.refund_situation != "対応済")
+        query = query.filter(LostItem.refund_situation != "還付済")
+        query = query.filter(LostItem.refund_situation == "還付予定")
+        query = query.filter(LostItem.item_situation != "返還済み")
+        search_results = query.all()
     else:
         start_date = search_results['start_date']
         end_date = search_results['end_date']
@@ -135,12 +137,14 @@ def refund_item():
         if not returned:
             query = query.filter(LostItem.refund_situation != "対応済")
             query = query.filter(LostItem.refund_situation != "還付済")
+            query = query.filter(LostItem.refund_situation == "還付予定")
         else:
             query = query.filter(LostItem.refund_situation != "NULL")
         if item_plice:
             query = query.filter(LostItem.item_value is True)
         if item_feature:
             query = query.filter(LostItem.item_feature.ilike(f"%{item_feature}%"))
+        query = query.filter(LostItem.item_situation != "返還済み")
         search_results = query.all()
 
     # ページネーション処理
@@ -202,7 +206,11 @@ def refunded():
     form = RefundedForm()
     search_results = session.get('search_refunded', None)
     if search_results is None:
-        search_results = db.session.query(LostItem).all()
+        # クエリの生成
+        query = db.session.query(LostItem)
+        query = query.filter(LostItem.refund_situation == "還付済")
+        query = query.filter(LostItem.item_situation != "返還済み")
+        search_results = query.all()
     else:
         start_date = search_results['start_date']
         end_date = search_results['end_date']
@@ -226,8 +234,11 @@ def refunded():
             query = query.filter(LostItem.refunded_process == refunded_process)
         if not refunded_bool:
             query = query.filter(LostItem.refund_situation != "処理済")
+            query = query.filter(LostItem.refund_situation == "還付済")
         else:
-            query = query.filter(LostItem.refund_situation != "NULL")
+            query = query.filter(or_(LostItem.refund_situation == "処理済",
+                                     LostItem.refund_situation == "還付済"))
+        query = query.filter(LostItem.item_situation != "返還済み")
         search_results = query.all()
 
     # ページネーション処理
@@ -274,7 +285,11 @@ def refunded():
 def refund_list():
     search_results = session.get('search_refund_list', None)
     if search_results is None:
-        search_results = db.session.query(LostItem).all()
+        # クエリの生成
+        query = db.session.query(LostItem)
+        query = query.filter(LostItem.refund_situation == "還付予定")
+        query = query.filter(LostItem.item_situation != "返還済み")
+        search_results = query.all()
     else:
         refund_expect_year = search_results['refund_expect_year']
         refund_situation = search_results['refund_situation']
@@ -287,6 +302,7 @@ def refund_list():
             query = query.filter(LostItem.refund_situation == "還付予定")
         else:
             query = query.filter(LostItem.refund_situation == "還付済")
+        query = query.filter(LostItem.item_situation != "返還済み")
         search_results = query.all()
 
     # ページネーション処理
