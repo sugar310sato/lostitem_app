@@ -24,6 +24,18 @@
     </div>
     <!-- 還付済物件処理フォーム -->
     <hr>
+    <!-- 担当者チェックのフラッシュメッセージ -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <span style="color: red;">{{ message }}</span>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="row mb-3">
+        <div class="col-4">{{ form.refunded_process_manager.label }} {{ form.refunded_process_manager }}</div>
+        <div class="col-4">{{ form.refunded_process_sub_manager.label }} {{ form.refunded_process_sub_manager }}</div>
+    </div>
     <p>{{ pagination.info }}</p>
     <p>
         <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>

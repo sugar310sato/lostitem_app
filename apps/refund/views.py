@@ -2,8 +2,8 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from flask import (Blueprint, redirect, render_template, request, session,
-                   url_for)
+from flask import (Blueprint, flash, redirect, render_template, request,
+                   session, url_for)
 from flask_paginate import Pagination, get_page_parameter
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfgen import canvas
@@ -203,7 +203,12 @@ def refund_item():
 # 還付済物件処理
 @refund.route("/refunded", methods=["POST", "GET"])
 def refunded():
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
     form = RefundedForm()
+    form.refunded_process_manager.choices = [("選択してください")] + user_choice
+    form.refunded_process_sub_manager.choices = [("選択してください")] + user_choice
     search_results = session.get('search_refunded', None)
     if search_results is None:
         # クエリの生成
@@ -263,14 +268,22 @@ def refunded():
         }
         return redirect(url_for("refund.refunded"))
     if form.submit2.data:
-        item_ids = request.form.getlist('item_ids')
-        items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
-        for item in items:
-            select_value = request.form.get(f'item_select_{item.id}')
-            item.refund_situation = "処理済"
-            item.refunded_process = select_value
-        db.session.commit()
-        return redirect(url_for('refund.refunded'))
+        if (form.refunded_process_manager.data != "選択してください" and
+                form.refunded_process_sub_manager.data != "選択してください"):
+            item_ids = request.form.getlist('item_ids')
+            items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
+            for item in items:
+                select_value = request.form.get(f'item_select_{item.id}')
+                item.refund_situation = "処理済"
+                item.refunded_process = select_value
+                item.refunded_process_manager = form.refunded_process_manager.data
+                item.refunded_process_sub_manager = \
+                    form.refunded_process_sub_manager.data
+            db.session.commit()
+            return redirect(url_for('refund.refunded'))
+        else:
+            flash("担当者を入力してください")
+            return redirect(url_for('refund.refunded'))
     if form.submit3.data:
         item_ids = request.form.getlist('item_ids')
         items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()

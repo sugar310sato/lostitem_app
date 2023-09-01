@@ -116,6 +116,8 @@ class LostItem(db.Model):
     refund_situation = db.Column(db.String)
     refund_manager = db.Column(db.String)
     refunded_process = db.Column(db.String)
+    refunded_process_manager = db.Column(db.String)
+    refunded_process_sub_manager = db.Column(db.String)
 
     # 廃棄処理
     disposal_date = db.Column(db.DateTime)

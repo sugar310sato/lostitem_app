@@ -42,7 +42,12 @@ class RefundedForm(FlaskForm):
         choices=REFUNDED_PROCESS,
     )
     refunded_bool = BooleanField("処理済も表示")
-    refund_manager = StringField("担当者")
+    refunded_process_manager = SelectField(
+        "担当者1",
+        choices=[])
+    refunded_process_sub_manager = SelectField(
+        "担当者2",
+        choices=[])
     submit = SubmitField("検索")
     submit2 = SubmitField("登録")
     submit3 = SubmitField("印刷")
