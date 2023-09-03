@@ -1,19 +1,23 @@
-import os
 from datetime import datetime
-from pathlib import Path
 
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 from flask_paginate import Pagination, get_page_parameter
-from reportlab.lib.pagesizes import A4, landscape
-from reportlab.pdfgen import canvas
 from sqlalchemy import extract, func, or_
 
 from apps.app import db
 from apps.crud.models import User
 from apps.refund.forms import (RefundedForm, RefundedPrint, RefundItemForm,
                                RefundList, RegisterItem)
-from apps.register.models import Denomination, LostItem
+# 関数の導入
+from apps.refund.print_document import (make_pdf_refund_items,
+                                        make_refunded_list_disposal,
+                                        make_refunded_list_hold,
+                                        make_refunded_list_HQ,
+                                        make_refunded_list_manager,
+                                        make_refunded_list_money,
+                                        make_refunded_list_police)
+from apps.register.models import LostItem
 
 refund = Blueprint(
     "refund",
@@ -21,11 +25,6 @@ refund = Blueprint(
     template_folder="templates",
     static_folder="static",
 )
-
-basedir = Path(__file__).parent.parent
-UPLOAD_FOLDER_REFUNDED = str(Path(basedir, "PDFfile", "refund_list_file", "refunded"))
-UPLOAD_FOLDER_REFUND_ITEM = str(Path(basedir, "PDFfile", "refund_list_file",
-                                     "refund_item"))
 
 
 # 届出受理番号登録
@@ -279,6 +278,7 @@ def refunded():
                 item.refunded_process_manager = form.refunded_process_manager.data
                 item.refunded_process_sub_manager = \
                     form.refunded_process_sub_manager.data
+                item.refunded_date = datetime.now().date()
             db.session.commit()
             return redirect(url_for('refund.refunded'))
         else:
@@ -335,6 +335,21 @@ def refunded_print():
         return redirect(url_for("refund.refunded_print"))
 
     if form.submit.data:
+        item_ids = request.form.getlist('item_ids')
+        session['item_ids'] = item_ids
+        items = db.session.query(LostItem).filter(LostItem.id.in_(item_ids)).all()
+        if choice_process == "店長":
+            make_refunded_list_manager(items)
+        elif choice_process == "廃棄":
+            make_refunded_list_disposal(items)
+        elif choice_process == "入金":
+            make_refunded_list_money(items)
+        elif choice_process == "本部":
+            make_refunded_list_HQ(items)
+        elif choice_process == "保留":
+            make_refunded_list_hold(items)
+        elif choice_process == "警処":
+            make_refunded_list_police(items)
         return redirect(url_for("refund.refunded_print"))
     return render_template("refund/refunded_print.html", search_results=rows,
                            form=form, pagination=pagination)
@@ -388,130 +403,3 @@ def refund_list():
         return redirect(url_for("refund.refund_list", items=items))
     return render_template("refund/refund_list.html", search_results=rows,
                            form=form, pagination=pagination)
-
-
-def make_pdf_refund_items(items):
-    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
-    file_name = "refund_item" + current_time + '.pdf'
-    file_path = os.path.join(UPLOAD_FOLDER_REFUND_ITEM, file_name)
-    p = canvas.Canvas(file_path, pagesize=landscape(A4))
-    # ヘッダー部分(表までのテンプレ)
-    p.setFont('HeiseiMin-W3', 20)
-    p.drawString(350, 550, "還付請求一覧")
-    p.setFont('HeiseiMin-W3', 10)
-    p.drawString(750, 520, datetime.now().strftime("%Y年%m月%d日"))
-
-    # 表の部分
-    p.rect(20, 480, 80, 20), p.rect(100, 480, 80, 20), p.rect(180, 480, 80, 20)
-    p.rect(260, 480, 80, 20), p.rect(340, 480, 80, 20), p.rect(420, 480, 320, 20)
-    p.rect(740, 480, 80, 20)
-    p.drawCentredString(60, 485, "還付予定日"), p.drawCentredString(140, 485, "受理番号")
-    p.drawCentredString(220, 485, "警察届出日"), p.drawCentredString(300, 485, "拾得日時")
-    p.drawCentredString(380, 485, "管理番号"), p.drawCentredString(580, 485, "物件の種類及び特徴")
-    p.drawCentredString(780, 485, "金額")
-
-    start_num = 450
-
-    # 拾得物の内容記載
-    for item in items:
-        p.rect(20, start_num, 80, 30), p.rect(100, start_num, 80, 30)
-        p.rect(180, start_num, 80, 30), p.rect(260, start_num, 80, 30)
-        p.rect(340, start_num, 80, 30), p.rect(420, start_num, 320, 30)
-        p.rect(740, start_num, 80, 30)
-
-        denomination = Denomination.query.filter_by(lostitem_id=item.id).first()
-        if item.refund_expect:
-            p.drawCentredString(60, start_num+10,
-                                item.refund_expect.strftime('%Y/%m/%d'))
-        else:
-            p.drawCentredString(60, start_num+10, "")
-        p.drawCentredString(140, start_num+10, str(item.receiptnumber))
-        if item.police_date:
-            p.drawCentredString(220, start_num+10,
-                                item.police_date.strftime('%Y/%m/%d'))
-        else:
-            p.drawCentredString(220, start_num+10, "")
-        if item.get_item:
-            p.drawCentredString(300, start_num+10, item.get_item.strftime('%Y/%m/%d'))
-        else:
-            p.drawCentredString(300, start_num+10, "")
-        p.drawCentredString(380, start_num+10, str(item.main_id))
-        p.drawCentredString(580, start_num+17, item.item_class_S)
-        p.drawCentredString(580, start_num+5, item.item_feature)
-        if denomination is not None:
-            p.drawCentredString(780, start_num+10, str(denomination.total_yen))
-        start_num -= 30
-
-    # Close the PDF object cleanly.
-    p.showPage()
-    p.save()
-
-    return "PDF receipt saved as " + file_name
-
-
-# 還付済物件処理一覧
-def make_refunded_list(items):
-    current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
-    file_name = "refunded" + current_time + '.pdf'
-    file_path = os.path.join(UPLOAD_FOLDER_REFUNDED, file_name)
-    p = canvas.Canvas(file_path, pagesize=landscape(A4))
-    # ヘッダー部分(表までのテンプレ)
-    p.setFont('HeiseiMin-W3', 20)
-    p.drawString(350, 550, "還付済物件処理一覧")
-    p.setFont('HeiseiMin-W3', 10)
-    p.drawString(750, 520, datetime.now().strftime("%Y年%m月%d日"))
-
-    # 表の部分
-    p.rect(20, 480, 80, 20), p.rect(100, 480, 80, 20), p.rect(180, 480, 80, 20)
-    p.rect(260, 480, 80, 20), p.rect(340, 480, 80, 20), p.rect(420, 480, 320, 20)
-    p.rect(740, 480, 80, 20)
-    p.drawCentredString(60, 485, "還付日"), p.drawCentredString(140, 485, "管理・受理番号")
-    p.drawCentredString(220, 485, "処理担当者"), p.drawCentredString(300, 485, "拾得日時")
-    p.drawCentredString(380, 485, "金額"), p.drawCentredString(580, 485, "物件の種類及び特徴")
-    p.drawCentredString(780, 485, "還付後処理")
-
-    start_num = 450
-    total_money = 0
-    # 拾得物の内容記載
-    for item in items:
-        p.rect(20, start_num, 80, 30), p.rect(100, start_num, 80, 30)
-        p.rect(180, start_num, 80, 30), p.rect(260, start_num, 80, 30)
-        p.rect(340, start_num, 80, 30), p.rect(420, start_num, 320, 30)
-        p.rect(740, start_num, 80, 30)
-
-        denomination = Denomination.query.filter_by(lostitem_id=item.id).first()
-        if item.refund_date:
-            p.drawCentredString(60, start_num+10,
-                                item.refund_date.strftime('%Y/%m/%d'))
-        else:
-            p.drawCentredString(60, start_num+10, "")
-        p.drawCentredString(140, start_num+17, str(item.main_id))
-        p.drawCentredString(140, start_num+5, str(item.receiptnumber))
-        if item.refund_manager:
-            p.drawCentredString(220, start_num+10, item.refund_manager)
-        if item.get_item:
-            p.drawCentredString(300, start_num+10, item.get_item.strftime('%Y/%m/%d'))
-        else:
-            p.drawCentredString(300, start_num+10, "")
-        if denomination is not None:
-            p.drawCentredString(380, start_num+10, str(denomination.total_yen))
-        p.drawCentredString(580, start_num+17, item.item_class_S)
-        p.drawCentredString(580, start_num+5, item.item_feature)
-        if item.refunded_process:
-            p.drawCentredString(780, start_num+10, item.refunded_process)
-        else:
-            p.drawCentredString(780, start_num+10, "")
-        if denomination is not None:
-            total_money += denomination.total_yen
-        start_num -= 30
-
-    # 合計金額の記載
-    p.drawString(580, start_num, "合計金額")
-    p.drawString(625, start_num, str(total_money) + "円")
-    p.line(580, start_num-3, 680, start_num-3)
-
-    # Close the PDF object cleanly.
-    p.showPage()
-    p.save()
-
-    return "PDF receipt saved as " + file_name

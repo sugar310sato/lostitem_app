@@ -21,7 +21,7 @@
             {{ form.submit2(class="btn btn-primary") }}
         </div>
         <div class="text-center mb-3">
-            {{ form.choice_refunded_process.label }} {{ form.choice_refunded_process }}
+            {{ form.choice_refunded_process.label }} {{ form.choice_refunded_process(class="form-set") }}
             {{ form.submit3(class="btn btn-primary") }}
         </div>
     </div>
@@ -36,8 +36,10 @@
     {% endif %}
     {% endwith %}
     <div class="row mb-3">
-        <div class="col-4">{{ form.refunded_process_manager.label }} {{ form.refunded_process_manager }}</div>
-        <div class="col-4">{{ form.refunded_process_sub_manager.label }} {{ form.refunded_process_sub_manager }}</div>
+        <div class="col-4">{{ form.refunded_process_manager.label }} {{ form.refunded_process_manager(class="form-set")
+            }}</div>
+        <div class="col-4">{{ form.refunded_process_sub_manager.label }} {{
+            form.refunded_process_sub_manager(class="form-set") }}</div>
     </div>
     <p>{{ pagination.info }}</p>
     <p>
