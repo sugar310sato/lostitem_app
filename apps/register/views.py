@@ -5,15 +5,26 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-from flask import (Blueprint, current_app, redirect, render_template, request,
-                   send_from_directory, session, url_for)
+from flask import (
+    Blueprint,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    session,
+    url_for,
+)
 from sqlalchemy import func
 
 from apps.app import db
 from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
 from apps.crud.models import User
-from apps.register.forms import (ChoicesFinderForm, OwnerLostItemForm,
-                                 ThirdPartyLostItemForm)
+from apps.register.forms import (
+    ChoicesFinderForm,
+    OwnerLostItemForm,
+    ThirdPartyLostItemForm,
+)
 from apps.register.models import LostItem
 
 basedir = Path(__file__).parent.parent
@@ -63,16 +74,16 @@ def save_image():
 # ホーム画面
 @register.route("/")
 def index():
-    session.pop('search_dislist', None)
-    session.pop('search_item', None)
-    session.pop('not_found_search', None)
-    session.pop('search_polices', None)
-    session.pop('item_ids', None)
-    session.pop('search_register_num', None)
-    session.pop('search_refund_item', None)
-    session.pop('police_item_ids', None)
-    session.pop('search_refunded', None)
-    session.pop('search_refund_list', None)
+    session.pop("search_dislist", None)
+    session.pop("search_item", None)
+    session.pop("not_found_search", None)
+    session.pop("search_polices", None)
+    session.pop("item_ids", None)
+    session.pop("search_register_num", None)
+    session.pop("search_refund_item", None)
+    session.pop("police_item_ids", None)
+    session.pop("search_refunded", None)
+    session.pop("search_refund_list", None)
     return render_template("register/index.html")
 
 
@@ -85,13 +96,22 @@ def photo():
 # 画像の保存
 @register.route("/upload", methods=["POST"])
 def upload():
-    image_data = request.json['image']
+    image_data = request.json["image"]
+    if (
+        request.json["inferenceResult"] != "None"
+        and request.json["photoDiscription"] != "None"
+    ):
+        session["inferenceResult"] = request.json["inferenceResult"]
+        session["photoDiscription"] = request.json["photoDiscription"]
+    else:
+        session["inferenceResult"] = "None"
+        session["photoDiscription"] = "None"
     image_data = image_data.replace("data:image/jpeg;base64,", "")
 
     # 画像の保存処理
-    filename = 'captured_image.jpg'  # 保存するファイル名を指定してください
+    filename = "captured_image.jpg"  # 保存するファイル名を指定してください
     save_path = os.path.join(UPLOAD_FOLDER, filename)
-    with open(save_path, 'wb') as f:
+    with open(save_path, "wb") as f:
         f.write(base64.b64decode(image_data))
 
     return redirect(url_for("register.choices_finder"))
@@ -113,6 +133,8 @@ def choices_finder():
 def register_item(choice_finder):
     current_year = datetime.now().year % 100
     main_id = generate_main_id(choice_finder, current_year)
+    inferenceResult = session["inferenceResult"]
+    photoDiscription = session["photoDiscription"]
     # Userの一覧取得
     users = User.query.all()
     user_choice = [(user.username) for user in users]
@@ -146,12 +168,10 @@ def register_item(choice_finder):
                 finder_address=form.finder_address.data,
                 finder_tel1=form.finder_tel1.data,
                 finder_tel2=form.finder_tel2.data,
-
                 # 大中小項目の実装
-                item_class_L=request.form.get('item_class_L'),
-                item_class_M=request.form.get('item_class_M'),
-                item_class_S=request.form.get('item_class_S'),
-
+                item_class_L=request.form.get("item_class_L"),
+                item_class_M=request.form.get("item_class_M"),
+                item_class_S=request.form.get("item_class_S"),
                 item_value=form.item_value.data,
                 item_feature=form.item_feature.data,
                 item_color=form.item_color.data,
@@ -169,7 +189,6 @@ def register_item(choice_finder):
                 finder_affiliation=form.finder_affiliation.data,
                 item_situation="保管中",
                 refund_situation="未",
-
                 # カードの場合は、カード情報の登録
                 card_campany=form.card_campany.data,
                 card_tel=form.card_tel.data,
@@ -213,12 +232,10 @@ def register_item(choice_finder):
                 finder_address=form.finder_address.data,
                 finder_tel1=form.finder_tel1.data,
                 finder_tel2=form.finder_tel2.data,
-
                 # 大中小項目の実装
-                item_class_L=request.form.get('item_class_L'),
-                item_class_M=request.form.get('item_class_M'),
-                item_class_S=request.form.get('item_class_S'),
-
+                item_class_L=request.form.get("item_class_L"),
+                item_class_M=request.form.get("item_class_M"),
+                item_class_S=request.form.get("item_class_S"),
                 item_value=form.item_value.data,
                 item_feature=form.item_feature.data,
                 item_color=form.item_color.data,
@@ -236,7 +253,6 @@ def register_item(choice_finder):
                 thirdparty_name_note=form.thirdparty_name_note.data,
                 item_situation="保管中",
                 refund_situation="未",
-
                 # カードの場合は、カード情報の登録
                 card_campany=form.card_campany.data,
                 card_tel=form.card_tel.data,
@@ -250,18 +266,35 @@ def register_item(choice_finder):
             )
             db.session.add(thirdpartylostitem)
             db.session.commit()
-            return redirect(url_for("items.detail", item_id=thirdpartylostitem.id))
-    return render_template("register/register_item.html", choice_finder=choice_finder,
-                           form=form, ITEM_CLASS_L=ITEM_CLASS_L,
-                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
+            return redirect(
+                url_for(
+                    "items.detail",
+                    item_id=thirdpartylostitem.id,
+                )
+            )
+    return render_template(
+        "register/register_item.html",
+        choice_finder=choice_finder,
+        form=form,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+        inferenceResult=inferenceResult,
+        photoDiscription=photoDiscription,
+    )
 
 
 # 識別番号の生成関数
 def generate_main_id(choice_finder, current_year):
     # choice_finderとcurrent_yearが一致するレコードの数をカウント
-    count = db.session.query(func.count(LostItem.id)
-                             ).filter(LostItem.choice_finder == choice_finder,
-                                      LostItem.current_year == current_year).scalar()
+    count = (
+        db.session.query(func.count(LostItem.id))
+        .filter(
+            LostItem.choice_finder == choice_finder,
+            LostItem.current_year == current_year,
+        )
+        .scalar()
+    )
     if choice_finder == "占有者拾得":
         identifier = f"1{current_year:02}{count+1:05}"
     else:

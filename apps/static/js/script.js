@@ -2,6 +2,13 @@ $(document).ready(function () {
     var $item_class_M = $('#item_class_M');
     var $item_class_S = $('#item_class_S');
 
+    if(inferenceResult!='None'){
+        $('#item_class_L').val(inferenceResult).change();
+    }
+    if(photoDiscription!='None'){
+        $('#item_feature').val(photoDiscription).change();
+    }
+
     $('#item_class_L').change(function () {
         var itemClassLVal = $(this).val();
 

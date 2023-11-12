@@ -4,11 +4,12 @@
 
 <body>
     <div class="lostitem-app-main" style="margin-left: 200px;">
+        <div id="loadingMessage" style="display: none;">推論処理中です。しばらくお待ちください...</div>
         <video id="video" width="640" height="480" autoplay class="card"></video><br>
         <button id="capture" class="btn btn-primary" style="margin-left: 300px;">撮影</button>
         <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
     </div>
-
+    <!-- 外部ファイルから呼びだそうとしたところ、動作しなかったので直接書き込み -->
     <script>
         // カメラのストリームを取得
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -38,52 +39,100 @@
                     'X-CSRF-TOKEN': csrfToken
                 }
             });
+            document.getElementById('loadingMessage').style.display = 'block';
 
-            // 画像をAPIゲートウェイに送信
-            $.ajax({
-                url: 'API_GATEWAY_URL',
+            // リクエストの送信
+            Promise.all([
+                getInferenceResult(image_to_base64, csrfToken),
+                getPhotoDiscription(image_to_base64, csrfToken),
+            ]).then(function (responses){
+                // リクエスト成功時の処理
+                document.getElementById('loadingMessage').style.display = 'none';
+                var inferenceResult = JSON.parse(responses[0].body).result;
+                var photoDiscription = JSON.parse(responses[1].body).description;
+
+
+            }).catch(function (error){
+                document.getElementById('loadingMessage').style.display = 'none';
+                uploadImageToServer(image, csrfToken);
+            });
+        });
+
+        // 画像認識APIの動作確認
+        function getInferenceResult(image, csrfToken){
+            return $.ajax({
+                url: 'ENDPOINT_URL',
                 type: 'POST',
-                data: JSON.stringify({ image: image_to_base64}),
+                data: JSON.stringify({ image: image }),
                 contentType: 'application/json',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
+                }
+            });
+        }
+
+        // CocaAPI動作確認
+        function getPhotoDiscription(image, csrfToken){
+            return $.ajax({
+                url: 'ENDPOINT_URL',
+                type: 'POST',
+                data: JSON.stringify({ image: image }),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+        }
+
+        // APIが正常に動いているときの処理
+        function uploadImageAndIResults(image, csrfToken, inferenceResult, photoDiscription){
+            $.ajax({
+                url: '{{ url_for("register.upload") }}',
+                type: 'POST',
+                data: JSON.stringify({
+                    image: image,
+                    inferenceResult: inferenceResult,
+                    photoDiscription: photoDiscription,
+                }),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken  // CSRFトークンを含める
                 },
                 success: function (response) {
-                    console.log('lambdaからのレスポンス:', response);
-
-                    //その後の画像、結果の処理
+                    console.log('画像と推論結果を送信しました:', response);
+                    window.location.href = "{{ url_for('register.choices_finder') }}";
                 },
                 error: function (error) {
-                    console.error('lambdaへのリクエストに失敗:', error);
-                    
-                    // 画像を保存
-                    uploadImageToServer(image, csrfToken);
+                    console.error('画像と推論結果の送信に失敗しました:', error);
                 }
+            });
+        }
 
-            })
 
-            
-
-            function uploadImageToServer(image, csrfToken){
-                // 画像をサーバーに送信
-                $.ajax({
-                    url: '{{ url_for("register.upload") }}',
-                    type: 'POST',
-                    data: JSON.stringify({ image: image }),
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken  // CSRFトークンを含める
-                    },
-                    success: function (response) {
-                        console.log('画像を保存しました:', response);
-                        window.location.href = "{{ url_for('register.choices_finder') }}";
-                    },
-                    error: function (error) {
-                        console.error('画像の保存に失敗しました:', error);
-                    }
-                });
-            }
-        });
+        // APIが動いていないときの処理
+        function uploadImageToServer(image, csrfToken){
+            // 画像をサーバーに送信
+            $.ajax({
+                url: '{{ url_for("register.upload") }}',
+                type: 'POST',
+                data: JSON.stringify({
+                    image: image,
+                    inferenceResult: 'None',
+                    photoDiscription: 'None',
+                }),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken  // CSRFトークンを含める
+                },
+                success: function (response) {
+                    console.log('画像を保存しました:', response);
+                    window.location.href = "{{ url_for('register.choices_finder') }}";
+                },
+                error: function (error) {
+                    console.error('画像の保存に失敗しました:', error);
+                }
+            });
+        }
     </script>
 </body>
 
