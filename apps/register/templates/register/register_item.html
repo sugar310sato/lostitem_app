@@ -134,5 +134,10 @@
         </div>
     </div>
 </form>
+<!-- jsファイルに変数を渡す -->
+<script>
+    var inferenceResult = "{{ inferenceResult }}";
+    var photoDiscription = "{{ photoDiscription }}";
+</script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}
