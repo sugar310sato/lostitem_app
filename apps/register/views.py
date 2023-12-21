@@ -281,6 +281,7 @@ def register_item(choice_finder):
         ITEM_CLASS_S=ITEM_CLASS_S,
         inferenceResult=inferenceResult,
         photoDiscription=photoDiscription,
+        main_id=main_id,
     )
 
 

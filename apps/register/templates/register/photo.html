@@ -28,7 +28,7 @@
             var context = canvasElement.getContext('2d');
             context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
             var image = canvasElement.toDataURL('image/jpeg');
-            var image_to_base64 = canvasElement.toDataURL('image/jpeg').replace('data:image/jpeg;base64,', '');
+            var image_to_base64 = image.replace('data:image/jpeg;base64,', '');
 
             // CSRFトークンを取得
             var csrfToken = "{{ csrf_token() }}";
@@ -61,7 +61,7 @@
         // 画像認識APIの動作確認
         function getInferenceResult(image, csrfToken){
             return $.ajax({
-                url: 'ENDPOINT_URL',
+                url: 'https://yj4g7gip50.execute-api.ap-northeast-1.amazonaws.com/default/lostitem-image-classification',
                 type: 'POST',
                 data: JSON.stringify({ image: image }),
                 contentType: 'application/json',
