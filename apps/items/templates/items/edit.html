@@ -6,6 +6,9 @@
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">
+            <div class="col-6">管理番号：{{ item.main_id }}</div>
+        </div>
+        <div class="row mb-3">
             <div class="col-6">{{ form.track_num.label }} {{ form.track_num(value=item.track_num, class="form-set") }}
             </div>
             <div class="col-6">{{ form.notify.label }} {{ form.notify(value=item.notify, class="form-set") }}</div>
@@ -178,5 +181,9 @@
         </div>
     </div>
 </form>
+<script>
+    var inferenceResult = "{{ inferenceResult }}";
+    var photoDiscription = "{{ photoDiscription }}";
+</script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}

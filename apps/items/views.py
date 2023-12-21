@@ -1,5 +1,13 @@
-from flask import (Blueprint, current_app, redirect, render_template, request,
-                   send_from_directory, session, url_for)
+from flask import (
+    Blueprint,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    session,
+    url_for,
+)
 from flask_paginate import Pagination, get_page_parameter
 
 from apps.app import db
@@ -21,21 +29,21 @@ items = Blueprint(
 def index():
     # すべての拾得物を表示
     form = SearchItems()
-    search_results = session.get('search_item', None)
+    search_results = session.get("search_item", None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
     else:
-        id = search_results['id']
-        start_date = search_results['start_date']
-        end_date = search_results['end_date']
-        item_feature = search_results['item_feature']
-        find_area = search_results['find_area']
-        item_color = search_results['item_color']
-        item_value = search_results['item_value']
-        item_not_yet = search_results['item_not_yet']
-        item_class_L = search_results['item_class_L']
-        item_class_M = search_results['item_class_M']
-        item_class_S = search_results['item_class_S']
+        id = search_results["id"]
+        start_date = search_results["start_date"]
+        end_date = search_results["end_date"]
+        item_feature = search_results["item_feature"]
+        find_area = search_results["find_area"]
+        item_color = search_results["item_color"]
+        item_value = search_results["item_value"]
+        item_not_yet = search_results["item_not_yet"]
+        item_class_L = search_results["item_class_L"]
+        item_class_M = search_results["item_class_M"]
+        item_class_S = search_results["item_class_S"]
         # 拾得物を検索するクエリを作成
         query = db.session.query(LostItem)
         # 入力された情報に基づいてクエリを絞り込む
@@ -43,10 +51,10 @@ def index():
             if item_class_L:
                 item_class = item_class_L
                 query = query.filter(LostItem.item_class_L == item_class)
-            if item_class_M:
+            if item_class_M != "選択してください":
                 item_class = item_class_M
                 query = query.filter(LostItem.item_class_M == item_class)
-            if item_class_S:
+            if item_class_S != "選択してください":
                 item_class = item_class_S
                 query = query.filter(LostItem.item_class_S == item_class)
 
@@ -73,32 +81,41 @@ def index():
 
     # ページネーション処理
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*50: page*50]
-    pagination = Pagination(page=page, total=len(search_results), per_page=50,
-                            css_framework='bootstrap5')
+    rows = search_results[(page - 1) * 50 : page * 50]
+    pagination = Pagination(
+        page=page, total=len(search_results), per_page=50, css_framework="bootstrap5"
+    )
 
     if form.submit.data:
         # セッション情報として絞り込み条件
-        session['search_item'] = {
-            'id': form.id.data,
-            'start_date': form.start_date.data.strftime('%Y-%m-%d')
-            if form.start_date.data else None,
-            'end_date': form.end_date.data.strftime('%Y-%m-%d')
-            if form.end_date.data else None,
-            'item_feature': form.item_feature.data,
-            'find_area': form.find_area.data,
-            'item_color': form.item_color.data,
-            'item_value': form.item_value.data,
-            'item_not_yet': form.item_not_yet.data,
-            'item_class_L': request.form.get('item_class_L'),
-            'item_class_M': request.form.get('item_class_M'),
-            'item_class_S': request.form.get('item_class_S'),
+        session["search_item"] = {
+            "id": form.id.data,
+            "start_date": form.start_date.data.strftime("%Y-%m-%d")
+            if form.start_date.data
+            else None,
+            "end_date": form.end_date.data.strftime("%Y-%m-%d")
+            if form.end_date.data
+            else None,
+            "item_feature": form.item_feature.data,
+            "find_area": form.find_area.data,
+            "item_color": form.item_color.data,
+            "item_value": form.item_value.data,
+            "item_not_yet": form.item_not_yet.data,
+            "item_class_L": request.form.get("item_class_L"),
+            "item_class_M": request.form.get("item_class_M"),
+            "item_class_S": request.form.get("item_class_S"),
         }
         return redirect(url_for("items.index"))
 
-    return render_template("items/index.html", all_lost_item=rows, form=form,
-                           pagination=pagination, ITEM_CLASS_L=ITEM_CLASS_L,
-                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
+    return render_template(
+        "items/index.html",
+        all_lost_item=rows,
+        form=form,
+        pagination=pagination,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+    )
 
 
 # 拾得物一覧画面(写真)
@@ -106,21 +123,21 @@ def index():
 def photo_arange():
     # すべての拾得物を表示
     form = SearchItems()
-    search_results = session.get('search_item', None)
+    search_results = session.get("search_item", None)
     if search_results is None:
         search_results = db.session.query(LostItem).all()
     else:
-        id = search_results['id']
-        start_date = search_results['start_date']
-        end_date = search_results['end_date']
-        item_feature = search_results['item_feature']
-        find_area = search_results['find_area']
-        item_color = search_results['item_color']
-        item_value = search_results['item_value']
-        item_not_yet = search_results['item_not_yet']
-        item_class_L = search_results['item_class_L']
-        item_class_M = search_results['item_class_M']
-        item_class_S = search_results['item_class_S']
+        id = search_results["id"]
+        start_date = search_results["start_date"]
+        end_date = search_results["end_date"]
+        item_feature = search_results["item_feature"]
+        find_area = search_results["find_area"]
+        item_color = search_results["item_color"]
+        item_value = search_results["item_value"]
+        item_not_yet = search_results["item_not_yet"]
+        item_class_L = search_results["item_class_L"]
+        item_class_M = search_results["item_class_M"]
+        item_class_S = search_results["item_class_S"]
         # 拾得物を検索するクエリを作成
         query = db.session.query(LostItem)
         # 入力された情報に基づいてクエリを絞り込む
@@ -128,10 +145,10 @@ def photo_arange():
             if item_class_L:
                 item_class = item_class_L
                 query = query.filter(LostItem.item_class_L == item_class)
-            if item_class_M:
+            if item_class_M != "選択してください":
                 item_class = item_class_M
                 query = query.filter(LostItem.item_class_M == item_class)
-            if item_class_S:
+            if item_class_S != "選択してください":
                 item_class = item_class_S
                 query = query.filter(LostItem.item_class_S == item_class)
 
@@ -159,32 +176,41 @@ def photo_arange():
     # ページネーション処理
     # デモのため、5枚に設定
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1)*5: page*5]
-    pagination = Pagination(page=page, total=len(search_results), per_page=5,
-                            css_framework='bootstrap5')
+    rows = search_results[(page - 1) * 5 : page * 5]
+    pagination = Pagination(
+        page=page, total=len(search_results), per_page=5, css_framework="bootstrap5"
+    )
 
     if form.submit.data:
         # セッション情報として絞り込み条件
-        session['search_item'] = {
-            'id': form.id.data,
-            'start_date': form.start_date.data.strftime('%Y-%m-%d')
-            if form.start_date.data else None,
-            'end_date': form.end_date.data.strftime('%Y-%m-%d')
-            if form.end_date.data else None,
-            'item_feature': form.item_feature.data,
-            'find_area': form.find_area.data,
-            'item_color': form.item_color.data,
-            'item_value': form.item_value.data,
-            'item_not_yet': form.item_not_yet.data,
-            'item_class_L': request.form.get('item_class_L'),
-            'item_class_M': request.form.get('item_class_M'),
-            'item_class_S': request.form.get('item_class_S'),
+        session["search_item"] = {
+            "id": form.id.data,
+            "start_date": form.start_date.data.strftime("%Y-%m-%d")
+            if form.start_date.data
+            else None,
+            "end_date": form.end_date.data.strftime("%Y-%m-%d")
+            if form.end_date.data
+            else None,
+            "item_feature": form.item_feature.data,
+            "find_area": form.find_area.data,
+            "item_color": form.item_color.data,
+            "item_value": form.item_value.data,
+            "item_not_yet": form.item_not_yet.data,
+            "item_class_L": request.form.get("item_class_L"),
+            "item_class_M": request.form.get("item_class_M"),
+            "item_class_S": request.form.get("item_class_S"),
         }
         return redirect(url_for("items.photo_arange"))
 
-    return render_template("items/photo_arange.html", all_lost_item=rows,
-                           form=form, pagination=pagination, ITEM_CLASS_L=ITEM_CLASS_L,
-                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
+    return render_template(
+        "items/photo_arange.html",
+        all_lost_item=rows,
+        form=form,
+        pagination=pagination,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+    )
 
 
 # 詳細画面
@@ -193,8 +219,12 @@ def detail(item_id):
     item = LostItem.query.filter_by(id=item_id).first()
     bundleditem = BundledItems.query.filter_by(lostitem_id=item_id).all()
     denomination = Denomination.query.filter_by(lostitem_id=item_id).all()
-    return render_template("items/detail.html", item=item, bundleditem=bundleditem,
-                           denomination=denomination)
+    return render_template(
+        "items/detail.html",
+        item=item,
+        bundleditem=bundleditem,
+        denomination=denomination,
+    )
 
 
 # 編集物選択画面（メインor同梱物）
@@ -236,9 +266,9 @@ def edit(item_id):
             item.finder_tel2 = form.finder_tel2.data
 
             # 大中小項目の実装
-            item.item_class_L = request.form.get('item_class_L')
-            item.item_class_M = request.form.get('item_class_M')
-            item.item_class_S = request.form.get('item_class_S')
+            item.item_class_L = request.form.get("item_class_L")
+            item.item_class_M = request.form.get("item_class_M")
+            item.item_class_S = request.form.get("item_class_S")
 
             item.item_value = form.item_value.data
             item.item_feature = form.item_feature.data
@@ -294,9 +324,9 @@ def edit(item_id):
             item.finder_tel2 = form.finder_tel2.data
 
             # 大中小項目の実装
-            item.item_class_L = request.form.get('item_class_L')
-            item.item_class_M = request.form.get('item_class_M')
-            item.item_class_S = request.form.get('item_class_S')
+            item.item_class_L = request.form.get("item_class_L")
+            item.item_class_M = request.form.get("item_class_M")
+            item.item_class_S = request.form.get("item_class_S")
 
             item.item_value = form.item_value.data
             item.item_feature = form.item_feature.data
@@ -328,9 +358,15 @@ def edit(item_id):
             db.session.add(item)
             db.session.commit()
             return redirect(url_for("items.detail", item_id=item.id))
-    return render_template("items/edit.html", form=form, item=item,
-                           choice_finder=item.choice_finder, ITEM_CLASS_L=ITEM_CLASS_L,
-                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
+    return render_template(
+        "items/edit.html",
+        form=form,
+        item=item,
+        choice_finder=item.choice_finder,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+    )
 
 
 # 拾得物の削除
