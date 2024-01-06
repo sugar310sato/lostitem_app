@@ -61,7 +61,7 @@
         // 画像認識APIの動作確認
         function getInferenceResult(image, csrfToken){
             return $.ajax({
-                url: 'https://yj4g7gip50.execute-api.ap-northeast-1.amazonaws.com/default/lostitem-image-classification',
+                url: 'https://4impjq1wx2.execute-api.ap-northeast-1.amazonaws.com/default/lost-item-classification',
                 type: 'POST',
                 data: JSON.stringify({ image: image }),
                 contentType: 'application/json',

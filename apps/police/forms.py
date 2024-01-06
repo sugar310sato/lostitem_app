@@ -1,6 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import (BooleanField, DateField, SelectField, SubmitField,
-                            TextAreaField)
+from wtforms.fields import (
+    BooleanField,
+    DateField,
+    SelectField,
+    SubmitField,
+    TextAreaField,
+)
 
 from apps.config import CHOICES_FINDER_POLICE
 
@@ -14,6 +19,8 @@ class PoliceForm(FlaskForm):
         label="拾得者",
         choices=CHOICES_FINDER_POLICE,
     )
+    item_police = BooleanField("届け出済みも表示")
+    item_return = BooleanField("返却済みも表示")
     submit = SubmitField("絞り込み")
     submit_output = SubmitField("警察届出所出力")
 
@@ -26,7 +33,7 @@ class OptionDocument(FlaskForm):
         choices=[
             ("占有者拾得物提出書", "占有者拾得物提出書"),
             ("第三者拾得物提出書", "第三者拾得物提出書"),
-        ]
+        ],
     )
     submit = SubmitField("提出書類の作成")
 
