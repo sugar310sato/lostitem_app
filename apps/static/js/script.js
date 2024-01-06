@@ -2,12 +2,15 @@ $(document).ready(function () {
     var $item_class_M = $('#item_class_M');
     var $item_class_S = $('#item_class_S');
 
-    if(inferenceResult!='None'){
-        $('#item_class_L').val(inferenceResult).change();
-    }
-    if(photoDiscription!='None'){
-        $('#item_feature').val(photoDiscription).change();
-    }
+
+    // このコードはAIで学習結果が得られたとき用のコードだが、item_class_Lの内容が消える
+    // inferenceResultがNoneの場合、別の処理を記述する必要がある。
+    // if(inferenceResult!='None'){
+    //     $('#item_class_L').val(inferenceResult).change();
+    // }
+    // if(photoDiscription!='None'){
+    //     $('#item_feature').val(photoDiscription).change();
+    // }
 
     $('#item_class_L').change(function () {
         var itemClassLVal = $(this).val();

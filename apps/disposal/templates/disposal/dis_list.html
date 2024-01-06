@@ -112,5 +112,9 @@
         <div style="margin-left: 45%;">{{ pagination.links }}</div>
     </div>
 </form>
+<script>
+    var inferenceResult = "{{ inferenceResult }}";
+    var photoDiscription = "{{ photoDiscription }}";
+</script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}
