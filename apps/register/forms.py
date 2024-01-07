@@ -1,10 +1,27 @@
-from flask_wtf.form import FlaskForm
-from wtforms.fields import (BooleanField, DateField, IntegerField, RadioField,
-                            SelectField, StringField, SubmitField,
-                            TextAreaField)
+from datetime import datetime
 
-from apps.config import (CHOICES_FINDER, COLOR, MINUTE, NOTE, OWN_WAIVER, SEX,
-                         STORAGE_PLACE, TIMES)
+from flask_wtf.form import FlaskForm
+from wtforms.fields import (
+    BooleanField,
+    DateField,
+    IntegerField,
+    RadioField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+
+from apps.config import (
+    CHOICES_FINDER,
+    COLOR,
+    MINUTE,
+    NOTE,
+    OWN_WAIVER,
+    SEX,
+    STORAGE_PLACE,
+    TIMES,
+)
 
 
 # 拾得者選択クラス
@@ -20,7 +37,7 @@ class ChoicesFinderForm(FlaskForm):
 class LostItemForm(FlaskForm):
     track_num = IntegerField(label="問い合わせ番号")
     notify = BooleanField(label="届出要否")
-    get_item = DateField("拾得日")
+    get_item = DateField("拾得日", default=datetime.today)
     get_item_hour = SelectField(
         label="拾得時間",
         choices=TIMES,
@@ -29,7 +46,7 @@ class LostItemForm(FlaskForm):
         label="拾得時間(分)",
         choices=MINUTE,
     )
-    recep_item = DateField("受付日")
+    recep_item = DateField("受付日", default=datetime.now)
     recep_item_hour = SelectField(
         label="受付時間",
         choices=TIMES,
