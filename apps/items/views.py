@@ -12,6 +12,7 @@ from flask_paginate import Pagination, get_page_parameter
 
 from apps.app import db
 from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
+from apps.crud.models import User
 from apps.items.forms import SearchItems
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
 from apps.register.models import BundledItems, Denomination, LostItem
@@ -240,18 +241,24 @@ def edit_select(item_id):
 @items.route("/edit/<item_id>", methods=["POST", "GET"])
 def edit(item_id):
     item = LostItem.query.filter_by(id=item_id).first()
+    get_item_date = item.get_item.strftime("%Y-%m-%d") if item.get_item else ""
+    recep_item_date = item.recep_item.strftime("%Y-%m-%d") if item.recep_item else ""
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
     if item.choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
+        form.recep_manager.choices = user_choice
         if form.submit.data:
             item.choice_finder = item.choice_finder
             item.track_num = form.track_num.data
             item.notify = form.notify.data
             item.get_item = form.get_item.data
-            item.get_item_hour = form.get_item_hour.data
-            item.get_item_minute = form.get_item_minute.data
+            item.get_item_hour = request.form.get("get_item_hours")
+            item.get_item_minute = request.form.get("get_item_minutes")
             item.recep_item = form.recep_item.data
-            item.recep_item_hour = form.recep_item_hour.data
-            item.recep_item_minute = form.recep_item_minute.data
+            item.recep_item_hour = request.form.get("recep_item_hours")
+            item.recep_item_minute = request.form.get("recep_item_minutes")
             item.recep_manager = form.recep_manager.data
             item.find_area = form.find_area.data
             item.find_area_police = form.find_area_police.data
@@ -301,16 +308,17 @@ def edit(item_id):
             return redirect(url_for("items.detail", item_id=item.id))
     else:
         form = ThirdPartyLostItemForm()
+        form.recep_manager.choices = user_choice
         if form.submit.data:
             item.choice_finder = item.choice_finder
             item.track_num = form.track_num.data
             item.notify = form.notify.data
             item.get_item = form.get_item.data
-            item.get_item_hour = form.get_item_hour.data
-            item.get_item_minute = form.get_item_minute.data
+            item.get_item_hour = request.form.get("get_item_hours")
+            item.get_item_minute = request.form.get("get_item_minutes")
             item.recep_item = form.recep_item.data
-            item.recep_item_hour = form.recep_item_hour.data
-            item.recep_item_minute = form.recep_item_minute.data
+            item.recep_item_hour = request.form.get("recep_item_hours")
+            item.recep_item_minute = request.form.get("recep_item_minutes")
             item.recep_manager = form.recep_manager.data
             item.find_area = form.find_area.data
             item.find_area_police = form.find_area_police.data
@@ -363,6 +371,8 @@ def edit(item_id):
         form=form,
         item=item,
         choice_finder=item.choice_finder,
+        get_item_date=get_item_date,
+        recep_item_date=recep_item_date,
         ITEM_CLASS_L=ITEM_CLASS_L,
         ITEM_CLASS_M=ITEM_CLASS_M,
         ITEM_CLASS_S=ITEM_CLASS_S,

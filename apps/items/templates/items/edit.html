@@ -12,20 +12,41 @@
             <div class="col-6">{{ form.notify.label }} {{ form.notify(value=item.notify, class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.get_item.label }} {{ form.get_item(value=item.get_item, class="form-set") }}
+            <div class="col-4">{{ form.get_item.label }} {{ form.get_item(value=get_item_date, class="form-set") }}
             </div>
-            <div class="col-4">{{ form.get_item_hour.label }} {{ form.get_item_hour(value=item.get_item_hour,
-                class="form-set") }}{{ form.get_item_minute(value=item.get_item_minute, class="form-set") }}
+            <div class="col-4">{{ form.get_item_hour.label }}
+                <select id="hours" name="get_item_hours" class="form-set">
+                    <!-- 時間の選択肢を0から23まで -->
+                    {% for i in range(24) %}
+                    <option value="{{ i }}" {% if
+                        item.get_item_hour|int == i %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select> :
+                <select id="minutes" name="get_item_minutes" class="form-set">
+                    <!-- 分の選択肢を0から59まで -->
+                    {% for i in range(60) %}
+                    <option value="{{ i }}" {% if
+                        item.get_item_minute|int == i %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item(value=item.recep_item, class="form-set")
+            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item(value=recep_item_date, class="form-set")
                 }}</div>
-            <div class="col-3">{{ form.recep_item_hour.label }} {{ form.recep_item_hour(value=item.recep_item_hour,
-                class="form-set") }}{{
-                form.recep_item_minute(value=item.recep_item_minute, class="form-set") }}</div>
-            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager(value=item.recep_manager,
-                class="form-set") }}</div>
+            <div class="col-3">{{ form.recep_item_hour.label }} <select id="recep_hours" name="recep_item_hours" class="form-set">
+                <!-- 時間の選択肢を0から23まで -->
+                {% for i in range(24) %}
+                <option value="{{ i }}" {% if item.recep_item_hour|int==i %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select> :
+            <select id="recep_minutes" name="recep_item_minutes" class="form-set">
+                <!-- 分の選択肢を0から59まで -->
+                {% for i in range(60) %}
+                <option value="{{ i }}" {% if item.recep_item_minute|int==i %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select></div>
+            <div class="col-3">{{ form.recep_manager.label }} {{ form.recep_manager(class="form-set") }}</div>
         </div>
         <div class="row mb-3">
             {% if choice_finder=="占有者拾得" %}
