@@ -11,9 +11,9 @@
         <div class="col-3">管理番号 <u>{{ item.main_id }}</u></div>
         <div class="col-3">通知 <u>{{ item.notify }}</u></div>
         <div class="col-3">拾得日時 <u>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
-                {{ item.get_item_hour }}{{ item.get_item_minute }}</u></div>
+                {{ item.get_item_hour }}時{{ item.get_item_minute }}分</u></div>
         <div class="col-3">受付日時 <u>{{ item.recep_item.strftime('%Y/%m/%d') if item.recep_item is not none else ""}}
-                {{ item.recep_item_hour }}{{ item.recep_item_minute }}</u></div>
+                {{ item.recep_item_hour }}時{{ item.recep_item_minute }}分</u></div>
     </div>
     <div class="row">
         <div class="col-3">受付者 <u>{{ item.recep_manager }}</u></div>
