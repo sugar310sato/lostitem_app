@@ -301,7 +301,7 @@ def edit(item_id):
             item.card_item_minute = form.card_item_minute.data
             item.card_item_minute = form.card_item_minute.data
 
-            item.finder_class = form.finder_class.data
+            # item.finder_class = form.finder_class.data
             item.finder_affiliation = form.finder_affiliation.data
             db.session.add(item)
             db.session.commit()

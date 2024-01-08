@@ -185,7 +185,7 @@ def register_item(choice_finder):
                 item_money=form.item_money.data,
                 item_remarks=form.item_remarks.data,
                 item_image=moved_path,
-                finder_class=form.finder_class.data,
+                # finder_class=form.finder_class.data,
                 finder_affiliation=form.finder_affiliation.data,
                 item_situation="保管中",
                 refund_situation="未",
