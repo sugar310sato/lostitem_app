@@ -249,6 +249,8 @@ def edit(item_id):
     if item.choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
         form.recep_manager.choices = user_choice
+        form.item_feature.data = item.item_feature
+        form.item_remarks.data = item.item_remarks
         if form.submit.data:
             item.choice_finder = item.choice_finder
             item.track_num = form.track_num.data
@@ -309,6 +311,8 @@ def edit(item_id):
     else:
         form = ThirdPartyLostItemForm()
         form.recep_manager.choices = user_choice
+        form.item_feature.data = item.item_feature
+        form.item_remarks.data = item.item_remarks
         if form.submit.data:
             item.choice_finder = item.choice_finder
             item.track_num = form.track_num.data

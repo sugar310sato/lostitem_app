@@ -150,3 +150,8 @@ u {
     border-radius: .25rem;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
+
+/* 必須項目の文字の色 */
+.color-text {
+    color: red;
+}

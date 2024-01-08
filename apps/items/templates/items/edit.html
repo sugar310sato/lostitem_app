@@ -12,9 +12,9 @@
             <div class="col-6">{{ form.notify.label }} {{ form.notify(value=item.notify, class="form-set") }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.get_item.label }} {{ form.get_item(value=get_item_date, class="form-set") }}
+            <div class="col-4 color-text">{{ form.get_item.label }} {{ form.get_item(value=get_item_date, class="form-set") }}
             </div>
-            <div class="col-4">{{ form.get_item_hour.label }}
+            <div class="col-4 color-text">{{ form.get_item_hour.label }}
                 <select id="hours" name="get_item_hours" class="form-set">
                     <!-- 時間の選択肢を0から23まで -->
                     {% for i in range(24) %}
@@ -32,9 +32,9 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">{{ form.recep_item.label }} {{ form.recep_item(value=recep_item_date, class="form-set")
+            <div class="col-3 color-text">{{ form.recep_item.label }} {{ form.recep_item(value=recep_item_date, class="form-set")
                 }}</div>
-            <div class="col-3">{{ form.recep_item_hour.label }} <select id="recep_hours" name="recep_item_hours" class="form-set">
+            <div class="col-3 color-text">{{ form.recep_item_hour.label }} <select id="recep_hours" name="recep_item_hours" class="form-set">
                 <!-- 時間の選択肢を0から23まで -->
                 {% for i in range(24) %}
                 <option value="{{ i }}" {% if item.recep_item_hour|int==i %}selected{% endif %}>{{ i }}</option>
@@ -52,7 +52,7 @@
             {% if choice_finder=="占有者拾得" %}
             <!-- <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class(value=item.finder_class,
                 class="form-set") }}</div> -->
-            <div class="col-4">{{ form.finder_affiliation.label }} {{
+            <div class="col-4 color-text">{{ form.finder_affiliation.label }} {{
                 form.finder_affiliation(value=item.finder_affiliation, class="form-set") }}</div>
             {% else %}
             <div class="col-4">{{ form.thirdparty_waiver.label }} {{
@@ -61,7 +61,7 @@
                 form.thirdparty_name_note(value=item.thirdparty_name_note, class="form-set") }}</div>
             {% endif %}
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3 color-text">
             <div class="col-4">
                 物件分類（大）
                 <select name="item_class_L" id="item_class_L" class="form-set">
@@ -93,16 +93,16 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.find_area.label }} {{ form.find_area(value=item.find_area, class="form-set") }}
+            <div class="col-4 color-text">{{ form.find_area.label }} {{ form.find_area(value=item.find_area, class="form-set") }}
             </div>
-            <div class="col-4">{{ form.find_area_police.label }} {{ form.find_area_police(value=item.find_area_police,
+            <div class="col-4 color-text">{{ form.find_area_police.label }} {{ form.find_area_police(value=item.find_area_police,
                 class="form-set")
                 }}</div>
             <div class="col-4">{{ form.own_waiver.label }} {{ form.own_waiver(value=item.own_waiver, class="form-set")
                 }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.finder_name.label }} {{ form.finder_name(vlaue=item.finder_name,
+            <div class="col-4 color-text">{{ form.finder_name.label }} {{ form.finder_name(vlaue=item.finder_name,
                 class="form-set") }}</div>
             <div class="col-4">{{ form.own_name_note.label }} {{ form.own_name_note(value=item.own_name_note,
                 class="form-set") }}</div>
@@ -137,9 +137,9 @@
                 }}</div>
         </div>
         <div class="row mb-3">
-            <div class="col-4">{{ form.item_storage.label }} {{ form.item_storage(value=item.item_storage,
+            <div class="col-4 color-text">{{ form.item_storage.label }} {{ form.item_storage(value=item.item_storage,
                 class="form-set") }}</div>
-            <div class="col-4">{{ form.item_storage_place.label }} {{
+            <div class="col-4 color-text">{{ form.item_storage_place.label }} {{
                 form.item_storage_place(value=item.item_storage_place, class="form-set") }}</div>
             <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(value=item.item_expiration,
                 class="form-set") }}
@@ -162,7 +162,7 @@
         <div class="row mb-3">
             <div class="col-6">{{ form.item_remarks.label }} <br>{{ form.item_remarks(value=item.item_remarks,
                 class="form-set", style="width: 80%;") }}</div>
-            <div class="col-6">{{ form.item_feature.label }} <br>{{ form.item_feature(value=item.item_feature,
+            <div class="col-6 color-text">{{ form.item_feature.label }} <br>{{ form.item_feature(value=item.item_feature,
                 class="form-set", style="width: 80%;") }}</div>
         </div>
         <p>

@@ -11,6 +11,7 @@ from wtforms.fields import (
     SubmitField,
     TextAreaField,
 )
+from wtforms.validators import DataRequired
 
 from apps.config import (
     CHOICES_FINDER,
@@ -56,13 +57,15 @@ class LostItemForm(FlaskForm):
         choices=MINUTE,
     )
     recep_manager = SelectField("受付担当者", choices=[])
-    find_area = StringField("拾得場所")
-    find_area_police = StringField("警察届出用拾得場所")
+    find_area = StringField("拾得場所", validators=[DataRequired(message="必須項目です")])
+    find_area_police = StringField(
+        "警察届出用拾得場所", validators=[DataRequired(message="必須項目です")]
+    )
     own_waiver = SelectField(
         label="占有者権利放棄",
         choices=OWN_WAIVER,
     )
-    finder_name = StringField("拾得者氏名")
+    finder_name = StringField("拾得者氏名", validators=[DataRequired(message="必須項目です")])
     own_name_note = SelectField(
         label="占有者氏名等告知",
         choices=NOTE,
@@ -78,12 +81,12 @@ class LostItemForm(FlaskForm):
     finder_tel2 = StringField("連絡先2")
 
     item_value = BooleanField(label="貴重な物品に該当")
-    item_feature = TextAreaField("物品の特徴")
+    item_feature = TextAreaField("物品の特徴", validators=[DataRequired(message="必須項目です")])
     item_color = SelectField(
         label="色",
         choices=COLOR,
     )
-    item_storage = StringField("保管施設")
+    item_storage = StringField("保管施設", validators=[DataRequired(message="必須項目です")])
     item_storage_place = SelectField(
         label="保管場所",
         choices=STORAGE_PLACE,
@@ -118,7 +121,9 @@ class LostItemForm(FlaskForm):
 # 占有者拾得物クラス
 class OwnerLostItemForm(LostItemForm):
     finder_class = StringField("拾得者属性")
-    finder_affiliation = StringField("拾得者所属")
+    finder_affiliation = StringField(
+        "拾得者所属", validators=[DataRequired(message="必須項目です")]
+    )
     submit = SubmitField("登録")
 
 
