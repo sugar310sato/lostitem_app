@@ -57,6 +57,7 @@
     <a href="{{ url_for('items.photo_arange') }}" class="btn btn-secondary">写真一覧へ</a>
     {{ pagination.info }}
 </div>
+<!-- 各物品の詳細情報のテーブル -->
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -75,8 +76,8 @@
             <td>
                 <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
             </td>
-            <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour }}{{
-                item.get_item_minute }}</td>
+            <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour }}時{{
+                item.get_item_minute }}分</td>
             <td>{{ item.find_area }}</td>
             <td>{{ item.item_class_S }}
                 <br>{{ item.item_feature }}
