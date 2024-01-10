@@ -155,3 +155,17 @@ u {
 .color-text {
     color: red;
 }
+
+/* ナビゲーションバーや背景色の変更 */
+.nav-color {
+    /* 緑 */
+    background-color: #6fd186;
+    /* 青 */
+    background-color: #50b0ce;
+}
+.back-color {
+    /* 緑 */
+    background-color: #6be9c3;
+    /* 青 */
+    background-color: #93e2ec;
+}
