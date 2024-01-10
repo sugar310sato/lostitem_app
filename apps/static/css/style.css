@@ -159,13 +159,13 @@ u {
 /* ナビゲーションバーや背景色の変更 */
 .nav-color {
     /* 緑 */
-    background-color: #6fd186;
+    /* background-color: #6fd186; */
     /* 青 */
-    background-color: #50b0ce;
+    background-color: #eca85a;
 }
 .back-color {
     /* 緑 */
-    background-color: #6be9c3;
+    /* background-color: #6be9c3; */
     /* 青 */
-    background-color: #93e2ec;
+    background-color: #ecd3b1;
 }
