@@ -167,4 +167,19 @@
 </script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 <script src="{{ url_for('static', filename='js/settime.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var dayofWeek = today.getDay();
+        var dayMapping = ['日', '月', '火', '水', '木', '金', '土']
+        var currentDay = dayMapping[dayofWeek];
+        var selectElement = document.getElementById('{{ form.item_storage_place.id }}')
+        for(var option of selectElement.options) {
+            if(option.text === currentDay){
+                option.selected = true;
+                break;
+            }
+        }
+    })
+</script>
 {% endblock %}
