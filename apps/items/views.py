@@ -1,3 +1,7 @@
+import os
+from datetime import datetime, timedelta
+from pathlib import Path
+
 from flask import (
     Blueprint,
     current_app,
@@ -17,6 +21,9 @@ from apps.items.forms import SearchItems
 from apps.register.forms import OwnerLostItemForm, ThirdPartyLostItemForm
 from apps.register.models import BundledItems, Denomination, LostItem
 
+basedir = Path(__file__).parent.parent
+PHOTO_FOLDER = str(Path(basedir, "renamed_images"))
+
 items = Blueprint(
     "items",
     __name__,
@@ -25,9 +32,32 @@ items = Blueprint(
 )
 
 
+# データベース削除の関数
+def delete_old_records():
+    three_years_ago = datetime.utcnow() - timedelta(days=3 * 365)
+    old_records = LostItem.query.filter(LostItem.get_item < three_years_ago)
+    for record in old_records:
+        db.session.delete(record)
+    db.session.commit()
+
+
+# 写真削除の関数
+def delete_old_photos():
+    two_months_ago = datetime.now() - timedelta(days=60)
+    for filename in os.listdir(PHOTO_FOLDER):
+        if filename == ".gitkeep":
+            continue
+        file_path = os.path.join(PHOTO_FOLDER, filename)
+        file_mod_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+        if file_mod_time < two_months_ago:
+            os.remove(file_path)
+
+
 # 拾得物一覧画面
 @items.route("/", methods=["POST", "GET"])
 def index():
+    delete_old_records()
+    delete_old_photos()
     # すべての拾得物を表示
     form = SearchItems()
     search_results = session.get("search_item", None)
