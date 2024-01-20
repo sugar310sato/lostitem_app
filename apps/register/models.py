@@ -55,7 +55,12 @@ class LostItem(db.Model):
     item_remarks = db.Column(db.String)
     item_situation = db.Column(db.String)
     item_image = db.Column(db.String)
-    item_bundled = db.relationship("BundledItems", backref="bundled_item")
+    item_bundled = db.relationship(
+        "BundledItems", backref="bundled_item", cascade="all, delete-orphan"
+    )
+    item_denomination = db.relationship(
+        "Denomination", backref="denomination_item", cascade="all, delete-orphan"
+    )
 
     # 占有者用入力項目
     finder_class = db.Column(db.String)

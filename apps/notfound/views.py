@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from flask import Blueprint, redirect, render_template, request, session, url_for
 from flask_paginate import Pagination, get_page_parameter
 from sqlalchemy import func
@@ -13,6 +15,15 @@ notfound = Blueprint(
     template_folder="templates",
     static_folder="static",
 )
+
+
+# データベース削除の関数
+def delete_old_records():
+    three_years_ago = datetime.utcnow() - timedelta(days=90)
+    old_records = NotFound.query.filter(NotFound.lost_item < three_years_ago)
+    for record in old_records:
+        db.session.delete(record)
+    db.session.commit()
 
 
 # 登録
@@ -78,6 +89,7 @@ def notfound_register():
 @notfound.route("/search", methods=["POST", "GET"])
 def notfound_search():
     form = SearchNotFoundForm()
+    delete_old_records()
     search_results = session.get("not_found_search", None)
     if search_results is None:
         # クエリの生成
