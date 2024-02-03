@@ -21,6 +21,9 @@ FLASK_ENV=development
 FLASK_DEBUG=1
 ```
 
+### img2txtの導入
+img2txtのモデルであるCocaを利用します。register/model_folder直下にmodel.pthとして保存してください。
+
 
 ### DBの作成
 以下のコマンドを入力し、DBを作成してください。  
