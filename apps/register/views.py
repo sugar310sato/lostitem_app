@@ -25,6 +25,7 @@ from apps.register.forms import (
     OwnerLostItemForm,
     ThirdPartyLostItemForm,
 )
+from apps.register.model_folder.predict import img2text
 from apps.register.models import LostItem
 
 basedir = Path(__file__).parent.parent
@@ -138,10 +139,18 @@ def register_item(choice_finder):
     # Userの一覧取得
     users = User.query.all()
     user_choice = [(user.username) for user in users]
+    root_path = Path(current_app.root_path, "images/captured_image.jpg")
+    model_path = Path(current_app.root_path, "register", "model_folder", "model.pth")
+    if model_path.exists():
+        # img2text関数を実行してテキストを取得
+        text = img2text(model_path, root_path)
+    else:
+        text = ""
 
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
         form.recep_manager.choices = user_choice
+        form.item_feature.data = text
         if form.submit.data:
             moved_path = save_image()
             ownerlostitem = LostItem(
@@ -206,6 +215,7 @@ def register_item(choice_finder):
     elif choice_finder == "第三者拾得":
         form = ThirdPartyLostItemForm()
         form.recep_manager.choices = user_choice
+        form.item_feature.data = text
         if form.submit.data:
             moved_path = save_image()
             thirdpartylostitem = LostItem(

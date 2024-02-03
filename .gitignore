@@ -268,3 +268,4 @@ local.sqlite
 config.py
 *jpg
 *pdf
+model.pth

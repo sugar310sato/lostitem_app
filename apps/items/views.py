@@ -34,7 +34,7 @@ items = Blueprint(
 
 # データベース削除の関数
 def delete_old_records():
-    three_years_ago = datetime.utcnow() - timedelta(days=3 * 365)
+    three_years_ago = datetime.utcnow() - timedelta(days=5 * 365)
     old_records = LostItem.query.filter(LostItem.get_item < three_years_ago)
     for record in old_records:
         db.session.delete(record)
@@ -43,7 +43,7 @@ def delete_old_records():
 
 # 写真削除の関数
 def delete_old_photos():
-    two_months_ago = datetime.now() - timedelta(days=60)
+    two_months_ago = datetime.now() - timedelta(days=365)
     for filename in os.listdir(PHOTO_FOLDER):
         if filename == ".gitkeep":
             continue
@@ -121,12 +121,14 @@ def index():
         # セッション情報として絞り込み条件
         session["search_item"] = {
             "id": form.id.data,
-            "start_date": form.start_date.data.strftime("%Y-%m-%d")
-            if form.start_date.data
-            else None,
-            "end_date": form.end_date.data.strftime("%Y-%m-%d")
-            if form.end_date.data
-            else None,
+            "start_date": (
+                form.start_date.data.strftime("%Y-%m-%d")
+                if form.start_date.data
+                else None
+            ),
+            "end_date": (
+                form.end_date.data.strftime("%Y-%m-%d") if form.end_date.data else None
+            ),
             "item_feature": form.item_feature.data,
             "find_area": form.find_area.data,
             "item_color": form.item_color.data,
@@ -216,12 +218,14 @@ def photo_arange():
         # セッション情報として絞り込み条件
         session["search_item"] = {
             "id": form.id.data,
-            "start_date": form.start_date.data.strftime("%Y-%m-%d")
-            if form.start_date.data
-            else None,
-            "end_date": form.end_date.data.strftime("%Y-%m-%d")
-            if form.end_date.data
-            else None,
+            "start_date": (
+                form.start_date.data.strftime("%Y-%m-%d")
+                if form.start_date.data
+                else None
+            ),
+            "end_date": (
+                form.end_date.data.strftime("%Y-%m-%d") if form.end_date.data else None
+            ),
             "item_feature": form.item_feature.data,
             "find_area": form.find_area.data,
             "item_color": form.item_color.data,
