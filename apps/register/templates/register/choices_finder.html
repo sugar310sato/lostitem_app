@@ -13,8 +13,15 @@
             {% endfor %}
         </div>
         <p>
-            {{ form.submit(class="btn btn-primary", style="margin-left: 15%;") }}
+            {{ form.submit(id="submit_button", class="btn btn-primary", style="margin-left: 15%;") }}
         </p>
     </form>
+    <div id="loadingMessage" style="display: none;">AIが解析中です。しばらくお待ちください...</div>
 </section>
+<script>
+    document.getElementById('submit_button').addEventListener('click', function() {
+        // ローディングメッセージを表示
+        document.getElementById('loadingMessage').style.display = 'block';
+    });
+</script>
 {% endblock %}
