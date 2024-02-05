@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
+import requests
 from flask import (
     Blueprint,
     current_app,
@@ -18,7 +19,7 @@ from flask import (
 from sqlalchemy import func
 
 from apps.app import db
-from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S
+from apps.config import ITEM_CLASS_L, ITEM_CLASS_M, ITEM_CLASS_S, LAMBDA_ENDPOINT
 from apps.crud.models import User
 from apps.register.forms import (
     ChoicesFinderForm,
@@ -70,6 +71,28 @@ def save_image():
         os.unlink(file_path)
 
     return new_filename
+
+
+# AWS lambdaで画像認識する関数
+def send_image_AWS(image_path):
+    # 画像ファイルを開き、Base64にエンコード
+    with open(image_path, "rb") as image_file:
+        image_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+
+    # Lambda関数のエンドポイントURL
+    try:
+        # Lambda関数に送信
+        response = requests.post(LAMBDA_ENDPOINT, json={"image": image_base64})
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return "Error"
+    except requests.exceptions.Timeout:
+        print("timeout!")
+        return "Error"
+    except requests.exceptions.RequestException:
+        print("Error!")
+        return "Error"
 
 
 # ホーム画面
@@ -139,6 +162,7 @@ def register_item(choice_finder):
     # Userの一覧取得
     users = User.query.all()
     user_choice = [(user.username) for user in users]
+    # Cocaによるキャプション生成
     root_path = Path(current_app.root_path, "images/captured_image.jpg")
     model_path = Path(current_app.root_path, "register", "model_folder", "model.pth")
     if model_path.exists():
@@ -146,6 +170,10 @@ def register_item(choice_finder):
         text = img2text(model_path, root_path)
     else:
         text = ""
+    # AWSでの推論
+    result = send_image_AWS(root_path)
+    if result != "Error":
+        print(result)
 
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
@@ -292,6 +320,7 @@ def register_item(choice_finder):
         inferenceResult=inferenceResult,
         photoDiscription=photoDiscription,
         main_id=main_id,
+        result=result,
     )
 
 

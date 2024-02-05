@@ -61,7 +61,7 @@
                 物件分類（大）
                 <select name="item_class_L" id="item_class_L" class="form-set">
                     {% for option in ITEM_CLASS_L %}
-                    <option value="{{ option }}">{{ option }}</option>
+                    <option value="{{ option }}"{% if option == result %}selected{% endif %}>{{ option }}</option>
                     {% endfor %}
                 </select>
             </div>

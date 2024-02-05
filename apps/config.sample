@@ -3,6 +3,9 @@ from pathlib import Path
 basedir = Path(__file__).parent.parent
 
 
+LAMBDA_ENDPOINT = "AWS lambdaへのリンク"
+
+
 class BaseConfig:
     SECRET_KEY = "20moziirer20moziirer"
     WTF_CSRF_SECRET_KEY = "20moziirer20moziirer"
