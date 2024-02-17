@@ -8,6 +8,9 @@
     <form action="{{ url_for('register.choices_finder') }}" method="post">
         {{ form.csrf_token }}
         <div class="row">
+            <div class="col-4">{{ form.use_AI.label }}  {{ form.use_AI }}</div>
+        </div>
+        <div class="row">
             {% for subfield in form.choice_finder %}
             <div class="col-3">{{ subfield }} {{ subfield.label }}</div>
             {% endfor %}

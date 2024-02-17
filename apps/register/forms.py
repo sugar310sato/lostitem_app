@@ -31,6 +31,7 @@ class ChoicesFinderForm(FlaskForm):
         label="拾得者",
         choices=CHOICES_FINDER,
     )
+    use_AI = BooleanField(label="AIの使用をスキップする")
     submit = SubmitField("選択")
 
 
@@ -57,7 +58,9 @@ class LostItemForm(FlaskForm):
         choices=MINUTE,
     )
     recep_manager = SelectField("受付担当者", choices=[])
-    find_area = StringField("拾得場所", validators=[DataRequired(message="必須項目です")])
+    find_area = StringField(
+        "拾得場所", validators=[DataRequired(message="必須項目です")]
+    )
     find_area_police = StringField(
         "警察届出用拾得場所", validators=[DataRequired(message="必須項目です")]
     )
@@ -65,7 +68,9 @@ class LostItemForm(FlaskForm):
         label="占有者権利放棄",
         choices=OWN_WAIVER,
     )
-    finder_name = StringField("拾得者氏名", validators=[DataRequired(message="必須項目です")])
+    finder_name = StringField(
+        "拾得者氏名", validators=[DataRequired(message="必須項目です")]
+    )
     own_name_note = SelectField(
         label="占有者氏名等告知",
         choices=NOTE,
@@ -81,12 +86,16 @@ class LostItemForm(FlaskForm):
     finder_tel2 = StringField("連絡先2")
 
     item_value = BooleanField(label="貴重な物品に該当")
-    item_feature = TextAreaField("物品の特徴", validators=[DataRequired(message="必須項目です")])
+    item_feature = TextAreaField(
+        "物品の特徴", validators=[DataRequired(message="必須項目です")]
+    )
     item_color = SelectField(
         label="色",
         choices=COLOR,
     )
-    item_storage = StringField("保管施設", validators=[DataRequired(message="必須項目です")])
+    item_storage = StringField(
+        "保管施設", validators=[DataRequired(message="必須項目です")]
+    )
     item_storage_place = SelectField(
         label="保管場所",
         choices=STORAGE_PLACE,

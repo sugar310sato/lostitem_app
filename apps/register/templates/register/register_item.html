@@ -2,7 +2,7 @@
 {% block title %}拾得物の登録{% endblock %}
 {% block content %}
 <h2>拾得物情報の登録</h2>
-<form action="{{ url_for('register.register_item', choice_finder=choice_finder) }}" method="post">
+<form action="{{ url_for('register.register_item', choice_finder=choice_finder, use_AI=use_AI) }}" method="post">
     {{ form.csrf_token }}
     <div class="container">
         <div class="row mb-3">

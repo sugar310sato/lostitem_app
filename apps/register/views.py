@@ -148,13 +148,22 @@ def choices_finder():
 
     if form.validate_on_submit():
         choice_finder = form.choice_finder.data
-        return redirect(url_for("register.register_item", choice_finder=choice_finder))
+        print(form.use_AI)
+        if form.use_AI == "y":
+            use_AI = "usenoAI"
+        else:
+            use_AI = "useAI"
+        return redirect(
+            url_for(
+                "register.register_item", choice_finder=choice_finder, use_AI=use_AI
+            )
+        )
     return render_template("register/choices_finder.html", form=form)
 
 
 # 拾得物の情報登録
-@register.route("/register_item/<choice_finder>", methods=["POST", "GET"])
-def register_item(choice_finder):
+@register.route("/register_item/<choice_finder>/<use_AI>", methods=["POST", "GET"])
+def register_item(choice_finder, use_AI):
     current_year = datetime.now().year % 100
     main_id = generate_main_id(choice_finder, current_year)
     inferenceResult = session["inferenceResult"]
@@ -162,18 +171,25 @@ def register_item(choice_finder):
     # Userの一覧取得
     users = User.query.all()
     user_choice = [(user.username) for user in users]
+    print(use_AI)
     # Cocaによるキャプション生成
-    root_path = Path(current_app.root_path, "images/captured_image.jpg")
-    model_path = Path(current_app.root_path, "register", "model_folder", "model.pth")
-    if model_path.exists():
-        # img2text関数を実行してテキストを取得
-        text = img2text(model_path, root_path)
-    else:
+    if use_AI == "usenoAI":
         text = ""
-    # AWSでの推論
-    result = send_image_AWS(root_path)
-    if result != "Error":
-        print(result)
+        result = "現金"
+    else:
+        root_path = Path(current_app.root_path, "images/captured_image.jpg")
+        model_path = Path(
+            current_app.root_path, "register", "model_folder", "model.pth"
+        )
+        if model_path.exists():
+            # img2text関数を実行してテキストを取得
+            text = img2text(model_path, root_path)
+        else:
+            text = ""
+        # AWSでの推論
+        result = send_image_AWS(root_path)
+        if result != "Error":
+            print(result)
 
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
@@ -313,6 +329,7 @@ def register_item(choice_finder):
     return render_template(
         "register/register_item.html",
         choice_finder=choice_finder,
+        use_AI=use_AI,
         form=form,
         ITEM_CLASS_L=ITEM_CLASS_L,
         ITEM_CLASS_M=ITEM_CLASS_M,
