@@ -148,8 +148,7 @@ def choices_finder():
 
     if form.validate_on_submit():
         choice_finder = form.choice_finder.data
-        print(form.use_AI)
-        if form.use_AI == "y":
+        if form.use_AI.data:
             use_AI = "usenoAI"
         else:
             use_AI = "useAI"
