@@ -269,3 +269,4 @@ config.py
 *jpg
 *pdf
 model.pth
+test.py

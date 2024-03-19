@@ -6,6 +6,7 @@ from PIL import Image
 
 def img2text(model_path, img_file):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
     model, preprocess, _ = open_clip.create_model_and_transforms(
         "coca_ViT-L-14",
         device=device,
