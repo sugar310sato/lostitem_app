@@ -21,10 +21,9 @@ def register(item_id):
     lostitem = LostItem.query.filter_by(id=item_id).first()
     if form.submit.data:
         bundleditem = BundledItems(
-            item_class_L=request.form.get('item_class_L'),
-            item_class_M=request.form.get('item_class_M'),
-            item_class_S=request.form.get('item_class_S'),
-
+            item_class_L=request.form.get("item_class_L"),
+            item_class_M=request.form.get("item_class_M"),
+            item_class_S=request.form.get("item_class_S"),
             item_value=form.item_value.data,
             item_feature=form.item_feature.data,
             item_color=form.item_color.data,
@@ -39,7 +38,6 @@ def register(item_id):
             item_remarks=form.item_remarks.data,
             lostitem_id=lostitem.id,
             item_situation="保管中",
-
             # カードの場合は、カード情報の登録
             card_campany=form.card_campany.data,
             card_tel=form.card_tel.data,
@@ -54,9 +52,14 @@ def register(item_id):
         db.session.add(bundleditem)
         db.session.commit()
         return redirect(url_for("items.detail", item_id=bundleditem.lostitem_id))
-    return render_template("bundleditems/register_item.html", form=form,
-                           lostitem=lostitem, ITEM_CLASS_L=ITEM_CLASS_L,
-                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
+    return render_template(
+        "bundleditems/register_item.html",
+        form=form,
+        lostitem=lostitem,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+    )
 
 
 # カード会社連絡
@@ -70,14 +73,14 @@ def card(item_id):
     form = CardNote()
     form.card_manager.choices = user_choice
     if form.submit.data:
-        renew_lostitem = request.form.getlist('main')
-        renew_bundleds = request.form.getlist('item')
+        renew_lostitem = request.form.getlist("main")
+        renew_bundleds = request.form.getlist("item")
         if renew_lostitem:
             lostitem.item_situation = "連絡済み"
             lostitem.card_return = form.card_return.data
             lostitem.card_item = form.card_item.data
-            lostitem.card_item_hour = form.card_item_hour.data
-            lostitem.card_item_minute = form.card_item_minute.data
+            lostitem.card_item_hour = request.form.get("card_item_hour")
+            lostitem.card_item_minute = request.form.get("card_item_minute")
             lostitem.card_manager = form.card_manager.data
             db.session.add(lostitem)
             db.session.commit()
@@ -86,14 +89,18 @@ def card(item_id):
             renew_bundled.item_situation = "連絡済み"
             renew_bundled.card_return = form.card_return.data
             renew_bundled.card_item = form.card_item.data
-            renew_bundled.card_item_hour = form.card_item_hour.data
-            renew_bundled.card_item_minute = form.card_item_minute.data
+            renew_bundled.card_item_hour = request.form.get("card_item_hour")
+            renew_bundled.card_item_minute = request.form.get("card_item_minute")
             renew_bundled.card_manager = form.card_manager.data
             db.session.add(renew_bundled)
             db.session.commit()
         return redirect(url_for("bundleditems.card", item_id=item_id))
-    return render_template("/bundleditems/card.html", lostitem=lostitem,
-                           bundleditems=bundleditems, form=form)
+    return render_template(
+        "/bundleditems/card.html",
+        lostitem=lostitem,
+        bundleditems=bundleditems,
+        form=form,
+    )
 
 
 # 同梱物編集
@@ -103,9 +110,9 @@ def edit(item_id):
     bundleditem = BundledItems.query.filter_by(id=item_id).first()
     if form.submit.data:
         # 大中小項目の実装
-        bundleditem.item_class_L = request.form.get('item_class_L')
-        bundleditem.item_class_M = request.form.get('item_class_M')
-        bundleditem.item_class_S = request.form.get('item_class_S')
+        bundleditem.item_class_L = request.form.get("item_class_L")
+        bundleditem.item_class_M = request.form.get("item_class_M")
+        bundleditem.item_class_S = request.form.get("item_class_S")
 
         bundleditem.item_value = form.item_value.data
         bundleditem.item_feature = form.item_feature.data
@@ -133,9 +140,14 @@ def edit(item_id):
         db.session.add(bundleditem)
         db.session.commit()
         return redirect(url_for("items.detail", item_id=bundleditem.lostitem_id))
-    return render_template("bundleditems/edit.html", form=form, item=bundleditem,
-                           ITEM_CLASS_L=ITEM_CLASS_L,
-                           ITEM_CLASS_M=ITEM_CLASS_M, ITEM_CLASS_S=ITEM_CLASS_S)
+    return render_template(
+        "bundleditems/edit.html",
+        form=form,
+        item=bundleditem,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+    )
 
 
 # 金種登録
@@ -145,16 +157,16 @@ def money_register(item_id):
     lostitem = LostItem.query.filter_by(id=item_id).first()
     if form.submit.data:
         total_yen = (
-            (form.ten_thousand_yen.data or 0) * 10000 +
-            (form.five_thousand_yen.data or 0) * 5000 +
-            (form.two_thousand_yen.data or 0) * 2000 +
-            (form.one_thousand_yen.data or 0) * 1000 +
-            (form.five_hundred_yen.data or 0) * 500 +
-            (form.one_hundred_yen.data or 0) * 100 +
-            (form.fifty_yen.data or 0) * 50 +
-            (form.ten_yen.data or 0) * 10 +
-            (form.five_yen.data or 0) * 5 +
-            (form.one_yen.data or 0) * 1
+            (form.ten_thousand_yen.data or 0) * 10000
+            + (form.five_thousand_yen.data or 0) * 5000
+            + (form.two_thousand_yen.data or 0) * 2000
+            + (form.one_thousand_yen.data or 0) * 1000
+            + (form.five_hundred_yen.data or 0) * 500
+            + (form.one_hundred_yen.data or 0) * 100
+            + (form.fifty_yen.data or 0) * 50
+            + (form.ten_yen.data or 0) * 10
+            + (form.five_yen.data or 0) * 5
+            + (form.one_yen.data or 0) * 1
         )
         denomination = Denomination(
             ten_thousand_yen=form.ten_thousand_yen.data,
@@ -169,7 +181,6 @@ def money_register(item_id):
             one_yen=form.one_yen.data,
             total_yen=total_yen,
             item_situation="保管中",
-
             # 記念硬貨
             commemorative_coin_1=form.commemorative_coin_1.data,
             commemorative_coin_1_value=form.commemorative_coin_1_value.data,
@@ -180,8 +191,9 @@ def money_register(item_id):
         db.session.add(denomination)
         db.session.commit()
         return redirect(url_for("items.detail", item_id=denomination.lostitem_id))
-    return render_template("bundleditems/register_money.html", form=form,
-                           lostitem=lostitem)
+    return render_template(
+        "bundleditems/register_money.html", form=form, lostitem=lostitem
+    )
 
 
 # 金種編集
@@ -191,16 +203,16 @@ def money_edit(item_id):
     denomination = Denomination.query.filter_by(lostitem_id=item_id).first()
     if form.submit.data:
         total_yen = (
-            (form.ten_thousand_yen.data or 0) * 10000 +
-            (form.five_thousand_yen.data or 0) * 5000 +
-            (form.two_thousand_yen.data or 0) * 2000 +
-            (form.one_thousand_yen.data or 0) * 1000 +
-            (form.five_hundred_yen.data or 0) * 500 +
-            (form.one_hundred_yen.data or 0) * 100 +
-            (form.fifty_yen.data or 0) * 50 +
-            (form.ten_yen.data or 0) * 10 +
-            (form.five_yen.data or 0) * 5 +
-            (form.one_yen.data or 0) * 1
+            (form.ten_thousand_yen.data or 0) * 10000
+            + (form.five_thousand_yen.data or 0) * 5000
+            + (form.two_thousand_yen.data or 0) * 2000
+            + (form.one_thousand_yen.data or 0) * 1000
+            + (form.five_hundred_yen.data or 0) * 500
+            + (form.one_hundred_yen.data or 0) * 100
+            + (form.fifty_yen.data or 0) * 50
+            + (form.ten_yen.data or 0) * 10
+            + (form.five_yen.data or 0) * 5
+            + (form.one_yen.data or 0) * 1
         )
         denomination.ten_thousand_yen = form.ten_thousand_yen.data
         denomination.five_thousand_yen = form.five_thousand_yen.data
@@ -222,8 +234,9 @@ def money_edit(item_id):
         db.session.add(denomination)
         db.session.commit()
         return redirect(url_for("items.detail", item_id=denomination.lostitem_id))
-    return render_template("bundleditems/money_edit.html", form=form,
-                           denomination=denomination)
+    return render_template(
+        "bundleditems/money_edit.html", form=form, denomination=denomination
+    )
 
 
 # 金種削除

@@ -32,7 +32,7 @@
                 <td>{{ lostitem.card_campany }}</td>
                 <td>{{ lostitem.card_name }}</td>
                 <td>{{ lostitem.card_item.strftime('%Y/%m/%d') if lostitem.card_item is not none else "" }}</td>
-                <td>{{ lostitem.card_item_hour }} {{ lostitem.card_item_minute }}</td>
+                <td>{{ lostitem.card_item_hour }}時{{ lostitem.card_item_minute }}分</td>
                 <td>{{ lostitem.item_situation }}</td>
             </tr>
             <tr>
@@ -75,7 +75,7 @@
                 <td>{{ bundleditem.card_campany }}</td>
                 <td>{{ bundleditem.card_name }}</td>
                 <td>{{ bundleditem.card_item.strftime('%Y/%m/%d') if bundleditem.card_item is not none else "" }}</td>
-                <td>{{ bundleditem.card_item_hour }} {{ bundleditem.card_item_minute }}</td>
+                <td>{{ bundleditem.card_item_hour }}時{{ bundleditem.card_item_minute }}分</td>
                 <td>{{ bundleditem.item_situation }}</td>
             </tr>
             <tr>
@@ -106,7 +106,18 @@
         <tbody>
             <tr>
                 <td>{{ form.card_item(class="form-set") }}</td>
-                <td>{{ form.card_item_hour(class="form-set") }} {{ form.card_item_minute(class="form-set") }}</td>
+                <td><select id="card_item_hour" name="card_item_hour" class="form-set">
+                    <!-- 時間の選択肢を0から23まで -->
+                    {% for i in range(24) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select> :
+                    <select id="card_item_minute" name="card_item_minute" class="form-set">
+                    <!-- 分の選択肢を0から59まで -->
+                    {% for i in range(60) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select></td>
             </tr>
             <tr>
                 <td>{{ form.card_return(class="form-set") }}</td>

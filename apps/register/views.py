@@ -246,11 +246,6 @@ def register_item(choice_finder, use_AI):
                 card_tel=form.card_tel.data,
                 card_name=form.card_name.data,
                 card_person=form.card_person.data,
-                card_return=form.card_return.data,
-                card_item=form.card_item.data,
-                card_item_hour=form.card_item_hour.data,
-                card_item_minute=form.card_item_minute.data,
-                card_manager=form.card_manager.data,
             )
             db.session.add(ownerlostitem)
             db.session.commit()
@@ -311,11 +306,6 @@ def register_item(choice_finder, use_AI):
                 card_tel=form.card_tel.data,
                 card_name=form.card_name.data,
                 card_person=form.card_person.data,
-                card_return=form.card_return.data,
-                card_item=form.card_item.data,
-                card_item_hour=form.card_item_hour.data,
-                card_item_minute=form.card_item_minute.data,
-                card_manager=form.card_manager.data,
             )
             db.session.add(thirdpartylostitem)
             db.session.commit()
