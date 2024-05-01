@@ -193,7 +193,8 @@ def register_item(choice_finder, use_AI):
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
         form.recep_manager.choices = user_choice
-        form.item_feature.data = text
+        if text != "":
+            form.item_feature.data = text
         if form.submit.data:
             moved_path = save_image()
             ownerlostitem = LostItem(
@@ -253,7 +254,8 @@ def register_item(choice_finder, use_AI):
     elif choice_finder == "第三者拾得":
         form = ThirdPartyLostItemForm()
         form.recep_manager.choices = user_choice
-        form.item_feature.data = text
+        if text != "":
+            form.item_feature.data = text
         if form.submit.data:
             moved_path = save_image()
             thirdpartylostitem = LostItem(
