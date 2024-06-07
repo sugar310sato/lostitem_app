@@ -1,156 +1,158 @@
 {% extends "register/base.html" %}
 {% block title %}拾得物の登録{% endblock %}
 {% block content %}
-<h2>拾得物情報の登録</h2>
-<form action="{{ url_for('register.register_item', choice_finder=choice_finder, use_AI=use_AI) }}" method="post">
-    {{ form.csrf_token }}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-6">管理番号：{{ main_id }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-6">{{ form.notify.label }} {{ form.notify }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4 color-text">{{ form.get_item.label }} {{ form.get_item(class="form-set") }}</div>
-            <div class="col-4 color-text">{{ form.get_item_hour.label }}
-                <select id="hours" name="get_item_hours" class="form-set">
+<div class="block-card">
+    <h2>拾得物情報の登録</h2>
+    <form action="{{ url_for('register.register_item', choice_finder=choice_finder, use_AI=use_AI) }}" method="post">
+        {{ form.csrf_token }}
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-6">管理番号：{{ main_id }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">{{ form.notify.label }} {{ form.notify }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4 color-text">{{ form.get_item.label }} {{ form.get_item(class="form-set") }}</div>
+                <div class="col-4 color-text">{{ form.get_item_hour.label }}
+                    <select id="hours" name="get_item_hours" class="form-set">
+                        <!-- 時間の選択肢を0から23まで -->
+                        {% for i in range(24) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select> :
+                    <select id="minutes" name="get_item_minutes" class="form-set">
+                        <!-- 分の選択肢を0から59まで -->
+                        {% for i in range(60) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3 color-text">{{ form.recep_item.label }} {{ form.recep_item(class="form-set") }}</div>
+                <div class="col-3 color-text">{{ form.recep_item_hour.label }}
+                    <select id="recep_hours" name="recep_item_hours" class="form-set">
                     <!-- 時間の選択肢を0から23まで -->
                     {% for i in range(24) %}
                     <option value="{{ i }}">{{ i }}</option>
                     {% endfor %}
                 </select> :
-                <select id="minutes" name="get_item_minutes" class="form-set">
+                    <select id="recep_minutes" name="recep_item_minutes" class="form-set">
                     <!-- 分の選択肢を0から59まで -->
                     {% for i in range(60) %}
                     <option value="{{ i }}">{{ i }}</option>
                     {% endfor %}
                 </select>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-3 color-text">{{ form.recep_item.label }} {{ form.recep_item(class="form-set") }}</div>
-            <div class="col-3 color-text">{{ form.recep_item_hour.label }}
-                <select id="recep_hours" name="recep_item_hours" class="form-set">
-                <!-- 時間の選択肢を0から23まで -->
-                {% for i in range(24) %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-            </select> :
-                <select id="recep_minutes" name="recep_item_minutes" class="form-set">
-                <!-- 分の選択肢を0から59まで -->
-                {% for i in range(60) %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-            </select>
-        </div>
-            <div class="col-3 color-text">{{ form.recep_manager.label }} {{ form.recep_manager(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            {% if choice_finder=="占有者拾得" %}
-            <!-- <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class(class="form-set") }}</div> -->
-            <div class="col-4 color-text">{{ form.finder_affiliation.label }} {{ form.finder_affiliation(class="form-set") }}</div>
-            {% else %}
-            <div class="col-4">{{ form.thirdparty_waiver.label }} {{ form.thirdparty_waiver(class="form-set") }}</div>
-            <div class="col-4">{{ form.thirdparty_name_note.label }} {{ form.thirdparty_name_note(class="form-set") }}
+                <div class="col-3 color-text">{{ form.recep_manager.label }} {{ form.recep_manager(class="form-set") }}</div>
             </div>
-            {% endif %}
-        </div>
-        <div class="row mb-3">
-            <div class="col-4 color-text">
-                物件分類（大）
-                <select name="item_class_L" id="item_class_L" class="form-set">
-                    {% for option in ITEM_CLASS_L %}
-                    <option value="{{ option }}"{% if option == result %}selected{% endif %}>{{ option }}</option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                {% if choice_finder=="占有者拾得" %}
+                <!-- <div class="col-4">{{ form.finder_class.label }} {{ form.finder_class(class="form-set") }}</div> -->
+                <div class="col-4 color-text">{{ form.finder_affiliation.label }} {{ form.finder_affiliation(class="form-set") }}</div>
+                {% else %}
+                <div class="col-4">{{ form.thirdparty_waiver.label }} {{ form.thirdparty_waiver(class="form-set") }}</div>
+                <div class="col-4">{{ form.thirdparty_name_note.label }} {{ form.thirdparty_name_note(class="form-set") }}
+                </div>
+                {% endif %}
             </div>
-            <div class="col-4 color-text">
-                （中）
-                <select name="item_class_M" id="item_class_M" class="form-set">
-                    {% for option in ITEM_CLASS_M %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-4 color-text">
-                （小）
-                <select name="item_class_S" id="item_class_S" class="form-set">
-                    {% for option in ITEM_CLASS_S %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4 color-text">{{ form.find_area.label }} {{ form.find_area(class="form-set") }}</div>
-            <div class="col-4 color-text">{{ form.find_area_police.label }} {{ form.find_area_police(class="form-set") }}</div>
-            <div class="col-4">{{ form.own_waiver.label }} {{ form.own_waiver(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4 color-text">{{ form.finder_name.label }} {{ form.finder_name(class="form-set") }}</div>
-            <div class="col-4">{{ form.own_name_note.label }} {{ form.own_name_note(class="form-set") }}</div>
-            <div class="col-4">{{ form.finder_age.label }} {{ form.finder_age(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.finder_post.label }} {{ form.finder_post(class="form-set") }}</div>
-            <div class="col-8">{{ form.finder_address.label }} {{ form.finder_address(style="width: 500px;",
-                class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">
-                <div class="row">
-                    {{ form.finder_sex.label }}
-                    {% for subfield in form.finder_sex %}
-                    <div class="col-3">{{ subfield }} {{ subfield.label }}</div>
-                    {% endfor %}
+            <div class="row mb-3">
+                <div class="col-4 color-text">
+                    物件分類（大）
+                    <select name="item_class_L" id="item_class_L" class="form-set">
+                        {% for option in ITEM_CLASS_L %}
+                        <option value="{{ option }}"{% if option == result %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4 color-text">
+                    （中）
+                    <select name="item_class_M" id="item_class_M" class="form-set">
+                        {% for option in ITEM_CLASS_M %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4 color-text">
+                    （小）
+                    <select name="item_class_S" id="item_class_S" class="form-set">
+                        {% for option in ITEM_CLASS_S %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
-            <div class="col-4">{{ form.finder_tel1.label }} {{ form.finder_tel1(class="form-set") }}</div>
-            <div class="col-4">{{ form.finder_tel2.label }} {{ form.finder_tel2(class="form-set") }}</div>
+            <div class="row mb-3">
+                <div class="col-4 color-text">{{ form.find_area.label }} {{ form.find_area(class="form-set") }}</div>
+                <div class="col-4 color-text">{{ form.find_area_police.label }} {{ form.find_area_police(class="form-set") }}</div>
+                <div class="col-4">{{ form.own_waiver.label }} {{ form.own_waiver(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4 color-text">{{ form.finder_name.label }} {{ form.finder_name(class="form-set") }}</div>
+                <div class="col-4">{{ form.own_name_note.label }} {{ form.own_name_note(class="form-set") }}</div>
+                <div class="col-4">{{ form.finder_age.label }} {{ form.finder_age(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.finder_post.label }} {{ form.finder_post(class="form-set") }}</div>
+                <div class="col-8">{{ form.finder_address.label }} {{ form.finder_address(style="width: 500px;",
+                    class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <div class="row">
+                        {{ form.finder_sex.label }}
+                        {% for subfield in form.finder_sex %}
+                        <div class="col-3">{{ subfield }} {{ subfield.label }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-4">{{ form.finder_tel1.label }} {{ form.finder_tel1(class="form-set") }}</div>
+                <div class="col-4">{{ form.finder_tel2.label }} {{ form.finder_tel2(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_value.label }} {{ form.item_value(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_color.label }} {{ form.item_color(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4 color-text">{{ form.item_storage.label }} {{ form.item_storage(class="form-set") }}</div>
+                <div class="col-4 color-text">{{ form.item_storage_place.label }} {{ form.item_storage_place(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_num.label }} {{ form.item_num(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_money.label }} {{ form.item_money(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6 color-text">{{ form.item_feature.label }} {{ form.item_feature(class="form-set", style="width:
+                    70%;") }}</div>
+                <div class="col-6">{{ form.item_remarks.label }} {{ form.item_remarks(class="form-set", style="width:
+                    70%;") }}</div> 
+            </div>
+            <p>
+                <hr>
+                遺失物がカードであれば、以下の項目を入力してください。<br>
+                同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
+            </p>
+            <div class="row mb-5">
+                <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany(class="form-set") }}</div>
+                <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel(class="form-set") }}</div>
+                <div class="col-3">{{ form.card_name.label }} {{ form.card_name(class="form-set") }}</div>
+                <div class="col-3">{{ form.card_person.label }} {{ form.card_person(class="form-set") }}</div>
+            </div>
+            <div class="text-center">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_value.label }} {{ form.item_value(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4 color-text">{{ form.item_storage.label }} {{ form.item_storage(class="form-set") }}</div>
-            <div class="col-4 color-text">{{ form.item_storage_place.label }} {{ form.item_storage_place(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_num.label }} {{ form.item_num(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_money.label }} {{ form.item_money(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-6 color-text">{{ form.item_feature.label }} {{ form.item_feature(class="form-set", style="width:
-                70%;") }}</div>
-            <div class="col-6">{{ form.item_remarks.label }} {{ form.item_remarks(class="form-set", style="width:
-                70%;") }}</div> 
-        </div>
-        <p>
-            <hr>
-            遺失物がカードであれば、以下の項目を入力してください。<br>
-            同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
-        </p>
-        <div class="row mb-5">
-            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany(class="form-set") }}</div>
-            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel(class="form-set") }}</div>
-            <div class="col-3">{{ form.card_name.label }} {{ form.card_name(class="form-set") }}</div>
-            <div class="col-3">{{ form.card_person.label }} {{ form.card_person(class="form-set") }}</div>
-        </div>
-        <div class="text-center">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <!-- jsファイルに変数を渡す -->
 <script>
     var inferenceResult = "{{ inferenceResult }}";

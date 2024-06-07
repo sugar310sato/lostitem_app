@@ -1,83 +1,87 @@
 {% extends "register/base.html" %}
 {% block title %}拾得物一覧{% endblock %}
 {% block content %}
-<h2>検索項目</h2>
-<form action="{{ url_for('items.photo_arange') }}" method="post">
-    {{ form.csrf_token }}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-4">
-                物件分類（大）
-                <select name="item_class_L" id="item_class_L" class="form-set">
-                    <option value="選択してください">選択してください</option>
-                    {% for option in ITEM_CLASS_L %}
-                    <option value="{{ option }}">{{ option }}</option>
-                    {% endfor %}
-                </select>
+<div class="block-card">
+    <h2>検索項目</h2>
+    <form action="{{ url_for('items.photo_arange') }}" method="post">
+        {{ form.csrf_token }}
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-4">
+                    物件分類（大）
+                    <select name="item_class_L" id="item_class_L" class="form-set">
+                        <option value="選択してください">選択してください</option>
+                        {% for option in ITEM_CLASS_L %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    （中）
+                    <select name="item_class_M" id="item_class_M" class="form-set">
+                        <option value="選択してください">選択してください</option>
+                        {% for option in ITEM_CLASS_M %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    （小）
+                    <select name="item_class_S" id="item_class_S" class="form-set">
+                        <option value="選択してください">選択してください</option>
+                        {% for option in ITEM_CLASS_S %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-            <div class="col-4">
-                （中）
-                <select name="item_class_M" id="item_class_M" class="form-set">
-                    <option value="選択してください">選択してください</option>
-                    {% for option in ITEM_CLASS_M %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                    form.end_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_color.label }} {{ form.item_color(class="form-set") }}</div>
+                <div class="col-4">{{ form.find_area.label }} {{ form.find_area(class="form-set") }}</div>
             </div>
-            <div class="col-4">
-                （小）
-                <select name="item_class_S" id="item_class_S" class="form-set">
-                    <option value="選択してください">選択してください</option>
-                    {% for option in ITEM_CLASS_S %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_value.label }} {{ form.item_value(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_not_yet.label }} {{ form.item_not_yet(class="form-set") }}</div>
+            </div>
+            <div class="text-center">
+                {{ form.submit(class="btn btn-primary") }}
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
-                form.end_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color(class="form-set") }}</div>
-            <div class="col-4">{{ form.find_area.label }} {{ form.find_area(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_value.label }} {{ form.item_value(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_not_yet.label }} {{ form.item_not_yet(class="form-set") }}</div>
-        </div>
-        <div class="text-center">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </div>
-</form>
-<div class="d-flex align-items-center">
-    <h2 class="mr-3">拾得物一覧</h2>
-    <a href="{{ url_for('items.index') }}" class="btn btn-secondary">一覧表示へ</a>
-    {{ pagination.info }}
+    </form>
 </div>
-<table class="table table-bordered table-striped">
-    <tbody>
-        {% for i in range(0, all_lost_item|length, 5) %}
-        <tr>
-            {% for j in range(5) %}
-            <td class="text-center" style="width: 20%;">
-                {% if i + j < all_lost_item|length %} <a
-                    href="{{ url_for('items.detail', item_id=all_lost_item[i + j].id) }}"><img
-                        src="{{ url_for('items.image_file', item_id=all_lost_item[i + j].id) }}" alt="Photo"
-                        class="photo w-100"></a>
-                    <p>{{ all_lost_item[i + j].get_item.strftime('%Y/%m/%d') if all_lost_item[i + j].get_item is not
-                        none else "" }}</p>
-                    {% endif %}
-            </td>
+<div class="block-card">
+    <div class="d-flex align-items-center">
+        <h2 class="mr-3">拾得物一覧</h2>
+        <a href="{{ url_for('items.index') }}" class="btn btn-secondary">一覧表示へ</a>
+        {{ pagination.info }}
+    </div>
+    <table class="table table-bordered table-striped">
+        <tbody>
+            {% for i in range(0, all_lost_item|length, 5) %}
+            <tr>
+                {% for j in range(5) %}
+                <td class="text-center" style="width: 20%;">
+                    {% if i + j < all_lost_item|length %} <a
+                        href="{{ url_for('items.detail', item_id=all_lost_item[i + j].id) }}"><img
+                            src="{{ url_for('items.image_file', item_id=all_lost_item[i + j].id) }}" alt="Photo"
+                            class="photo w-100"></a>
+                        <p>{{ all_lost_item[i + j].get_item.strftime('%Y/%m/%d') if all_lost_item[i + j].get_item is not
+                            none else "" }}</p>
+                        {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<div class="container">
-    <div style="margin-left: 45%;">{{ pagination.links }}</div>
+        </tbody>
+    </table>
+    <div class="container">
+        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    </div>
 </div>
 <script>
     var inferenceResult = "{{ inferenceResult }}";

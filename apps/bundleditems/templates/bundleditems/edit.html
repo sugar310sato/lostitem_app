@@ -4,89 +4,91 @@
 <h2>同梱物編集</h2>
 <form action="{{ url_for('bundleditems.edit', item_id=item.id) }}" method="post">
     {{ form.csrf_token }}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-4">
-                物件分類（大）
-                <select name="item_class_L" id="item_class_L" class="form-set">
-                    {% for option in ITEM_CLASS_L %}
-                    <option value="{{ option }}" {% if item.item_class_L==option %}selected{% endif %}>{{ option
-                        }}</option>
-                    {% endfor %}
-                </select>
+    <div class="block-card">
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-4">
+                    物件分類（大）
+                    <select name="item_class_L" id="item_class_L" class="form-set">
+                        {% for option in ITEM_CLASS_L %}
+                        <option value="{{ option }}" {% if item.item_class_L==option %}selected{% endif %}>{{ option
+                            }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    （中）
+                    <select name="item_class_M" id="item_class_M" class="form-set">
+                        {% for option in ITEM_CLASS_M %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}" {% if
+                            item.item_class_M==option['value'] %}selected{% endif %}>{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    （小）
+                    <select name="item_class_S" id="item_class_S" class="form-set">
+                        {% for option in ITEM_CLASS_S %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}" {% if
+                            item.item_class_S==option['value'] %}selected{% endif %}>{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-            <div class="col-4">
-                （中）
-                <select name="item_class_M" id="item_class_M" class="form-set">
-                    {% for option in ITEM_CLASS_M %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}" {% if
-                        item.item_class_M==option['value'] %}selected{% endif %}>{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_value.label }} {{ form.item_value(value=item.item_value) }}</div>
+                <div class="col-4">{{ form.item_color.label }} {{ form.item_color(value=item.item_color) }}</div>
             </div>
-            <div class="col-4">
-                （小）
-                <select name="item_class_S" id="item_class_S" class="form-set">
-                    {% for option in ITEM_CLASS_S %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}" {% if
-                        item.item_class_S==option['value'] %}selected{% endif %}>{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_storage.label }} {{ form.item_storage(value=item.item_storage) }}</div>
+                <div class="col-4">{{ form.item_storage_place.label }} {{
+                    form.item_storage_place(value=item.item_storage_place) }}</div>
+                <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(value=item.item_expiration) }}
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker(value=item.item_maker) }}</div>
+                <div class="col-4">{{ form.item_num.label }} {{ form.item_num(value=item.item_num) }}</div>
+                <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit(value=item.item_unit) }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(value=item.item_plice) }}</div>
+                <div class="col-4">{{ form.item_money.label }} {{ form.item_money(value=item.item_money) }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks(value=item.item_remarks) }}</div>
+                <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature(value=item.item_feature) }}</div>
+            </div>
+            <p>
+                <hr>
+                遺失物がカードであれば、以下の項目を入力してください。<br>
+                同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
+            </p>
+            <div class="row mb-5">
+                <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany(value=item.card_campany) }}</div>
+                <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel(value=item.card_tel) }}</div>
+                <div class="col-3">{{ form.card_name.label }} {{ form.card_name(value=item.card_name) }}</div>
+                <div class="col-3">{{ form.card_person.label }} {{ form.card_person(value=item.card_person) }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">{{ form.card_item.label }} {{ form.card_item(value=item.card_item) }}</div>
+                <div class="col-3">{{ form.card_return.label }} {{ form.card_return(value=item.card_return) }}</div>
+                <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour(value=item.card_item_hour) }}
+                </div>
+                <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute(value=item.card_item_minute)
+                    }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager(value=item.card_manager) }}</div>
+            </div>
+            <div class="text-center">
+                {{ form.submit(value="編集",class="btn btn-primary") }}
+                <a href="{{ url_for('bundleditems.delete_bundled', item_id=item.id) }}" class="btn btn-secondary">削除</a>
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_value.label }} {{ form.item_value(value=item.item_value) }}</div>
-            <div class="col-4">{{ form.item_color.label }} {{ form.item_color(value=item.item_color) }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_storage.label }} {{ form.item_storage(value=item.item_storage) }}</div>
-            <div class="col-4">{{ form.item_storage_place.label }} {{
-                form.item_storage_place(value=item.item_storage_place) }}</div>
-            <div class="col-4">{{ form.item_expiration.label }} {{ form.item_expiration(value=item.item_expiration) }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_maker.label }} {{ form.item_maker(value=item.item_maker) }}</div>
-            <div class="col-4">{{ form.item_num.label }} {{ form.item_num(value=item.item_num) }}</div>
-            <div class="col-4">{{ form.item_unit.label }} {{ form.item_unit(value=item.item_unit) }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(value=item.item_plice) }}</div>
-            <div class="col-4">{{ form.item_money.label }} {{ form.item_money(value=item.item_money) }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_remarks.label }} {{ form.item_remarks(value=item.item_remarks) }}</div>
-            <div class="col-4">{{ form.item_feature.label }} {{ form.item_feature(value=item.item_feature) }}</div>
-        </div>
-        <p>
-            <hr>
-            遺失物がカードであれば、以下の項目を入力してください。<br>
-            同梱物として登録する場合は、同梱物の詳細画面からカード情報を入力してください。
-        </p>
-        <div class="row mb-5">
-            <div class="col-3">{{ form.card_campany.label }} {{ form.card_campany(value=item.card_campany) }}</div>
-            <div class="col-3">{{ form.card_tel.label }} {{ form.card_tel(value=item.card_tel) }}</div>
-            <div class="col-3">{{ form.card_name.label }} {{ form.card_name(value=item.card_name) }}</div>
-            <div class="col-3">{{ form.card_person.label }} {{ form.card_person(value=item.card_person) }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-3">{{ form.card_item.label }} {{ form.card_item(value=item.card_item) }}</div>
-            <div class="col-3">{{ form.card_return.label }} {{ form.card_return(value=item.card_return) }}</div>
-            <div class="col-3">{{ form.card_item_hour.label }} {{ form.card_item_hour(value=item.card_item_hour) }}
-            </div>
-            <div class="col-3">{{ form.card_item_minute.label }} {{ form.card_item_minute(value=item.card_item_minute)
-                }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-3">{{ form.card_manager.label }} {{ form.card_manager(value=item.card_manager) }}</div>
-        </div>
-        <div class="text-center">
-            {{ form.submit(value="編集",class="btn btn-primary") }}
-            <a href="{{ url_for('bundleditems.delete_bundled', item_id=item.id) }}" class="btn btn-secondary">削除</a>
-        </div>
-    </div>
+    </div> 
 </form>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}

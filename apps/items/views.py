@@ -209,9 +209,9 @@ def photo_arange():
     # ページネーション処理
     # デモのため、5枚に設定
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    rows = search_results[(page - 1) * 5 : page * 5]
+    rows = search_results[(page - 1) * 20 : page * 20]
     pagination = Pagination(
-        page=page, total=len(search_results), per_page=5, css_framework="bootstrap5"
+        page=page, total=len(search_results), per_page=20, css_framework="bootstrap5"
     )
 
     if form.submit.data:

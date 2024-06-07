@@ -5,129 +5,134 @@
     <!-- メインの拾得物がカードか -->
     {{ form.csrf_token }}
     {% if lostitem.item_class_M=="キャッシュカード類" %}
-    <p>拾得物</p>
-    <!-- 保管中であれば入力フォームを表示、連絡済みならステータスを表示 -->
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>カード会社名</th>
-                <th>カード名</th>
-                <th>連絡日</th>
-                <th>連絡時間</th>
-                <th>状況</th>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>カード会社連絡先</th>
-                <th>カード記載人名</th>
-                <th>返還（還付）日</th>
-                <th>連絡担当者</th>
-                <th>更新</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ lostitem.id }}</td>
-                <td>{{ lostitem.card_campany }}</td>
-                <td>{{ lostitem.card_name }}</td>
-                <td>{{ lostitem.card_item.strftime('%Y/%m/%d') if lostitem.card_item is not none else "" }}</td>
-                <td>{{ lostitem.card_item_hour }}時{{ lostitem.card_item_minute }}分</td>
-                <td>{{ lostitem.item_situation }}</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>{{ lostitem.card_tel }}</td>
-                <td>{{ lostitem.card_person }}</td>
-                <td>{{ lostitem.card_return if lostitem.card_return is not none else "" }}</td>
-                <td>{{ lostitem.card_manager }}</td>
-                <td><input type="checkbox" name="main" value="{{ lostitem.id }}"></td>
-            </tr>
-        </tbody>
-    </table>
-    {% endif %}
-    <!-- 同梱物がカードか -->
-    <p>同梱物</p>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>カード会社名</th>
-                <th>カード名</th>
-                <th>連絡日</th>
-                <th>連絡時間</th>
-                <th>状況</th>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>カード会社連絡先</th>
-                <th>カード記載人名</th>
-                <th>返還（還付）日</th>
-                <th>連絡担当者</th>
-                <th>更新</th>
-            </tr>
-        </thead>
-        {% for bundleditem in bundleditems %}
-        {% if bundleditem.item_class_M == "キャッシュカード類" %}
-        <tbody>
-            <tr>
-                <td>{{ bundleditem.id }}</td>
-                <td>{{ bundleditem.card_campany }}</td>
-                <td>{{ bundleditem.card_name }}</td>
-                <td>{{ bundleditem.card_item.strftime('%Y/%m/%d') if bundleditem.card_item is not none else "" }}</td>
-                <td>{{ bundleditem.card_item_hour }}時{{ bundleditem.card_item_minute }}分</td>
-                <td>{{ bundleditem.item_situation }}</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>{{ bundleditem.card_tel }}</td>
-                <td>{{ bundleditem.card_person }}</td>
-                <td>{{ bundleditem.card_return.strftime('%Y/%m/%d') if bundleditem.card_return is not none else "" }}
-                </td>
-                <td>{{ bundleditem.card_manager }}</td>
-                <td><input type="checkbox" name="item" value="{{ bundleditem.id }}"></td>
-            </tr>
-        </tbody>
+    <div class="block-card">
+        <h2>拾得物</h2>
+        <!-- 保管中であれば入力フォームを表示、連絡済みならステータスを表示 -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>カード会社名</th>
+                    <th>カード名</th>
+                    <th>連絡日</th>
+                    <th>連絡時間</th>
+                    <th>状況</th>
+                </tr>
+                <tr>
+                    <th> </th>
+                    <th>カード会社連絡先</th>
+                    <th>カード記載人名</th>
+                    <th>返還（還付）日</th>
+                    <th>連絡担当者</th>
+                    <th>更新</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ lostitem.id }}</td>
+                    <td>{{ lostitem.card_campany }}</td>
+                    <td>{{ lostitem.card_name }}</td>
+                    <td>{{ lostitem.card_item.strftime('%Y/%m/%d') if lostitem.card_item is not none else "" }}</td>
+                    <td>{{ lostitem.card_item_hour }}時{{ lostitem.card_item_minute }}分</td>
+                    <td>{{ lostitem.item_situation }}</td>
+                </tr>
+                <tr>
+                    <td> </td>
+                    <td>{{ lostitem.card_tel }}</td>
+                    <td>{{ lostitem.card_person }}</td>
+                    <td>{{ lostitem.card_return if lostitem.card_return is not none else "" }}</td>
+                    <td>{{ lostitem.card_manager }}</td>
+                    <td><input type="checkbox" name="main" value="{{ lostitem.id }}"></td>
+                </tr>
+            </tbody>
+        </table>
         {% endif %}
-        {% endfor %}
-    </table>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>連絡日</th>
-                <th>連絡時間</th>
-            </tr>
-            <tr>
-                <th>返還（還付）日</th>
-                <th>連絡担当者</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ form.card_item(class="form-set") }}</td>
-                <td><select id="card_item_hour" name="card_item_hour" class="form-set">
-                    <!-- 時間の選択肢を0から23まで -->
-                    {% for i in range(24) %}
-                    <option value="{{ i }}">{{ i }}</option>
-                    {% endfor %}
-                </select> :
-                    <select id="card_item_minute" name="card_item_minute" class="form-set">
-                    <!-- 分の選択肢を0から59まで -->
-                    {% for i in range(60) %}
-                    <option value="{{ i }}">{{ i }}</option>
-                    {% endfor %}
-                </select></td>
-            </tr>
-            <tr>
-                <td>{{ form.card_return(class="form-set") }}</td>
-                <td>{{ form.card_manager(class="form-set") }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="text-center">
-        {{ form.submit(class="btn btn-primary") }}
-        <a href="{{ url_for('items.detail', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
+    </div>
+    <!-- 同梱物がカードか -->
+    <div class="block-card">
+        <h2>同梱物</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>カード会社名</th>
+                    <th>カード名</th>
+                    <th>連絡日</th>
+                    <th>連絡時間</th>
+                    <th>状況</th>
+                </tr>
+                <tr>
+                    <th> </th>
+                    <th>カード会社連絡先</th>
+                    <th>カード記載人名</th>
+                    <th>返還（還付）日</th>
+                    <th>連絡担当者</th>
+                    <th>更新</th>
+                </tr>
+            </thead>
+            {% for bundleditem in bundleditems %}
+            {% if bundleditem.item_class_M == "キャッシュカード類" %}
+            <tbody>
+                <tr>
+                    <td>{{ bundleditem.id }}</td>
+                    <td>{{ bundleditem.card_campany }}</td>
+                    <td>{{ bundleditem.card_name }}</td>
+                    <td>{{ bundleditem.card_item.strftime('%Y/%m/%d') if bundleditem.card_item is not none else "" }}</td>
+                    <td>{{ bundleditem.card_item_hour }}時{{ bundleditem.card_item_minute }}分</td>
+                    <td>{{ bundleditem.item_situation }}</td>
+                </tr>
+                <tr>
+                    <td> </td>
+                    <td>{{ bundleditem.card_tel }}</td>
+                    <td>{{ bundleditem.card_person }}</td>
+                    <td>{{ bundleditem.card_return.strftime('%Y/%m/%d') if bundleditem.card_return is not none else "" }}
+                    </td>
+                    <td>{{ bundleditem.card_manager }}</td>
+                    <td><input type="checkbox" name="item" value="{{ bundleditem.id }}"></td>
+                </tr>
+            </tbody>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+    <div class="block-card">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>連絡日</th>
+                    <th>連絡時間</th>
+                </tr>
+                <tr>
+                    <th>返還（還付）日</th>
+                    <th>連絡担当者</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ form.card_item(class="form-set") }}</td>
+                    <td><select id="card_item_hour" name="card_item_hour" class="form-set">
+                        <!-- 時間の選択肢を0から23まで -->
+                        {% for i in range(24) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select> :
+                        <select id="card_item_minute" name="card_item_minute" class="form-set">
+                        <!-- 分の選択肢を0から59まで -->
+                        {% for i in range(60) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>{{ form.card_return(class="form-set") }}</td>
+                    <td>{{ form.card_manager(class="form-set") }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('items.detail', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
+        </div>
     </div>
 </form>
 {% endblock %}

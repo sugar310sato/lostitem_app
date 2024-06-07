@@ -1,54 +1,56 @@
 {% extends "register/base.html" %}
 {% block title %}遺失物返還{% endblock %}
 {% block content %}
-<h2>遺失物返還</h2>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>管理番号(詳細)</th>
-            <th>拾得日時</th>
-            <th>拾得場所</th>
-            <th>拾得物名/特徴</th>
-            <th>色</th>
-            <th>保管施設/場所</th>
-            <th>状況</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                <a href="{{ url_for('items.detail', item_id=lostitem.id) }}">{{ lostitem.id }}</a>
-            </td>
-            <td>{{ lostitem.get_item.strftime('%Y/%m/%d') if lostitem.get_item is not none else "" }} {{
-                lostitem.get_item_hour }}{{
-                lostitem.get_item_minute }}</td>
-            <td>{{ lostitem.find_area }}</td>
-            <td>{{ lostitem.item_feature }}</td>
-            <td>{{ lostitem.item_color }}</td>
-            <td>{{ lostitem.item_storage }}/{{ lostitem.item_storage_place }}</td>
-            <td>{{ lostitem.item_situation }}
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<form action="{{ url_for('return_item.item_return', item_id=lostitem.id) }}" , method="post">
-    {{ form.csrf_token }}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-4">{{ form.return_date.label }} {{ form.return_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.return_check.label }} {{ form.return_check(class="form-set") }}</div>
-            <div class="col-4">{{ form.return_person.label }} {{ form.return_person(class="form-set") }}</div>
+<div class="block-card">
+    <h2>遺失物返還</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>管理番号(詳細)</th>
+                <th>拾得日時</th>
+                <th>拾得場所</th>
+                <th>拾得物名/特徴</th>
+                <th>色</th>
+                <th>保管施設/場所</th>
+                <th>状況</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="{{ url_for('items.detail', item_id=lostitem.id) }}">{{ lostitem.id }}</a>
+                </td>
+                <td>{{ lostitem.get_item.strftime('%Y/%m/%d') if lostitem.get_item is not none else "" }} {{
+                    lostitem.get_item_hour }}{{
+                    lostitem.get_item_minute }}</td>
+                <td>{{ lostitem.find_area }}</td>
+                <td>{{ lostitem.item_feature }}</td>
+                <td>{{ lostitem.item_color }}</td>
+                <td>{{ lostitem.item_storage }}/{{ lostitem.item_storage_place }}</td>
+                <td>{{ lostitem.item_situation }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <form action="{{ url_for('return_item.item_return', item_id=lostitem.id) }}" , method="post">
+        {{ form.csrf_token }}
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-4">{{ form.return_date.label }} {{ form.return_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.return_check.label }} {{ form.return_check(class="form-set") }}</div>
+                <div class="col-4">{{ form.return_person.label }} {{ form.return_person(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.return_address.label }} {{ form.return_address(class="form-set") }}</div>
+                <div class="col-4">{{ form.return_tel.label }} {{ form.return_tel(class="form-set") }}</div>
+                <div class="col-4">{{ form.return_manager.label }} {{ form.return_manager(class="form-set") }}</div>
+            </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.return_address.label }} {{ form.return_address(class="form-set") }}</div>
-            <div class="col-4">{{ form.return_tel.label }} {{ form.return_tel(class="form-set") }}</div>
-            <div class="col-4">{{ form.return_manager.label }} {{ form.return_manager(class="form-set") }}</div>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('return_item.item', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
         </div>
-    </div>
-    <div class="text-center">
-        {{ form.submit(class="btn btn-primary") }}
-        <a href="{{ url_for('return_item.item', item_id=lostitem.id) }}" class="btn btn-secondary">戻る</a>
-    </div>
-</form>
+    </form>
+</div>
 {% endblock %}

@@ -1,168 +1,178 @@
 {% extends "register/base.html" %}
 {% block title %}拾得物詳細画面{% endblock %}
 {% block content %}
-<h2>拾得物詳細画面</h2>
 <div class="container">
-    <div class="text-center">
-        <img src="{{ url_for('items.image_file', item_id=item.id) }}" alt="拾得物の画像" width="25%" height="auto"
-            class="photo mb-3">
-    </div>
-    <div class="row mt-3">
-        {% set details = [
-            ("管理番号", item.main_id),
-            ("通知", item.notify),
-            ("拾得日時", item.get_item.strftime('%Y/%m/%d') ~ " " ~ item.get_item_hour ~ "時" ~ item.get_item_minute ~ "分" if item.get_item is not none else ""),
-            ("受付日時", item.recep_item.strftime('%Y/%m/%d') ~ " " ~ item.recep_item_hour ~ "時" ~ item.recep_item_minute ~ "分" if item.recep_item is not none else ""),
-            ("受付者", item.recep_manager),
-            ("拾得場所", item.find_area),
-            ("警察届出用拾得場所", item.find_area_police),
-            ("占有者権利放棄", item.own_waiver),
-            ("拾得者氏名", item.finder_name),
-            ("占有者氏名等告知", item.own_name_note),
-            ("年齢", item.finder_age),
-            ("性別", item.finder_sex),
-            ("拾得者所属", item.finder_affiliation if item.choice_finder=="占有者拾得" else "第三者権利放棄"),
-            ("氏名等告知", item.thirdparty_name_note if item.choice_finder!="占有者拾得" else None),
-            ("物件分類（大）", item.item_class_L),
-            ("物件分類（中）", item.item_class_M),
-            ("物件分類（小）", item.item_class_S),
-            ("郵便番号", item.finder_post),
-            ("住所", item.finder_address),
-            ("連絡先1", item.finder_tel1),
-            ("連絡先2", item.finder_tel2),
-            ("貴重な物品に該当", item.item_value),
-            ("物品の特徴", item.item_feature),
-            ("色", item.item_color),
-            ("保管施設", item.item_storage),
-            ("保管場所", item.item_storage_place),
-            ("メーカー", item.item_maker),
-            ("消費期限", item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else ""),
-            ("数量", item.item_num),
-            ("単位", item.item_unit),
-            ("値段", item.item_plice),
-            ("金額", item.item_money),
-            ("備考", item.item_remarks),
-            ("届出済", item.item_situation)
-        ] %}
-        {% for label, value in details %}
-            {% if value %}
-                <div class="col-md-3 col-sm-6 mb-2">
-                    <strong>{{ label }}:</strong> <span>{{ value | default('') }}</span>
-                </div>
-            {% else %}
-                <div class="col-md-3 col-sm-6 mb-2">
-                    <strong>{{ label }}:</strong> <span></span>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-    {% if item.item_class_L=="証明書類・カード類" %}
-    <div class="row mb-5">
-        <div class="col-3">カード発行会社名<br> <u>{{ item.card_campany }}</u></div>
-        <div class="col-3">カード発行会社連絡先<br> <u>{{ item.card_tel }}</u></div>
-        <div class="col-3">カード名<br> <u>{{ item.card_name }}</u></div>
-        <div class="col-3">カード記載人名<br> <u>{{ item.card_person }}</u></div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.card_item is not none else "" }}</u>
+    <div class="block-card">
+        <h2>拾得物</h2>
+        <div class="text-center">
+            <img src="{{ url_for('items.image_file', item_id=item.id) }}" alt="拾得物の画像" width="25%" height="auto"
+                class="photo mb-3">
         </div>
-        <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.card_return is not none else ""
-                }}</u>
+        <div class="row mt-3">
+            {% set details = [
+                ("管理番号", item.main_id),
+                ("通知", item.notify),
+                ("拾得日時", item.get_item.strftime('%Y/%m/%d') ~ " " ~ item.get_item_hour ~ "時" ~ item.get_item_minute ~ "分" if item.get_item is not none else ""),
+                ("受付日時", item.recep_item.strftime('%Y/%m/%d') ~ " " ~ item.recep_item_hour ~ "時" ~ item.recep_item_minute ~ "分" if item.recep_item is not none else ""),
+                ("受付者", item.recep_manager),
+                ("拾得場所", item.find_area),
+                ("警察届出用拾得場所", item.find_area_police),
+                ("占有者権利放棄", item.own_waiver),
+                ("拾得者氏名", item.finder_name),
+                ("占有者氏名等告知", item.own_name_note),
+                ("年齢", item.finder_age),
+                ("性別", item.finder_sex),
+                ("拾得者所属", item.finder_affiliation if item.choice_finder=="占有者拾得" else "第三者権利放棄"),
+                ("氏名等告知", item.thirdparty_name_note if item.choice_finder!="占有者拾得" else None),
+                ("物件分類（大）", item.item_class_L),
+                ("物件分類（中）", item.item_class_M),
+                ("物件分類（小）", item.item_class_S),
+                ("郵便番号", item.finder_post),
+                ("住所", item.finder_address),
+                ("連絡先1", item.finder_tel1),
+                ("連絡先2", item.finder_tel2),
+                ("貴重な物品に該当", item.item_value),
+                ("物品の特徴", item.item_feature),
+                ("色", item.item_color),
+                ("保管施設", item.item_storage),
+                ("保管場所", item.item_storage_place),
+                ("メーカー", item.item_maker),
+                ("消費期限", item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else ""),
+                ("数量", item.item_num),
+                ("単位", item.item_unit),
+                ("値段", item.item_plice),
+                ("金額", item.item_money),
+                ("備考", item.item_remarks),
+                ("届出済", item.item_situation)
+            ] %}
+            {% for label, value in details %}
+                {% if value %}
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <strong>{{ label }}:</strong> <span>{{ value | default('') }}</span>
+                    </div>
+                {% else %}
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <strong>{{ label }}:</strong> <span></span>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
-        <div class="col-3">連絡時間 <u>{{ item.card_item_hour }}</u></div>
-        <div class="col-3">連絡時間(分) <u>{{ item.card_item_minute }}</u></div>
+        {% if item.item_class_L=="証明書類・カード類" %}
+        <div class="row mb-5">
+            <div class="col-3">カード発行会社名<br> <u>{{ item.card_campany }}</u></div>
+            <div class="col-3">カード発行会社連絡先<br> <u>{{ item.card_tel }}</u></div>
+            <div class="col-3">カード名<br> <u>{{ item.card_name }}</u></div>
+            <div class="col-3">カード記載人名<br> <u>{{ item.card_person }}</u></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.card_item is not none else "" }}</u>
+            </div>
+            <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.card_return is not none else ""
+                    }}</u>
+            </div>
+            <div class="col-3">連絡時間 <u>{{ item.card_item_hour }}</u></div>
+            <div class="col-3">連絡時間(分) <u>{{ item.card_item_minute }}</u></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">連絡者 <u>{{ item.card_manager }}</u></div>
+        </div>
+        {% endif %}
     </div>
-    <div class="row mb-3">
-        <div class="col-3">連絡者 <u>{{ item.card_manager }}</u></div>
+    {% if bundleditem %}
+    <div class="block-card">
+        <h2>同梱物</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>管理番号</th>
+                    <th>拾得物分類</th>
+                    <th>特徴</th>
+                    <th>色</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in bundleditem %}
+                <tr>
+                    <td>
+                        {{ item.id }}
+                    </td>
+                    <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
+                    <td>{{ item.item_feature }}</td>
+                    <td>{{ item.item_color }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     {% endif %}
-    <h2>同梱物</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>管理番号</th>
-                <th>拾得物分類</th>
-                <th>特徴</th>
-                <th>色</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in bundleditem %}
-            <tr>
-                <td>
-                    {{ item.id }}
-                </td>
-                <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
-                <td>{{ item.item_feature }}</td>
-                <td>{{ item.item_color }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
     {% if denomination %}
-    <h2>金種</h2>
-    {% for denomination in denomination %}
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>一万円</th>
-                <th>五千円</th>
-                <th>二千円</th>
-                <th>千円</th>
-                <th>五百円</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ denomination.ten_thousand_yen }}</td>
-                <td>{{ denomination.five_thousand_yen }}</td>
-                <td>{{ denomination.two_thousand_yen }}</td>
-                <td>{{ denomination.one_thousand_yen }}</td>
-                <td>{{ denomination.five_hundred_yen }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>百円</th>
-                <th>五十円</th>
-                <th>十円</th>
-                <th>五円</th>
-                <th>一円</th>
-                <th>合計</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ denomination.one_hundred_yen }}</td>
-                <td>{{ denomination.fifty_yen }}</td>
-                <td>{{ denomination.ten_yen }}</td>
-                <td>{{ denomination.five_yen }}</td>
-                <td>{{ denomination.one_yen }}</td>
-                <td>{{ denomination.total_yen }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>記念硬貨名</th>
-                <th>金額</th>
-                <th>記念硬貨名</th>
-                <th>金額</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ denomination.commemorative_coin_1 }}</td>
-                <td>{{ denomination.commemorative_coin_1_value }}</td>
-                <td>{{ denomination.commemorative_coin_2 }}</td>
-                <td>{{ denomination.commemorative_coin_2_value }}</td>
-            </tr>
-        </tbody>
-    </table>
-    {% endfor %}
+    <div class="block-card">
+        <h2>金種</h2>
+        {% for denomination in denomination %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>一万円</th>
+                    <th>五千円</th>
+                    <th>二千円</th>
+                    <th>千円</th>
+                    <th>五百円</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ denomination.ten_thousand_yen }}</td>
+                    <td>{{ denomination.five_thousand_yen }}</td>
+                    <td>{{ denomination.two_thousand_yen }}</td>
+                    <td>{{ denomination.one_thousand_yen }}</td>
+                    <td>{{ denomination.five_hundred_yen }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>百円</th>
+                    <th>五十円</th>
+                    <th>十円</th>
+                    <th>五円</th>
+                    <th>一円</th>
+                    <th>合計</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ denomination.one_hundred_yen }}</td>
+                    <td>{{ denomination.fifty_yen }}</td>
+                    <td>{{ denomination.ten_yen }}</td>
+                    <td>{{ denomination.five_yen }}</td>
+                    <td>{{ denomination.one_yen }}</td>
+                    <td>{{ denomination.total_yen }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>記念硬貨名</th>
+                    <th>金額</th>
+                    <th>記念硬貨名</th>
+                    <th>金額</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% if denomination.commemorative_coin_1 %}
+                        <td>{{ denomination.commemorative_coin_1 }}</td>
+                        <td>{{ denomination.commemorative_coin_1_value }}</td>
+                        <td>{{ denomination.commemorative_coin_2 }}</td>
+                        <td>{{ denomination.commemorative_coin_2_value }}</td>
+                    {% endif %}
+                </tr>
+            </tbody>
+        </table>
+        {% endfor %}
+    </div>
     {% endif %}
 </div>
 <div class="text-center">

@@ -2,55 +2,60 @@
 {% block title %}編集対象選択{% endblock %}
 {% block content %}
 <h2>編集対象選択</h2>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>管理番号(詳細)</th>
-            <th>拾得物分類</th>
-            <th>特徴</th>
-            <th>色</th>
-            <th>状況</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                <a href="{{ url_for('items.edit', item_id=item.id) }}">{{ item.main_id }}</a>
-            </td>
-            <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
-            <td>{{ item.item_feature }}</td>
-            <td>{{ item.item_color }}</td>
-            <td>
-                {% if item.item_situation %}
-                届出済み
-                {% else %}
-                届け出不要
-                {% endif %}
-            </td>
-        </tr>
-    </tbody>
-</table>
-<h2>同梱物</h2>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>管理番号</th>
-            <th>拾得物分類</th>
-            <th>特徴</th>
-            <th>色</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in bundleditem %}
-        <tr>
-            <td>
-                <a href="{{ url_for('bundleditems.edit', item_id=item.id) }}">{{ item.id }}</a>
-            </td>
-            <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
-            <td>{{ item.item_feature }}</td>
-            <td>{{ item.item_color }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="block-card">
+    <h3>メイン拾得物</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>管理番号(詳細)</th>
+                <th>拾得物分類</th>
+                <th>特徴</th>
+                <th>色</th>
+                <th>状況</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="{{ url_for('items.edit', item_id=item.id) }}">{{ item.main_id }}</a>
+                </td>
+                <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
+                <td>{{ item.item_feature }}</td>
+                <td>{{ item.item_color }}</td>
+                <td>
+                    {% if item.item_situation %}
+                    届出済み
+                    {% else %}
+                    届け出不要
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="block-card">
+    <h3>同梱物</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>管理番号</th>
+                <th>拾得物分類</th>
+                <th>特徴</th>
+                <th>色</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bundleditem %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('bundleditems.edit', item_id=item.id) }}">{{ item.id }}</a>
+                </td>
+                <td>{{ item.item_class_L }} {{ item.item_class_M }} {{ item.item_class_S }}</td>
+                <td>{{ item.item_feature }}</td>
+                <td>{{ item.item_color }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
