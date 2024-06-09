@@ -65,23 +65,22 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{ lostitem.lost_person }}</td>
-                <td>{{ lostitem.lost_class }}</td>
-                <td>{{ lostitem.lost_affiliation }}</td>
-                <td>{{ lostitem.lost_tel1 }}</td>
-                <td>{{ lostitem.lost_tel2 }}</td>
-                <td>{{ lostitem.lost_post }}</td>
-                <td>{{ lostitem.lost_address }}</td>
+                <td>{{ lostitem.lost_person if lostitem.lost_person!="None" else ""}}</td>
+                <td>{{ lostitem.lost_class if lostitem.lost_class!="None" else "" }}</td>
+                <td>{{ lostitem.lost_affiliation if lostitem.lost_affilication else "" }}</td>
+                <td>{{ lostitem.lost_tel1 if lostitem.lost_tel1!="None" else "" }}</td>
+                <td>{{ lostitem.lost_tel2 if lostitem.lost_tel2!="None" else "" }}</td>
+                <td>{{ lostitem.lost_post if lostitem.lost_post!="None" else "" }}</td>
+                <td>{{ lostitem.lost_address if lostitem.lost_address!="None" else "" }}</td>
             </tr>
             <tr>
                 <td>{{ lostitem.note_date.strftime('%Y/%m/%d') if lostitem.note_date is not none else "" }}</td>
-                <td>{{ lostitem.note_process }}</td>
+                <td>{{ lostitem.note_process if lostitem.note_process!="None" else "" }}</td>
                 <td>{{ lostitem.note_manager }}</td>
                 <td>{{ lostitem.response_date.strftime('%Y/%m/%d') if lostitem.response_date is not none else "" }}</td>
                 <td>{{ lostitem.response_expect.strftime('%Y/%m/%d') if lostitem.response_expect is not none else "" }}</td>
-                <td>{{ lostitem.response_content }}</td>
-                <td>{{ lostitem.response_remarks }}
-                </td>
+                <td>{{ lostitem.response_content if lostitem.response_content!="None" else "" }}</td>
+                <td>{{ lostitem.response_remarks if lostitem.response_remarks!="None" else "" }}</td>
             </tr>
         </tbody>
     </table>

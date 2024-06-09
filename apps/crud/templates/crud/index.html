@@ -1,9 +1,8 @@
 {% extends "register/base.html" %}
 {% block title %}ユーザー一覧{% endblock %}
 {% block content %}
-
-<body>
-    <h2>ユーザー一覧</h2>
+<h2>ユーザー一覧</h2>
+<div class="block-card">
     <a href="{{ url_for('auth.signup') }}">ユーザー新規作成</a>
     <table class="table table-bordered table-striped">
         <tr>
@@ -19,5 +18,5 @@
         </tr>
         {% endfor %}
     </table>
-</body>
+</div>
 {% endblock %}

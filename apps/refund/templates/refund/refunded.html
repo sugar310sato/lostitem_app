@@ -5,96 +5,100 @@
 <form action="{{ url_for('refund.refunded') }}" , method="post">
     <!-- 検索フォーム -->
     {{ form.csrf_token }}
-    <div class="container mb-3">
+    <div class="block-card">
+        <div class="container mb-3">
+            <div class="row mb-3">
+                <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.police_date.label }} {{ form.police_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                    form.end_date(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.refunded_process.label }} {{ form.refunded_process(class="form-set") }}</div>
+                <div class="col-4">{{ form.refunded_bool.label }} {{ form.refunded_bool(class="form-set") }}</div>
+            </div>
+            <div class="text-center mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+                {{ form.submit2(class="btn btn-primary") }}
+            </div>
+            <div class="text-center mb-3">
+                {{ form.choice_refunded_process.label }} {{ form.choice_refunded_process(class="form-set") }}
+                {{ form.submit3(class="btn btn-primary") }}
+            </div>
+        </div>
+        <!-- 還付済物件処理フォーム -->
+        <hr>
+        <!-- 担当者チェックのフラッシュメッセージ -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <span style="color: red;">{{ message }}</span>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="row mb-3">
-            <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.police_date.label }} {{ form.police_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
-                form.end_date(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.refunded_process.label }} {{ form.refunded_process(class="form-set") }}</div>
-            <div class="col-4">{{ form.refunded_bool.label }} {{ form.refunded_bool(class="form-set") }}</div>
-        </div>
-        <div class="text-center mb-3">
-            {{ form.submit(class="btn btn-primary") }}
-            {{ form.submit2(class="btn btn-primary") }}
-        </div>
-        <div class="text-center mb-3">
-            {{ form.choice_refunded_process.label }} {{ form.choice_refunded_process(class="form-set") }}
-            {{ form.submit3(class="btn btn-primary") }}
+            <div class="col-4">{{ form.refunded_process_manager.label }} {{ form.refunded_process_manager(class="form-set")
+                }}</div>
+            <div class="col-4">{{ form.refunded_process_sub_manager.label }} {{
+                form.refunded_process_sub_manager(class="form-set") }}</div>
         </div>
     </div>
-    <!-- 還付済物件処理フォーム -->
-    <hr>
-    <!-- 担当者チェックのフラッシュメッセージ -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <span style="color: red;">{{ message }}</span>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <div class="row mb-3">
-        <div class="col-4">{{ form.refunded_process_manager.label }} {{ form.refunded_process_manager(class="form-set")
-            }}</div>
-        <div class="col-4">{{ form.refunded_process_sub_manager.label }} {{
-            form.refunded_process_sub_manager(class="form-set") }}</div>
-    </div>
-    <p>{{ pagination.info }}</p>
-    <p>
-        <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
-        <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
-    </p>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>選択</th>
-                <th>管理番号<br>受理番号</th>
-                <th>還付予定日</th>
-                <th>還付日</th>
-                <th>拾得日時</th>
-                <th>拾得物件名/特徴</th>
-                <th>金額</th>
-                <th>担当者</th>
-                <th>処理</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in search_results %}
-            <tr>
-                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
-                <td>
-                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
-                    <br>{{ item.receiptnumber }}
-                </td>
-                <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
-                <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
-                <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
-                    <br>{{ item.get_item_hour }}時{{ item.get_item_minute }}分
-                </td>
-                <td>{{ item.item_class_S }}
-                    <br>{{ item.item_feature }}
-                </td>
-                <td>{{ item.item_money }}</td>
-                <td>{{ item.refund_manager }}</td>
-                <td>
-                    <select name="item_select_{{ item.id }}">
-                        <option value=""></option>
-                        <option value="店長" {% if item.refunded_process=="店長" %}selected{% endif %}>店長</option>
-                        <option value="廃棄" {% if item.refunded_process=="廃棄" %}selected{% endif %}>廃棄</option>
-                        <option value="入金" {% if item.refunded_process=="入金" %}selected{% endif %}>入金</option>
-                        <option value="本部" {% if item.refunded_process=="本部" %}selected{% endif %}>本部</option>
-                        <option value="保留" {% if item.refunded_process=="保留" %}selected{% endif %}>保留</option>
-                        <option value="警処" {% if item.refunded_process=="警処" %}selected{% endif %}>警処</option>
-                    </select>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="container">
-        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    <div class="block-card">
+        <p>{{ pagination.info }}</p>
+        <p>
+            <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
+            <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
+        </p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>選択</th>
+                    <th>管理番号<br>受理番号</th>
+                    <th>還付予定日</th>
+                    <th>還付日</th>
+                    <th>拾得日時</th>
+                    <th>拾得物件名/特徴</th>
+                    <th>金額</th>
+                    <th>担当者</th>
+                    <th>処理</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in search_results %}
+                <tr>
+                    <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
+                    <td>
+                        <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
+                        <br>{{ item.receiptnumber }}
+                    </td>
+                    <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
+                    <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
+                    <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
+                        <br>{{ item.get_item_hour }}時{{ item.get_item_minute }}分
+                    </td>
+                    <td>{{ item.item_class_S }}
+                        <br>{{ item.item_feature }}
+                    </td>
+                    <td>{{ item.item_money }}</td>
+                    <td>{{ item.refund_manager }}</td>
+                    <td>
+                        <select name="item_select_{{ item.id }}">
+                            <option value=""></option>
+                            <option value="店長" {% if item.refunded_process=="店長" %}selected{% endif %}>店長</option>
+                            <option value="廃棄" {% if item.refunded_process=="廃棄" %}selected{% endif %}>廃棄</option>
+                            <option value="入金" {% if item.refunded_process=="入金" %}selected{% endif %}>入金</option>
+                            <option value="本部" {% if item.refunded_process=="本部" %}selected{% endif %}>本部</option>
+                            <option value="保留" {% if item.refunded_process=="保留" %}selected{% endif %}>保留</option>
+                            <option value="警処" {% if item.refunded_process=="警処" %}selected{% endif %}>警処</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="container">
+            <div style="margin-left: 45%;">{{ pagination.links }}</div>
+        </div>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/choice.js') }}"></script>

@@ -4,57 +4,61 @@
 <h2>警察届出対象一覧</h2>
 <form action="{{ url_for('police.item') }}" , method="post">
     {{ form.csrf_token }}
-    <div class="container mb-3">
-        <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
-                form.end_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_finder.label }} {{ form.item_finder(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.item_police.label }} {{ form.item_police(class="form-set") }}</div>
-            <div class="col-4">{{ form.item_return.label }} {{ form.item_return(class="form-set") }}</div>
-        </div>
-        <div class="text-center">
-            {{ form.submit(class="btn btn-primary") }}
-            {{ form.submit_output(class="btn btn-primary") }}
+    <div class="block-card">
+        <div class="container mb-3">
+            <div class="row mb-3">
+                <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                    form.end_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_finder.label }} {{ form.item_finder(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.item_police.label }} {{ form.item_police(class="form-set") }}</div>
+                <div class="col-4">{{ form.item_return.label }} {{ form.item_return(class="form-set") }}</div>
+            </div>
+            <div class="text-center">
+                {{ form.submit(class="btn btn-primary") }}
+                {{ form.submit_output(class="btn btn-primary") }}
+            </div>
         </div>
     </div>
-    <p>{{ pagination.info }}</p>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>管理番号(詳細)</th>
-                <th>拾得日時</th>
-                <th>拾得場所</th>
-                <th>拾得物名/特徴</th>
-                <th>色</th>
-                <th>保管施設/場所</th>
-                <th>状況</th>
-                <th>選択</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in all_lostitem %}
-            <tr>
-                <td>
-                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
-                </td>
-                <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour
-                    }}{{
-                    item.get_item_minute }}</td>
-                <td>{{ item.find_area }}</td>
-                <td>{{ item.item_feature }}</td>
-                <td>{{ item.item_color }}</td>
-                <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
-                <td>{{ item.item_situation }}</td>
-                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="container">
-        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    <div class="block-card">
+        <p>{{ pagination.info }}</p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>管理番号(詳細)</th>
+                    <th>拾得日時</th>
+                    <th>拾得場所</th>
+                    <th>拾得物名/特徴</th>
+                    <th>色</th>
+                    <th>保管施設/場所</th>
+                    <th>状況</th>
+                    <th>選択</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in all_lostitem %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
+                    </td>
+                    <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }} {{ item.get_item_hour
+                        }}{{
+                        item.get_item_minute }}</td>
+                    <td>{{ item.find_area }}</td>
+                    <td>{{ item.item_feature }}</td>
+                    <td>{{ item.item_color }}</td>
+                    <td>{{ item.item_storage }}/{{ item.item_storage_place }}</td>
+                    <td>{{ item.item_situation }}</td>
+                    <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="container">
+            <div style="margin-left: 45%;">{{ pagination.links }}</div>
+        </div>
     </div>
 </form>
 {% endblock %}

@@ -4,77 +4,81 @@
 <h2>還付</h2>
 <form action="{{ url_for('refund.refund_item') }}" , method="post">
     {{ form.csrf_token }}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-4">{{ form.receiptnumber.label }} {{ form.receiptnumber(class="form-set") }}</div>
-            <div class="col-3">{{ form.refund_expect.label }} {{ form.refund_expect(class="form-set") }}</div>
-            <div class="col-5">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
-                form.end_date(class="form-set") }}</div>
+    <div class="block-card">
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-4">{{ form.receiptnumber.label }} {{ form.receiptnumber(class="form-set") }}</div>
+                <div class="col-3">{{ form.refund_expect.label }} {{ form.refund_expect(class="form-set") }}</div>
+                <div class="col-5">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                    form.end_date(class="form-set") }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.returned.label }} {{ form.returned(class="form-set") }}</div>
+                <div class="col-3">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
+                <div class="col-5">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
+            </div>
+            <div class="text-center mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.returned.label }} {{ form.returned(class="form-set") }}</div>
-            <div class="col-3">{{ form.item_plice.label }} {{ form.item_plice(class="form-set") }}</div>
-            <div class="col-5">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
-        </div>
-        <div class="text-center mb-3">
-            {{ form.submit(class="btn btn-primary") }}
+        <hr>
+        <div class="containrt mb-3">
+            {% if errors %}
+            <span style="color: red;">{{ errors }}</span>
+            {% endif %}
+            <div class="row mb-3">
+                <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.refund_manager.label }} {{ form.refund_manager(class="form-set") }}</div>
+                <div class="col-4">{{ form.submit_register(class="btn btn-primary", value="登録") }}</div>
+            </div>
         </div>
     </div>
-    <hr>
-    <div class="containrt mb-3">
-        {% if errors %}
-        <span style="color: red;">{{ errors }}</span>
-        {% endif %}
-        <div class="row mb-3">
-            <div class="col-4">{{ form.refund_date.label }} {{ form.refund_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.refund_manager.label }} {{ form.refund_manager(class="form-set") }}</div>
-            <div class="col-4">{{ form.submit_register(class="btn btn-primary", value="登録") }}</div>
+    <div class="block-card">
+        <p>{{ pagination.info }}</p>
+        <p>
+            <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
+            <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
+        </p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>選択</th>
+                    <th>管理番号<br>受理番号</th>
+                    <th>還付予定日</th>
+                    <th>還付日</th>
+                    <th>警察<br>返還</th>
+                    <th>拾得日時</th>
+                    <th>拾得物件名/特徴</th>
+                    <th>金額</th>
+                    <th>担当者</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in search_results %}
+                <tr>
+                    <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
+                    <td>
+                        <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
+                        <br>{{ item.receiptnumber }}
+                    </td>
+                    <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
+                    <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
+                    <td><input type="checkbox" name="police_item_ids" value="{{ item.id }}"></td>
+                    <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
+                        <br>{{ item.get_item_hour }}時{{ item.get_item_minute }}分
+                    </td>
+                    <td>{{ item.item_class_S }}
+                        <br>{{ item.item_feature }}
+                    </td>
+                    <td>{{ item.item_money }}</td>
+                    <td>{{ item.refund_manager }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="container">
+            <div style="margin-left: 45%;">{{ pagination.links }}</div>
         </div>
-    </div>
-    <p>{{ pagination.info }}</p>
-    <p>
-        <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
-        <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
-    </p>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>選択</th>
-                <th>管理番号<br>受理番号</th>
-                <th>還付予定日</th>
-                <th>還付日</th>
-                <th>警察<br>返還</th>
-                <th>拾得日時</th>
-                <th>拾得物件名/特徴</th>
-                <th>金額</th>
-                <th>担当者</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in search_results %}
-            <tr>
-                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
-                <td>
-                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
-                    <br>{{ item.receiptnumber }}
-                </td>
-                <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
-                <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
-                <td><input type="checkbox" name="police_item_ids" value="{{ item.id }}"></td>
-                <td>{{ item.get_item.strftime('%Y/%m/%d') if item.get_item is not none else "" }}
-                    <br>{{ item.get_item_hour }}時{{ item.get_item_minute }}分
-                </td>
-                <td>{{ item.item_class_S }}
-                    <br>{{ item.item_feature }}
-                </td>
-                <td>{{ item.item_money }}</td>
-                <td>{{ item.refund_manager }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="container">
-        <div style="margin-left: 45%;">{{ pagination.links }}</div>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/choice.js') }}"></script>

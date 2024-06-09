@@ -4,88 +4,92 @@
 <form action="{{ url_for('notfound.notfound_search') }}" , method="post">
     <!-- 検索フォーム -->
     {{ form.csrf_token }}
-    <div class="container mb-3">
-        <div class="row mb-3">
-            <div class="col-4">
-                物件分類（大）
-                <select name="item_class_L" id="item_class_L" class="form-set">
-                    <option value="選択してください">選択してください</option>
-                    {% for option in ITEM_CLASS_L %}
-                    <option value="{{ option }}">{{ option }}</option>
-                    {% endfor %}
-                </select>
+    <div class="block-card">
+        <div class="container mb-3">
+            <div class="row mb-3">
+                <div class="col-4">
+                    物件分類（大）
+                    <select name="item_class_L" id="item_class_L" class="form-set">
+                        <option value="選択してください">選択してください</option>
+                        {% for option in ITEM_CLASS_L %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    （中）
+                    <select name="item_class_M" id="item_class_M" class="form-set">
+                        <option value="選択してください">選択してください</option>
+                        {% for option in ITEM_CLASS_M %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    （小）
+                    <select name="item_class_S" id="item_class_S" class="form-set">
+                        <option value="選択してください">選択してください</option>
+                        {% for option in ITEM_CLASS_S %}
+                        <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-            <div class="col-4">
-                （中）
-                <select name="item_class_M" id="item_class_M" class="form-set">
-                    <option value="選択してください">選択してください</option>
-                    {% for option in ITEM_CLASS_M %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
+                    form.end_date(class="form-set") }}</div>
+                <div class="col-4">{{ form.taiou_bool.label }} {{ form.taiou_bool(class="form-set") }}</div>
             </div>
-            <div class="col-4">
-                （小）
-                <select name="item_class_S" id="item_class_S" class="form-set">
-                    <option value="選択してください">選択してください</option>
-                    {% for option in ITEM_CLASS_S %}
-                    <option value="{{ option['value'] }}" data-val="{{ option['data-val'] }}">{{ option['value'] }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date(class="form-set")
+                    }}-{{
+                    form.end_expiration_date(class="form-set") }}</div>
+                <div class="col-7">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4">{{ form.start_date.label }} {{ form.start_date(class="form-set") }}-{{
-                form.end_date(class="form-set") }}</div>
-            <div class="col-4">{{ form.taiou_bool.label }} {{ form.taiou_bool(class="form-set") }}</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-5">{{ form.start_expiration_date.label }} {{ form.start_expiration_date(class="form-set")
-                }}-{{
-                form.end_expiration_date(class="form-set") }}</div>
-            <div class="col-7">{{ form.item_feature.label }} {{ form.item_feature(class="form-set") }}</div>
-        </div>
-        <div class="text-center mb-3">
-            {{ form.submit(class="btn btn-primary") }}
-            <hr>
-            {{ form.submit_taiou(class="btn btn-primary") }}
+            <div class="text-center mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+                <hr>
+                {{ form.submit_taiou(class="btn btn-primary") }}
+            </div>
         </div>
     </div>
-    <!-- 還付済物件処理フォーム -->
-    <hr>
-    <p>{{ pagination.info }}</p>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>選択</th>
-                <th>管理番号</th>
-                <th>遺失日時</th>
-                <th>消費期限</th>
-                <th>拾得物件名/特徴</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in search_results %}
-            <tr>
-                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
-                <td>
-                    <a href="{{ url_for('notfound.detail', item_id=item.id) }}">{{ item.id }}</a>
-                </td>
-                <td>{{ item.lost_item.strftime('%Y/%m/%d') if item.lost_item is not none else "" }}
-                    <br>{{ item.lost_item_hour }}時{{ item.lost_item_minute }}分
-                </td>
-                <td>{{ item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else "" }}</td>
-                <td>{{ item.item_class_S }}
-                    <br>{{ item.item_feature }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="container">
-        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    <div class="block-card">
+        <!-- 還付済物件処理フォーム -->
+        <hr>
+        <p>{{ pagination.info }}</p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>選択</th>
+                    <th>管理番号</th>
+                    <th>遺失日時</th>
+                    <th>消費期限</th>
+                    <th>拾得物件名/特徴</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in search_results %}
+                <tr>
+                    <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
+                    <td>
+                        <a href="{{ url_for('notfound.detail', item_id=item.id) }}">{{ item.id }}</a>
+                    </td>
+                    <td>{{ item.lost_item.strftime('%Y/%m/%d') if item.lost_item is not none else "" }}
+                        <br>{{ item.lost_item_hour }}時{{ item.lost_item_minute }}分
+                    </td>
+                    <td>{{ item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else "" }}</td>
+                    <td>{{ item.item_class_S }}
+                        <br>{{ item.item_feature }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="container">
+            <div style="margin-left: 45%;">{{ pagination.links }}</div>
+        </div>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

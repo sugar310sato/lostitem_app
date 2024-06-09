@@ -4,54 +4,58 @@
 <h2>還付請求一覧印刷</h2>
 <form action="{{ url_for('refund.refund_list') }}" , method="post">
     {{ form.csrf_token }}
-    <div class="containrt mb-3">
-        <div class="row">
-            <div class="col-4">{{ form.refund_expect_year.label }} {{ form.refund_expect_year(class="form-set") }}年
+    <div class="block-card">
+        <div class="containrt mb-3">
+            <div class="row">
+                <div class="col-4">{{ form.refund_expect_year.label }} {{ form.refund_expect_year(class="form-set") }}年
+                </div>
+                <div class="col-4">{{ form.refund_situation.label }} {{ form.refund_situation(class="form-set") }}</div>
             </div>
-            <div class="col-4">{{ form.refund_situation.label }} {{ form.refund_situation(class="form-set") }}</div>
-        </div>
-        <div class="text-center">
-            {{ form.submit(class="btn btn-primary") }}
-            {{ form.submit_list(class="btn btn-primary") }}
+            <div class="text-center">
+                {{ form.submit(class="btn btn-primary") }}
+                {{ form.submit_list(class="btn btn-primary") }}
+            </div>
         </div>
     </div>
-    <p>{{ pagination.info }}</p>
-    <p>
-        <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
-        <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
-    </p>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>管理番号</th>
-                <th>警察届出日</th>
-                <th>受理番号</th>
-                <th>拾得物件名/特徴</th>
-                <th>還付予定日</th>
-                <th>還付日</th>
-                <th>選択</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in search_results %}
-            <tr>
-                <td>
-                    <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
-                </td>
-                <td>{{ item.police_date.strftime('%Y/%m/%d') if item.police_date is not none else "" }}</td>
-                <td>{{ item.receiptnumber }}</td>
-                <td>{{ item.item_class_S }}
-                    <br>{{ item.item_feature }}
-                </td>
-                <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
-                <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
-                <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="container">
-        <div style="margin-left: 45%;">{{ pagination.links }}</div>
+    <div class="block-card">
+        <p>{{ pagination.info }}</p>
+        <p>
+            <button id="selectAll" type="button" class="btn btn-secondary">全て選択</button>
+            <button id="deselectAll" type="button" class="btn btn-secondary">選択解除</button>
+        </p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>管理番号</th>
+                    <th>警察届出日</th>
+                    <th>受理番号</th>
+                    <th>拾得物件名/特徴</th>
+                    <th>還付予定日</th>
+                    <th>還付日</th>
+                    <th>選択</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in search_results %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.main_id }}</a>
+                    </td>
+                    <td>{{ item.police_date.strftime('%Y/%m/%d') if item.police_date is not none else "" }}</td>
+                    <td>{{ item.receiptnumber }}</td>
+                    <td>{{ item.item_class_S }}
+                        <br>{{ item.item_feature }}
+                    </td>
+                    <td>{{ item.refund_expect.strftime('%Y/%m/%d') if item.refund_expect is not none else "" }}</td>
+                    <td>{{ item.refund_date.strftime('%Y/%m/%d') if item.refund_date is not none else "" }}</td>
+                    <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="container">
+            <div style="margin-left: 45%;">{{ pagination.links }}</div>
+        </div>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/choice.js') }}"></script>
