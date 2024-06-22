@@ -270,3 +270,4 @@ config.py
 *pdf
 model.pth
 test.py
+migrations
