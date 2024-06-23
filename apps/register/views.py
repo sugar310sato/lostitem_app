@@ -177,14 +177,15 @@ def register_item(choice_finder, use_AI):
         result = "現金"
     else:
         root_path = Path(current_app.root_path, "images/captured_image.jpg")
-        model_path = Path(
-            current_app.root_path, "register", "model_folder", "model.pth"
-        )
-        if model_path.exists():
-            # img2text関数を実行してテキストを取得
-            text = img2text(model_path, root_path)
-        else:
-            text = ""
+        # model_path = Path(
+        #     current_app.root_path, "register", "model_folder", "model.pth"
+        # )
+        # if model_path.exists():
+        #     # img2text関数を実行してテキストを取得
+        #     text = img2text(model_path, root_path)
+        # else:
+        #     text = ""
+        text = ""
         # AWSでの推論
         result = send_image_AWS(root_path)
         if result != "Error":
