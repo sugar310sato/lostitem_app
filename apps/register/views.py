@@ -6,6 +6,10 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
+import torch
+import torch.nn as nn
+import torchvision.models as models
+import torchvision.transforms as transforms
 from flask import (
     Blueprint,
     current_app,
@@ -16,6 +20,7 @@ from flask import (
     session,
     url_for,
 )
+from PIL import Image
 from sqlalchemy import func
 
 from apps.app import db
@@ -192,6 +197,65 @@ def register_item(choice_finder, use_AI):
         result = send_image_AWS(root_path)
         if result != "Error":
             print(result)
+        # ラズパイでの推論
+        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # vgg_model_path = Path(
+        #     current_app.root_path, "register", "model_folder", "vgg_model.pth"
+        # )
+        # model = models.vgg16(weights=False)
+        # model.classifier[6] = nn.Linear(in_features=4096, out_features=26)
+        # model.load_state_dict(torch.load(vgg_model_path))
+        # model.to(device).eval()
+        # idx_to_class = {
+        #     0: "かばん類",
+        #     1: "袋・封筒類",
+        #     2: "カメラ類",
+        #     3: "証明書類・カード類",
+        #     4: "衣類・履物類",
+        #     5: "生活用品類",
+        #     6: "書類・紙類",
+        #     7: "電気製品類",
+        #     8: "食料品類",
+        #     9: "めがね類",
+        #     10: "趣味娯楽用品類",
+        #     11: "医療・化粧品類",
+        #     12: "携帯電話類",
+        #     13: "手帳文具類",
+        #     14: "小包・箱類",
+        #     15: "有価証券類",
+        #     16: "かさ類",
+        #     17: "財布類",
+        #     18: "著作品類",
+        #     19: "カードケース類",
+        #     20: "現金",
+        #     21: "動植物類",
+        #     22: "鍵類",
+        #     23: "その他",
+        #     24: "貴金属類",
+        #     25: "時計類",
+        # }
+        # input_data = Image.open(root_path)
+        # resize = 224
+        # mean = (0.485, 0.456, 0.406)
+        # std = (0.229, 0.224, 0.225)
+
+        # transform = transforms.Compose(
+        #     [
+        #         transforms.Resize(resize),
+        #         transforms.CenterCrop(resize),
+        #         transforms.ToTensor(),
+        #         transforms.Normalize(mean, std),
+        #     ]
+        # )
+
+        # # 画像に変換と前処理を適用
+        # input_data = transform(input_data).unsqueeze(0)
+        # input_data = input_data.to(device)
+        # with torch.no_grad():
+        #     output = model(input_data)
+        #     _, preds = torch.max(output, 1)
+        # pred_class_name = idx_to_class[preds.item()]
+        # result = pred_class_name
 
     if choice_finder == "占有者拾得":
         form = OwnerLostItemForm()
