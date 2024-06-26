@@ -29,6 +29,8 @@ from apps.register.forms import (
 from apps.register.model_folder.predict import img2text
 from apps.register.models import LostItem
 
+from . import send_s3
+
 basedir = Path(__file__).parent.parent
 UPLOAD_FOLDER = str(Path(basedir, "images"))
 
@@ -198,6 +200,8 @@ def register_item(choice_finder, use_AI):
             form.item_feature.data = text
         if form.submit.data:
             moved_path = save_image()
+            s3_image_path = os.path.join(basedir, "renamed_images", moved_path)
+            send_s3.send_image_S3(s3_image_path, request.form.get("item_class_L"))
             ownerlostitem = LostItem(
                 main_id=main_id,
                 current_year=current_year,
@@ -259,6 +263,8 @@ def register_item(choice_finder, use_AI):
             form.item_feature.data = text
         if form.submit.data:
             moved_path = save_image()
+            s3_image_path = os.path.join(basedir, "renamed_images", moved_path)
+            send_s3.send_image_S3(s3_image_path, request.form.get("item_class_L"))
             thirdpartylostitem = LostItem(
                 main_id=main_id,
                 current_year=current_year,
