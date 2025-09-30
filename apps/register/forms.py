@@ -10,6 +10,8 @@ from wtforms.fields import (
     StringField,
     SubmitField,
     TextAreaField,
+    FieldList,
+    FormField,
 )
 from wtforms.validators import DataRequired
 
@@ -33,6 +35,75 @@ class ChoicesFinderForm(FlaskForm):
     )
     use_AI = BooleanField(label="AIの使用をスキップする")
     submit = SubmitField("選択")
+
+
+# フリーフロー用の動的フィールドクラス
+class DynamicFieldForm(FlaskForm):
+    field_name = StringField("項目名", validators=[DataRequired(message="項目名は必須です")])
+    field_type = SelectField(
+        "フィールドタイプ",
+        choices=[
+            ("text", "テキスト"),
+            ("textarea", "テキストエリア"),
+            ("number", "数値"),
+            ("date", "日付"),
+            ("select", "選択肢"),
+            ("radio", "ラジオボタン"),
+            ("checkbox", "チェックボックス"),
+        ],
+        validators=[DataRequired(message="フィールドタイプは必須です")]
+    )
+    field_value = TextAreaField("値/選択肢（改行区切り）")
+    required = BooleanField("必須項目")
+
+
+# フリーフロー拾得物登録クラス
+class FreeFlowLostItemForm(FlaskForm):
+    # 基本情報（固定）
+    track_num = IntegerField(label="問い合わせ番号")
+    notify = BooleanField(label="届出要否")
+    get_item = DateField("拾得日", default=datetime.today)
+    get_item_hour = SelectField(
+        label="拾得時間",
+        choices=TIMES,
+    )
+    get_item_minute = SelectField(
+        label="拾得時間(分)",
+        choices=MINUTE,
+    )
+    recep_item = DateField("受付日", default=datetime.now)
+    recep_item_hour = SelectField(
+        label="受付時間",
+        choices=TIMES,
+    )
+    recep_item_minute = SelectField(
+        label="受付時間(分)",
+        choices=MINUTE,
+    )
+    recep_manager = SelectField("受付担当者", choices=[])
+    
+    # 拾得物情報
+    item_feature = TextAreaField("物品の特徴", validators=[DataRequired(message="必須項目です")])
+    item_remarks = TextAreaField("備考")
+    item_value = BooleanField(label="貴重な物品に該当")
+    
+    # 拾得場所・拾得者情報
+    find_area = StringField("拾得場所", validators=[DataRequired(message="必須項目です")])
+    finder_name = StringField("拾得者氏名", validators=[DataRequired(message="必須項目です")])
+    finder_post = IntegerField("郵便番号")
+    finder_address = StringField("住所")
+    finder_tel1 = StringField("連絡先1")
+    finder_tel2 = StringField("連絡先2")
+    
+    # 動的フィールド
+    dynamic_fields = FieldList(FormField(DynamicFieldForm), min_entries=1)
+    
+    # アクションボタン
+    add_field = SubmitField("項目を追加")
+    remove_field = SubmitField("項目を削除")
+    save_template = SubmitField("テンプレートを保存")
+    load_template = SubmitField("テンプレートを読み込み")
+    submit = SubmitField("登録")
 
 
 # 拾得物基本クラス

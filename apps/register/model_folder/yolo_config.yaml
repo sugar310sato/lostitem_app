@@ -1,0 +1,57 @@
+# YOLO設定ファイル
+# 拾得物分類用のカスタム設定
+
+# モデル設定
+model:
+  type: "yolov8n"  # YOLO v8 nano
+  pretrained: true
+  custom_weights: false  # カスタム重みを使用する場合はtrue
+
+# 推論設定
+inference:
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  max_detections: 100
+
+# カテゴリマッピング
+categories:
+  # 拾得物カテゴリ
+  item_categories:
+    0: "かばん類"
+    1: "袋・封筒類"
+    2: "カメラ類"
+    3: "証明書類・カード類"
+    4: "衣類・履物類"
+    5: "生活用品類"
+    6: "書類・紙類"
+    7: "電気製品類"
+    8: "食料品類"
+    9: "めがね類"
+    10: "趣味娯楽用品類"
+    11: "医療・化粧品類"
+    12: "携帯電話類"
+    13: "手帳文具類"
+    14: "小包・箱類"
+    15: "有価証券類"
+    16: "かさ類"
+    17: "財布類"
+    18: "著作品類"
+    19: "カードケース類"
+    20: "現金"
+    21: "動植物類"
+    22: "鍵類"
+    23: "その他"
+    24: "貴金属類"
+    25: "時計類"
+
+# デバイス設定
+device:
+  auto_detect: true
+  force_cpu: false
+  force_cuda: false
+
+# ログ設定
+logging:
+  verbose: true
+  save_results: false
+  output_dir: "results" 

@@ -8,12 +8,24 @@
     <form action="{{ url_for('register.choices_finder') }}" method="post">
         {{ form.csrf_token }}
         <div class="row">
-            <div class="col-4">{{ form.use_AI.label }}  {{ form.use_AI }}</div>
+            <div class="col-4">{{ form.use_AI.label }} {{ form.use_AI }}</div>
         </div>
         <div class="row">
             {% for subfield in form.choice_finder %}
             <div class="col-3">{{ subfield }} {{ subfield.label }}</div>
             {% endfor %}
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <strong>フリーフロー形式での登録</strong><br>
+                    カスタム項目を自由に追加・編集できるフリーフロー形式での登録も可能です。
+                    <a href="{{ url_for('register.freeflow_register_item', choice_finder='フリーフロー', use_AI='usenoAI') }}"
+                        class="btn btn-outline-primary btn-sm ml-2">
+                        フリーフロー形式で登録
+                    </a>
+                </div>
+            </div>
         </div>
         <p>
             {{ form.submit(id="submit_button", class="btn btn-primary", style="margin-left: 15%;") }}
@@ -22,7 +34,7 @@
     <div id="loadingMessage" style="display: none;">AIが解析中です。しばらくお待ちください...</div>
 </section>
 <script>
-    document.getElementById('submit_button').addEventListener('click', function() {
+    document.getElementById('submit_button').addEventListener('click', function () {
         // ローディングメッセージを表示
         document.getElementById('loadingMessage').style.display = 'block';
     });

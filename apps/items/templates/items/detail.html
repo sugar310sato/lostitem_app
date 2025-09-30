@@ -8,53 +8,85 @@
             <img src="{{ url_for('items.image_file', item_id=item.id) }}" alt="拾得物の画像" width="25%" height="auto"
                 class="photo mb-3">
         </div>
+
+        <!-- フリーフロー形式のデータ表示 -->
+        {% if item.choice_finder == "フリーフロー" and item.item_remarks %}
+        <div class="alert alert-info">
+            <h4>フリーフロー形式で登録されたデータ</h4>
+            {% try %}
+            {% set dynamic_data = item.item_remarks | from_json %}
+            {% if dynamic_data %}
+            <div class="row">
+                {% for field_name, field_data in dynamic_data.items() %}
+                <div class="col-md-6 mb-2">
+                    <strong>{{ field_name }}:</strong>
+                    {% if field_data.type == "textarea" %}
+                    <div class="border rounded p-2 bg-light">{{ field_data.value | nl2br }}</div>
+                    {% else %}
+                    <span>{{ field_data.value }}</span>
+                    {% endif %}
+                    {% if field_data.required %}
+                    <span class="badge badge-danger">必須</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% except %}
+            <p>データの解析に失敗しました。</p>
+            {% endtry %}
+        </div>
+        {% endif %}
+
         <div class="row mt-3">
             {% set details = [
-                ("管理番号", item.main_id),
-                ("通知", item.notify),
-                ("拾得日時", item.get_item.strftime('%Y/%m/%d') ~ " " ~ item.get_item_hour ~ "時" ~ item.get_item_minute ~ "分" if item.get_item is not none else ""),
-                ("受付日時", item.recep_item.strftime('%Y/%m/%d') ~ " " ~ item.recep_item_hour ~ "時" ~ item.recep_item_minute ~ "分" if item.recep_item is not none else ""),
-                ("受付者", item.recep_manager),
-                ("拾得場所", item.find_area),
-                ("警察届出用拾得場所", item.find_area_police),
-                ("占有者権利放棄", item.own_waiver),
-                ("拾得者氏名", item.finder_name),
-                ("占有者氏名等告知", item.own_name_note),
-                ("年齢", item.finder_age),
-                ("性別", item.finder_sex),
-                ("拾得者所属", item.finder_affiliation if item.choice_finder=="占有者拾得" else "第三者権利放棄"),
-                ("氏名等告知", item.thirdparty_name_note if item.choice_finder!="占有者拾得" else None),
-                ("物件分類（大）", item.item_class_L),
-                ("物件分類（中）", item.item_class_M),
-                ("物件分類（小）", item.item_class_S),
-                ("郵便番号", item.finder_post),
-                ("住所", item.finder_address),
-                ("連絡先1", item.finder_tel1),
-                ("連絡先2", item.finder_tel2),
-                ("貴重な物品に該当", item.item_value),
-                ("物品の特徴", item.item_feature),
-                ("色", item.item_color),
-                ("保管施設", item.item_storage),
-                ("保管場所", item.item_storage_place),
-                ("メーカー", item.item_maker),
-                ("消費期限", item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else ""),
-                ("数量", item.item_num),
-                ("単位", item.item_unit),
-                ("値段", item.item_plice),
-                ("金額", item.item_money),
-                ("備考", item.item_remarks),
-                ("届出済", item.item_situation)
+            ("管理番号", item.main_id),
+            ("通知", item.notify),
+            ("拾得日時", item.get_item.strftime('%Y/%m/%d') ~ " " ~ item.get_item_hour ~ "時" ~ item.get_item_minute ~ "分" if
+            item.get_item is not none else ""),
+            ("受付日時", item.recep_item.strftime('%Y/%m/%d') ~ " " ~ item.recep_item_hour ~ "時" ~ item.recep_item_minute ~
+            "分" if item.recep_item is not none else ""),
+            ("受付者", item.recep_manager),
+            ("拾得場所", item.find_area),
+            ("警察届出用拾得場所", item.find_area_police),
+            ("占有者権利放棄", item.own_waiver),
+            ("拾得者氏名", item.finder_name),
+            ("占有者氏名等告知", item.own_name_note),
+            ("年齢", item.finder_age),
+            ("性別", item.finder_sex),
+            ("拾得者所属", item.finder_affiliation if item.choice_finder=="占有者拾得" else "第三者権利放棄"),
+            ("氏名等告知", item.thirdparty_name_note if item.choice_finder!="占有者拾得" else None),
+            ("物件分類（大）", item.item_class_L),
+            ("物件分類（中）", item.item_class_M),
+            ("物件分類（小）", item.item_class_S),
+            ("郵便番号", item.finder_post),
+            ("住所", item.finder_address),
+            ("連絡先1", item.finder_tel1),
+            ("連絡先2", item.finder_tel2),
+            ("貴重な物品に該当", item.item_value),
+            ("物品の特徴", item.item_feature),
+            ("色", item.item_color),
+            ("保管施設", item.item_storage),
+            ("保管場所", item.item_storage_place),
+            ("メーカー", item.item_maker),
+            ("消費期限", item.item_expiration.strftime('%Y/%m/%d') if item.item_expiration is not none else ""),
+            ("数量", item.item_num),
+            ("単位", item.item_unit),
+            ("値段", item.item_plice),
+            ("金額", item.item_money),
+            ("備考", item.item_remarks if item.choice_finder != "フリーフロー" else ""),
+            ("届出済", item.item_situation)
             ] %}
             {% for label, value in details %}
-                {% if value %}
-                    <div class="col-md-3 col-sm-6 mb-2">
-                        <strong>{{ label }}:</strong> <span>{{ value | default('') }}</span>
-                    </div>
-                {% else %}
-                    <div class="col-md-3 col-sm-6 mb-2">
-                        <strong>{{ label }}:</strong> <span></span>
-                    </div>
-                {% endif %}
+            {% if value %}
+            <div class="col-md-3 col-sm-6 mb-2">
+                <strong>{{ label }}:</strong> <span>{{ value | default('') }}</span>
+            </div>
+            {% else %}
+            <div class="col-md-3 col-sm-6 mb-2">
+                <strong>{{ label }}:</strong> <span></span>
+            </div>
+            {% endif %}
             {% endfor %}
         </div>
         {% if item.item_class_L=="証明書類・カード類" %}
@@ -65,7 +97,8 @@
             <div class="col-3">カード記載人名<br> <u>{{ item.card_person }}</u></div>
         </div>
         <div class="row mb-3">
-            <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.card_item is not none else "" }}</u>
+            <div class="col-3">連絡日 <u>{{ item.card_item.strftime('%Y/%m/%d') if item.card_item is not none else ""
+                    }}</u>
             </div>
             <div class="col-3">返還日 <u>{{ item.card_return.strftime('%Y/%m/%d') if item.card_return is not none else ""
                     }}</u>
@@ -163,10 +196,10 @@
             <tbody>
                 <tr>
                     {% if denomination.commemorative_coin_1 %}
-                        <td>{{ denomination.commemorative_coin_1 }}</td>
-                        <td>{{ denomination.commemorative_coin_1_value }}</td>
-                        <td>{{ denomination.commemorative_coin_2 }}</td>
-                        <td>{{ denomination.commemorative_coin_2_value }}</td>
+                    <td>{{ denomination.commemorative_coin_1 }}</td>
+                    <td>{{ denomination.commemorative_coin_1_value }}</td>
+                    <td>{{ denomination.commemorative_coin_2 }}</td>
+                    <td>{{ denomination.commemorative_coin_2_value }}</td>
                     {% endif %}
                 </tr>
             </tbody>

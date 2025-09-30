@@ -1,5 +1,5 @@
 body {
-    background-color: #f5f5f5;
+    background-color: #fff;
 }
 
 h4 {
@@ -7,7 +7,7 @@ h4 {
 }
 
 input[type="search"] {
-    background-color: #f5f5f5;
+    background-color: #fff;
 }
 
 .lostitem-app-main {
@@ -19,7 +19,8 @@ input[type="search"] {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 16px;
-    background-color: rgb(255, 241, 222);
+    border: 1px solid #dee2e6;
+    background-color: #fff;
 }
 
 .lostitem-app-main .lostitem-app-login {
@@ -95,7 +96,8 @@ input[type="search"] {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 16px;
-    background-color: rgb(234, 227, 236);
+    border: 1px solid #dee2e6;
+    background-color: #fff;
 }
 
 /* 全体的に使用するカード */
@@ -107,7 +109,8 @@ input[type="search"] {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 16px;
-    background-color: rgb(255, 241, 222);
+    border: 1px solid #dee2e6;
+    background-color: #fff;
 }
 
 
@@ -135,12 +138,16 @@ u {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 16px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
 }
 
 .photo {
     box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px rgba(7, 48, 114, 0.12),
         0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
     border-radius: 4px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
 }
 
 .lostitem-main .lostitem-login {
@@ -176,7 +183,7 @@ u {
 
 /* 必須項目の文字の色 */
 .color-text {
-    color: red;
+    color: #495057;
 }
 
 /* ナビゲーションバーや背景色の変更 */
@@ -184,11 +191,23 @@ u {
     /* 緑 */
     /* background-color: #6fd186; */
     /* 青 */
-    background-color: #eca85a;
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
 }
+
+.nav-color .navbar-brand,
+.nav-color .nav-link {
+    color: #495057 !important;
+}
+
+.nav-color .navbar-brand:hover,
+.nav-color .nav-link:hover {
+    color: #007bff !important;
+}
+
 .back-color {
     /* 緑 */
     /* background-color: #6be9c3; */
     /* 青 */
-    background-color: #ecd3b1;
+    background-color: #fff;
 }

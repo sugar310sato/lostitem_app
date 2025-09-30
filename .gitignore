@@ -271,3 +271,4 @@ config.py
 model.pth
 test.py
 migrations
+open_clip_pytorch_model.bin

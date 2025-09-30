@@ -2,6 +2,7 @@ import base64
 import os
 import shutil
 import uuid
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from flask import (
     send_from_directory,
     session,
     url_for,
+    flash,
 )
 from PIL import Image
 from sqlalchemy import func
@@ -30,8 +32,10 @@ from apps.register.forms import (
     ChoicesFinderForm,
     OwnerLostItemForm,
     ThirdPartyLostItemForm,
+    FreeFlowLostItemForm,
 )
 from apps.register.model_folder.predict import img2text
+from apps.register.model_folder.yolo_predict import YOLOPredictor
 from apps.register.models import LostItem
 
 from . import send_s3
@@ -44,6 +48,13 @@ register = Blueprint(
     __name__,
     template_folder="templates",
 )
+
+# テンプレート保存用のディレクトリ
+def get_template_dir():
+    if current_app:
+        return Path(current_app.root_path).parent / "templates"
+    else:
+        return Path(__file__).parent.parent.parent / "templates"
 
 
 # 画像の保存処理
@@ -100,6 +111,37 @@ def send_image_AWS(image_path):
     except requests.exceptions.RequestException:
         print("Error!")
         return "Error"
+
+
+# YOLOローカル推論で画像認識する関数
+def predict_with_yolo(image_path, confidence_threshold=0.5):
+    """
+    YOLOを使用したローカル画像認識
+    Args:
+        image_path: 画像ファイルのパス
+        confidence_threshold: 信頼度の閾値
+    Returns:
+        str: 予測されたカテゴリ名
+    """
+    try:
+        # YOLOモデルの初期化（初回のみ）
+        if not hasattr(predict_with_yolo, 'predictor'):
+            model_path = Path(current_app.root_path, "register", "model_folder", "yolo_model.pt")
+            predict_with_yolo.predictor = YOLOPredictor(model_path if model_path.exists() else None)
+        
+        # 推論実行
+        result = predict_with_yolo.predictor.predict_item_category(image_path, confidence_threshold)
+        
+        if "error" in result:
+            print(f"YOLO推論エラー: {result['error']}")
+            return "その他"
+        
+        print(f"YOLO推論結果: {result['category']} (信頼度: {result['confidence']:.3f})")
+        return result['category']
+        
+    except Exception as e:
+        print(f"YOLO推論中にエラーが発生しました: {str(e)}")
+        return "その他"
 
 
 # ホーム画面
@@ -178,12 +220,14 @@ def register_item(choice_finder, use_AI):
     users = User.query.all()
     user_choice = [(user.username) for user in users]
     print(use_AI)
-    # Cocaによるキャプション生成
+    # AI推論による分類
     if use_AI == "usenoAI":
         text = ""
         result = "現金"
     else:
         root_path = Path(current_app.root_path, "images/captured_image.jpg")
+        
+        # CoCaによるキャプション生成（オプション）
         # model_path = Path(
         #     current_app.root_path, "register", "model_folder", "model.pth"
         # )
@@ -193,10 +237,10 @@ def register_item(choice_finder, use_AI):
         # else:
         #     text = ""
         text = ""
-        # AWSでの推論
-        result = send_image_AWS(root_path)
-        if result != "Error":
-            print(result)
+        
+        # YOLOローカル推論（AWS Lambdaの代わり）
+        result = predict_with_yolo(str(root_path))
+        print(f"YOLO推論結果: {result}")
         # ラズパイでの推論
         # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         # vgg_model_path = Path(
@@ -425,3 +469,200 @@ def generate_main_id(choice_finder, current_year):
 @register.route("/images/<path:filename>")
 def image_file(filename):
     return send_from_directory(current_app.config["CARD_IMAGE_FOLDER"], filename)
+
+
+# フリーフロー拾得物登録
+@register.route("/freeflow_register_item/<choice_finder>/<use_AI>", methods=["POST", "GET"])
+def freeflow_register_item(choice_finder, use_AI):
+    current_year = datetime.now().year % 100
+    main_id = generate_main_id(choice_finder, current_year)
+    
+    # AI認識結果の取得
+    inferenceResult = session.get("inferenceResult", "")
+    photoDiscription = session.get("photoDiscription", "")
+    
+    # YOLO推論による分類（AI使用時）
+    if use_AI != "usenoAI":
+        root_path = Path(current_app.root_path, "images/captured_image.jpg")
+        if root_path.exists():
+            inferenceResult = predict_with_yolo(str(root_path))
+            print(f"フリーフローYOLO推論結果: {inferenceResult}")
+    
+    # Userの一覧取得
+    users = User.query.all()
+    user_choice = [(user.username) for user in users]
+    
+    form = FreeFlowLostItemForm()
+    form.recep_manager.choices = user_choice
+    
+    if request.method == "POST":
+        if form.add_field.data:
+            # 項目を追加
+            form.dynamic_fields.append_entry()
+            return render_template(
+                "register/freeflow_register.html",
+                choice_finder=choice_finder,
+                use_AI=use_AI,
+                form=form,
+                main_id=main_id,
+                inferenceResult=inferenceResult,
+                photoDiscription=photoDiscription,
+                ITEM_CLASS_L=ITEM_CLASS_L,
+                ITEM_CLASS_M=ITEM_CLASS_M,
+                ITEM_CLASS_S=ITEM_CLASS_S,
+                result=inferenceResult,
+            )
+        
+        elif form.remove_field.data:
+            # 項目を削除
+            if len(form.dynamic_fields.data) > 1:
+                form.dynamic_fields.pop_entry()
+            return render_template(
+                "register/freeflow_register.html",
+                choice_finder=choice_finder,
+                use_AI=use_AI,
+                form=form,
+                main_id=main_id,
+                inferenceResult=inferenceResult,
+                photoDiscription=photoDiscription,
+                ITEM_CLASS_L=ITEM_CLASS_L,
+                ITEM_CLASS_M=ITEM_CLASS_M,
+                ITEM_CLASS_S=ITEM_CLASS_S,
+                result=inferenceResult,
+            )
+        
+        elif form.save_template.data:
+            # テンプレートを保存
+            template_data = {
+                "fields": []
+            }
+            for field in form.dynamic_fields.data:
+                template_data["fields"].append({
+                    "name": field.get("field_name", ""),
+                    "type": field.get("field_type", ""),
+                    "value": field.get("field_value", ""),
+                    "required": field.get("required", False)
+                })
+            
+            template_file = get_template_dir() / f"freeflow_template_{choice_finder}.json"
+            with open(template_file, "w", encoding="utf-8") as f:
+                json.dump(template_data, f, ensure_ascii=False, indent=2)
+            
+            flash("テンプレートを保存しました", "success")
+            return render_template(
+                "register/freeflow_register.html",
+                choice_finder=choice_finder,
+                use_AI=use_AI,
+                form=form,
+                main_id=main_id,
+                inferenceResult=inferenceResult,
+                photoDiscription=photoDiscription,
+                ITEM_CLASS_L=ITEM_CLASS_L,
+                ITEM_CLASS_M=ITEM_CLASS_M,
+                ITEM_CLASS_S=ITEM_CLASS_S,
+                result=inferenceResult,
+            )
+        
+        elif form.load_template.data:
+            # テンプレートを読み込み
+            template_file = get_template_dir() / f"freeflow_template_{choice_finder}.json"
+            if template_file.exists():
+                with open(template_file, "r", encoding="utf-8") as f:
+                    template_data = json.load(f)
+                
+                # 既存のフィールドをクリア
+                while len(form.dynamic_fields.data) > 0:
+                    form.dynamic_fields.pop_entry()
+                
+                # テンプレートからフィールドを復元
+                for field_data in template_data.get("fields", []):
+                    field_entry = {
+                        "field_name": field_data.get("name", ""),
+                        "field_type": field_data.get("type", ""),
+                        "field_value": field_data.get("value", ""),
+                        "required": field_data.get("required", False)
+                    }
+                    form.dynamic_fields.append_entry(field_entry)
+                
+                flash("テンプレートを読み込みました", "success")
+            else:
+                flash("テンプレートが見つかりません", "error")
+            
+            return render_template(
+                "register/freeflow_register.html",
+                choice_finder=choice_finder,
+                use_AI=use_AI,
+                form=form,
+                main_id=main_id,
+                inferenceResult=inferenceResult,
+                photoDiscription=photoDiscription,
+                ITEM_CLASS_L=ITEM_CLASS_L,
+                ITEM_CLASS_M=ITEM_CLASS_M,
+                ITEM_CLASS_S=ITEM_CLASS_S,
+                result=inferenceResult,
+            )
+        
+        elif form.submit.data and form.validate():
+            # 拾得物を登録
+            moved_path = save_image()
+            s3_image_path = os.path.join(basedir, "renamed_images", moved_path)
+            send_s3.send_image_S3(s3_image_path, "フリーフロー登録")
+            
+            # 動的フィールドのデータをJSONとして保存
+            dynamic_data = {}
+            for field in form.dynamic_fields.data:
+                field_name = field.get("field_name", "")
+                if field_name:
+                    dynamic_data[field_name] = {
+                        "type": field.get("field_type", ""),
+                        "value": field.get("field_value", ""),
+                        "required": field.get("required", False)
+                    }
+            
+            # 拾得物オブジェクトを作成
+            lostitem = LostItem(
+                main_id=main_id,
+                current_year=current_year,
+                choice_finder=choice_finder,
+                notify=form.notify.data,
+                get_item=form.get_item.data,
+                get_item_hour=request.form.get("get_item_hour"),
+                get_item_minute=request.form.get("get_item_minute"),
+                recep_item=form.recep_item.data,
+                recep_item_hour=request.form.get("recep_item_hour"),
+                recep_item_minute=request.form.get("recep_item_minute"),
+                recep_manager=form.recep_manager.data,
+                find_area=form.find_area.data,
+                finder_name=form.finder_name.data,
+                finder_post=form.finder_post.data,
+                finder_address=form.finder_address.data,
+                finder_tel1=form.finder_tel1.data,
+                finder_tel2=form.finder_tel2.data,
+                item_feature=form.item_feature.data,
+                item_value=form.item_value.data,
+                item_image=moved_path,
+                item_situation="保管中",
+                refund_situation="未",
+                # 動的フィールドのデータを備考欄に追加
+                item_remarks=form.item_remarks.data + "\n\n--- カスタム項目 ---\n" + json.dumps(dynamic_data, ensure_ascii=False, indent=2) if form.item_remarks.data else "--- カスタム項目 ---\n" + json.dumps(dynamic_data, ensure_ascii=False, indent=2),
+            )
+            
+            db.session.add(lostitem)
+            db.session.commit()
+            
+            flash("拾得物を登録しました", "success")
+            return redirect(url_for("items.detail", item_id=lostitem.id))
+    
+    return render_template(
+        "register/freeflow_register.html",
+        choice_finder=choice_finder,
+        use_AI=use_AI,
+        form=form,
+        main_id=main_id,
+        inferenceResult=inferenceResult,
+        photoDiscription=photoDiscription,
+        ITEM_CLASS_L=ITEM_CLASS_L,
+        ITEM_CLASS_M=ITEM_CLASS_M,
+        ITEM_CLASS_S=ITEM_CLASS_S,
+        result=inferenceResult,
+    )
