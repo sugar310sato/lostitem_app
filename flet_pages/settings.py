@@ -657,6 +657,10 @@ class SettingsView(ft.UserControl):
         try:
             import json
             self.save_general_settings({"storage_places": json.dumps(places, ensure_ascii=False)})
+            
+            # 設定画面を更新して即座に反映
+            if self.page:
+                self.page.go("/settings")
         except Exception as e:
             print(f"保管場所保存エラー: {e}")
     
@@ -665,6 +669,10 @@ class SettingsView(ft.UserControl):
         try:
             import json
             self.save_general_settings({"find_places": json.dumps(places, ensure_ascii=False)})
+            
+            # 設定画面を更新して即座に反映
+            if self.page:
+                self.page.go("/settings")
         except Exception as e:
             print(f"拾得場所保存エラー: {e}")
     
@@ -1122,5 +1130,9 @@ class SettingsView(ft.UserControl):
         try:
             import json
             self.save_general_settings({"staff_list": json.dumps(staff_list, ensure_ascii=False)})
+            
+            # 設定画面を更新して即座に反映
+            if self.page:
+                self.page.go("/settings")
         except Exception as e:
             print(f"担当者リスト保存エラー: {e}")

@@ -196,90 +196,6 @@ def build_home_content(page: ft.Page, current_user=None) -> ft.Control:
 		weight=ft.FontWeight.BOLD
 	)
 	
-	# ログイン情報と担当者表示
-	login_info_text = ft.Text(
-		f"ログイン中: {current_user.get('display_name', '未設定')} ({current_user.get('role', 'user')})" if current_user else "未ログイン",
-		size=12,
-		color=ft.colors.GREY_600
-	)
-	
-	# 現在の担当者表示（編集可能）
-	current_staff_text = ft.Text(
-		f"現在の担当者: {current_user.get('display_name', '未設定')}" if current_user else "現在の担当者: 未設定",
-		size=14,
-		color=ft.colors.GREEN_700,
-		weight=ft.FontWeight.BOLD
-	)
-	
-	def show_staff_change_dialog():
-		"""担当者変更ダイアログを表示"""
-		staff_dropdown = ft.Dropdown(
-			label="担当者を選択",
-			width=300,
-			hint_text="担当者を選択してください"
-		)
-		
-		# 担当者リストを取得
-		try:
-			conn = sqlite3.connect(str(DB_PATH))
-			cur = conn.cursor()
-			cur.execute("SELECT display_name FROM users WHERE role != 'admin' ORDER BY display_name")
-			staff_list = [row[0] for row in cur.fetchall()]
-			conn.close()
-			
-			staff_dropdown.options = [ft.dropdown.Option(name) for name in staff_list]
-		except Exception as e:
-			print(f"担当者リスト取得エラー: {e}")
-			staff_dropdown.options = []
-		
-		def change_staff():
-			"""担当者を変更"""
-			if not staff_dropdown.value:
-				page.snack_bar = ft.SnackBar(ft.Text("担当者を選択してください"), bgcolor=ft.colors.RED_700)
-				page.snack_bar.open = True
-				page.update()
-				return
-			
-			try:
-				# グローバル変数のcurrent_userを更新
-				global current_user
-				if current_user:
-					current_user['display_name'] = staff_dropdown.value
-					current_staff_text.value = f"現在の担当者: {staff_dropdown.value}"
-					page.snack_bar = ft.SnackBar(ft.Text(f"担当者を {staff_dropdown.value} に変更しました"), bgcolor=ft.colors.GREEN_700)
-					page.snack_bar.open = True
-					page.update()
-				
-				# ダイアログを閉じる
-				page.dialog.open = False
-				page.update()
-				
-			except Exception as e:
-				print(f"担当者変更エラー: {e}")
-				page.snack_bar = ft.SnackBar(ft.Text(f"エラー: {e}"), bgcolor=ft.colors.RED_700)
-				page.snack_bar.open = True
-				page.update()
-		
-		dialog = ft.AlertDialog(
-			title=ft.Text("担当者変更"),
-			content=ft.Container(
-				content=ft.Column([
-					ft.Text("現在の担当者を変更します"),
-					staff_dropdown
-				], spacing=15),
-				width=350,
-				height=150
-			),
-			actions=[
-				ft.TextButton("キャンセル", on_click=lambda e: setattr(page.dialog, 'open', False) or page.update()),
-				ft.ElevatedButton("変更", on_click=lambda e: change_staff(), bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE)
-			]
-		)
-		
-		page.dialog = dialog
-		dialog.open = True
-		page.update()
-	
 	# 日時更新のタイマー
 	def update_datetime():
 		while True:
@@ -470,28 +386,6 @@ def build_home_content(page: ft.Page, current_user=None) -> ft.Control:
 			padding=10,
 			bgcolor=ft.colors.GREY_50,
 			border_radius=12
-		),
-		# ログイン情報と担当者セクション（左下）
-		ft.Container(
-			content=ft.Row([
-				ft.Column([
-					login_info_text,
-					ft.Row([
-						current_staff_text,
-						ft.IconButton(
-							icon=ft.icons.EDIT,
-							tooltip="担当者を変更",
-							on_click=lambda e: show_staff_change_dialog(),
-							icon_size=16
-						) if current_user else ft.Container()
-					], alignment=ft.MainAxisAlignment.START)
-				], horizontal_alignment=ft.CrossAxisAlignment.START),
-				ft.Container(expand=True)  # 右側を空ける
-			], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-			padding=10,
-			bgcolor=ft.colors.GREY_100,
-			border_radius=8,
-			margin=ft.margin.only(top=20)
 		)
 	], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
@@ -500,11 +394,12 @@ def build_sidebar_compact(page: ft.Page, current_user=None, on_login=None, on_lo
 	"""ホーム以外のページ用：ホバーで展開するサイドバー"""
 	menu_buttons = [
 		("ホーム", "/", ft.icons.HOME),
-		("拾得物の登録", "/register", ft.icons.NOTE_ADD),
+		("拾得物の登録", "/register", ft.icons.SHOPPING_BAG),
+		("拾得物一覧", "/items", ft.icons.FORMAT_LIST_NUMBERED),
 		("遺失物の登録", "/notfound-register", ft.icons.DESCRIPTION),
 		("遺失物一覧", "/notfound-list", ft.icons.LIST),
 		("還付管理", "/refund", ft.icons.ATTACH_MONEY),
-		("警察届け出処理", "/police", ft.icons.GAVEL),
+		("警察届け出処理", "/police", ft.icons.LOCAL_POLICE),
 		("統計", "/stats", ft.icons.INSIGHTS),
 		("AI画像分類テスト", "/ai", ft.icons.SCIENCE),
 		("ヘルプ", "/help", ft.icons.HELP_OUTLINE),
@@ -644,11 +539,12 @@ def build_sidebar(page: ft.Page, current_user=None, on_login=None, on_logout=Non
 	"""ホーム画面用：常に展開されたサイドバー"""
 	menu_buttons = [
 		("ホーム", "/", ft.icons.HOME),
-		("拾得物の登録", "/register", ft.icons.NOTE_ADD),
+		("拾得物の登録", "/register", ft.icons.SHOPPING_BAG),
+		("拾得物一覧", "/items", ft.icons.FORMAT_LIST_NUMBERED),
 		("遺失物の登録", "/notfound-register", ft.icons.DESCRIPTION),
 		("遺失物一覧", "/notfound-list", ft.icons.LIST),
 		("還付管理", "/refund", ft.icons.ATTACH_MONEY),
-		("警察届け出処理", "/police", ft.icons.GAVEL),
+		("警察届け出処理", "/police", ft.icons.LOCAL_POLICE),
 		("統計", "/stats", ft.icons.INSIGHTS),
 		("AI画像分類テスト", "/ai", ft.icons.SCIENCE),
 		("ヘルプ", "/help", ft.icons.HELP_OUTLINE),
@@ -689,73 +585,65 @@ def build_sidebar(page: ft.Page, current_user=None, on_login=None, on_logout=Non
 	for i, item in enumerate(menu):
 		print(f"  メニュー{i}: {menu_buttons[i][0]}")
 	
-	# ログイン情報エリア（常に表示）
+	# ログイン情報エリア（常に表示・コンパクト表示）
 	print(f"build_sidebar: ログイン情報構築開始 - current_user = {current_user}")
 	if current_user:
 		print(f"build_sidebar: ログインユーザー情報 - username={current_user.get('username')}, role={current_user.get('role')}")
-		login_section = ft.Container(
-			content=ft.Column([
-				ft.Row([
-					ft.Icon(ft.icons.ACCOUNT_CIRCLE, size=40, color=ft.colors.BLUE_700),
-					ft.Column([
-						ft.Text(
-							current_user.get("display_name", current_user.get("username")), 
-							size=14,
-							weight=ft.FontWeight.BOLD
-						),
-						ft.Container(
-							content=ft.Text(
-								"管理者" if current_user.get("role") == "admin" else "一般ユーザー",
-								size=10,
-								color=ft.colors.WHITE
-							),
-							bgcolor=ft.colors.RED_700 if current_user.get("role") == "admin" else ft.colors.BLUE_700,
-							padding=ft.padding.symmetric(horizontal=8, vertical=2),
-							border_radius=4,
-						),
-					], spacing=2, expand=True),
-				], spacing=10),
-				ft.ElevatedButton(
-					"ログアウト",
-					icon=ft.icons.LOGOUT,
-					on_click=lambda e: on_logout() if on_logout else None,
-					style=ft.ButtonStyle(
-						bgcolor=ft.colors.GREY_700,
-						color=ft.colors.WHITE
-					),
-					expand=True,
-				),
-			], spacing=10),
+		login_icon = ft.Container(
+			content=ft.Icon(ft.icons.ACCOUNT_CIRCLE, size=32, color=ft.colors.BLUE_700),
 			padding=10,
-			bgcolor=ft.colors.WHITE,
 			border_radius=8,
-			border=ft.border.all(1, ft.colors.GREY_300),
 		)
-		print(f"build_sidebar: ログインセクション構築完了（ログイン済み）")
+		login_detail = ft.Column([
+			ft.Text(current_user.get("display_name", current_user.get("username")), 
+				   size=12, weight=ft.FontWeight.BOLD, visible=True),
+			ft.Container(
+				content=ft.Text(
+					"管理者" if current_user.get("role") == "admin" else "一般",
+					size=9,
+					color=ft.colors.WHITE
+				),
+				bgcolor=ft.colors.RED_700 if current_user.get("role") == "admin" else ft.colors.BLUE_700,
+				padding=ft.padding.symmetric(horizontal=4, vertical=1),
+				border_radius=4,
+				visible=True
+			),
+			ft.TextButton(
+				"ログアウト",
+				icon=ft.icons.LOGOUT,
+				on_click=lambda e: on_logout() if on_logout else None,
+				style=ft.ButtonStyle(
+					padding=5,
+					bgcolor=ft.colors.GREY_700,
+					color=ft.colors.WHITE
+				),
+				visible=True
+			),
+		], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.START)
+		login_section = ft.Row([login_icon, login_detail], spacing=10)
+		print(f"build_sidebar: ログインセクション構築完了（ログイン済み・コンパクト）")
 	else:
 		print(f"build_sidebar: 未ログイン状態のログインセクション構築")
-		login_section = ft.Container(
-			content=ft.Column([
-				ft.Row([
-					ft.Icon(ft.icons.ACCOUNT_CIRCLE, size=40, color=ft.colors.GREY_400),
-					ft.Text("未ログイン", size=14, color=ft.colors.GREY_600, expand=True),
-				], spacing=10),
-				ft.ElevatedButton(
-					"ログイン",
-					icon=ft.icons.LOGIN,
-					on_click=lambda e: on_login() if on_login else None,
-					style=ft.ButtonStyle(
-						bgcolor=ft.colors.BLUE_700,
-						color=ft.colors.WHITE
-					),
-					expand=True,
-				),
-			], spacing=10),
+		login_icon = ft.Container(
+			content=ft.Icon(ft.icons.ACCOUNT_CIRCLE, size=32, color=ft.colors.GREY_400),
 			padding=10,
-			bgcolor=ft.colors.WHITE,
 			border_radius=8,
-			border=ft.border.all(1, ft.colors.GREY_300),
 		)
+		login_detail = ft.Column([
+			ft.Text("未ログイン", size=10, color=ft.colors.GREY_600, visible=True),
+			ft.TextButton(
+				"ログイン",
+				icon=ft.icons.LOGIN,
+				on_click=lambda e: on_login() if on_login else None,
+				style=ft.ButtonStyle(
+					padding=5,
+					bgcolor=ft.colors.BLUE_700,
+					color=ft.colors.WHITE
+				),
+				visible=True
+			),
+		], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.START)
+		login_section = ft.Row([login_icon, login_detail], spacing=10)
 	
 	# サイドバーコンテンツ（常に展開状態で固定）
 	all_controls = [

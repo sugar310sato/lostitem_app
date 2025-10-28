@@ -19,7 +19,13 @@ from flet_pages.statistics import StatisticsView
 
 # グローバル変数で撮影データとユーザー情報を管理
 captured_photos_data = {}
-current_user = None
+# 開発中のためログインをバイパス - ダミーユーザーを設定
+current_user = {
+	"id": 999,
+	"username": "dev_user",
+	"display_name": "開発ユーザー",
+	"role": "admin"
+}
 
 DB_PATH = Path(__file__).parent / "lostitem.db"
 
@@ -36,17 +42,39 @@ def check_initial_setup_needed():
 		""")
 		if not cur.fetchone():
 			conn.close()
+			print("usersテーブルが存在しないため、初期セットアップが必要です")
+			return True
+		
+		# roleカラムが存在するかチェック
+		cur.execute("PRAGMA table_info(users)")
+		columns = [column[1] for column in cur.fetchall()]
+		
+		if 'role' not in columns:
+			conn.close()
+			print("roleカラムが存在しないため、初期セットアップが必要です")
 			return True
 		
 		# 管理者アカウントが存在するかチェック
-		cur.execute("SELECT COUNT(*) FROM users WHERE role = 'admin'")
-		admin_count = cur.fetchone()[0]
-		
-		conn.close()
-		return admin_count == 0
+		try:
+			cur.execute("SELECT COUNT(*) FROM users WHERE role = 'admin'")
+			admin_count = cur.fetchone()[0]
+			conn.close()
+			
+			if admin_count == 0:
+				print("管理者アカウントが存在しないため、初期セットアップが必要です")
+				return True
+			else:
+				print(f"管理者アカウントが存在します（count: {admin_count}）")
+				return False
+		except Exception as e:
+			print(f"管理者アカウントチェックエラー: {e}")
+			conn.close()
+			return True
 		
 	except Exception as e:
 		print(f"初回セットアップチェックエラー: {e}")
+		import traceback
+		traceback.print_exc()
 		return True
 
 
@@ -144,6 +172,7 @@ def main(page: ft.Page):
 	page.title = "拾得物管理システム (Flet)"
 	page.theme_mode = ft.ThemeMode.LIGHT
 	page.padding = 10
+	page.transitions = [ft.PageTransitionTheme.NONE]
 	page.snack_bar = ft.SnackBar(ft.Text("未実装です"))
 	
 	# データベース構造を更新
@@ -152,13 +181,15 @@ def main(page: ft.Page):
 	# グローバル変数にアクセス
 	global current_user
 	
-	# ログイン状態を確認
+	# ログイン状態を確認（開発中のため無効化）
 	def check_login():
 		"""ログインチェック"""
-		if current_user is None:
-			show_login_dialog()
-			return False
+		# 開発中はダミーユーザーが設定されているため、常にTrueを返す
 		return True
+		# if current_user is None:
+		#     show_login_dialog()
+		#     return False
+		# return True
 	
 	def show_initial_setup_dialog():
 		"""初回セットアップダイアログを表示"""
@@ -180,8 +211,14 @@ def main(page: ft.Page):
 			)
 			page.snack_bar.open = True
 			
-			# ホーム画面に移動
-			page.go("/")
+			# 店舗名を即座に反映させるため、少し遅延してからホーム画面を更新
+			import threading
+			import time
+			def delayed_update():
+				time.sleep(0.5)  # 0.5秒待機してから更新
+				if page: 
+					page.go("/")  # ホーム画面に移動（店舗名が反映される）
+			threading.Thread(target=delayed_update, daemon=True).start()
 		
 		setup_dialog = InitialSetupDialog(on_setup_complete=on_setup_complete)
 		# ページを設定
@@ -250,80 +287,134 @@ def main(page: ft.Page):
 		return f"{prefix}{current_year:02}{count+1:05}"
 
 	def save_lost_item(form_data: dict) -> None:
-		from datetime import datetime as _dt
-		import os
-		current_year = _dt.now().year % 100
-		choice = form_data.get("finder_type") or "占有者拾得"
-		main_id = generate_main_id(choice, current_year)
-		
-		# 撮影データの処理（register_form.py の collect() メソッドから "captured_photos" というキーで渡される）
-		captured_photos = form_data.get("captured_photos", {})
-		saved_photo_paths = {"main_photos": [], "sub_photos": [], "bundle_photos": []}
-		
-		# 画像保存ディレクトリの作成
-		images_dir = Path(__file__).parent / "images"
-		images_dir.mkdir(exist_ok=True)
-		
-		# メイン写真の保存
-		if captured_photos and captured_photos.get("main_photos"):
-			for i, photo_data in enumerate(captured_photos.get("main_photos", [])):
-				if photo_data and "frame" in photo_data:
-					try:
-						frame = photo_data["frame"]
-						timestamp = photo_data.get("timestamp", "")
-						filename = f"main_{main_id}_{i+1}_{timestamp}.jpg"
-						filepath = images_dir / filename
-						
-						# OpenCVで画像を保存
-						import cv2
-						cv2.imwrite(str(filepath), frame)
-						saved_photo_paths["main_photos"].append(str(filepath))
-						print(f"メイン写真を保存しました: {filepath}")
-					except Exception as e:
-						print(f"メイン写真保存エラー: {e}")
-		
-		# サブ写真の保存
-		if captured_photos and captured_photos.get("sub_photos"):
-			for i, photo_data in enumerate(captured_photos.get("sub_photos", [])):
-				if photo_data and "frame" in photo_data:
-					try:
-						frame = photo_data["frame"]
-						timestamp = photo_data.get("timestamp", "")
-						filename = f"sub_{main_id}_{i+1}_{timestamp}.jpg"
-						filepath = images_dir / filename
-						
-						# OpenCVで画像を保存
-						import cv2
-						cv2.imwrite(str(filepath), frame)
-						saved_photo_paths["sub_photos"].append(str(filepath))
-						print(f"サブ写真を保存しました: {filepath}")
-					except Exception as e:
-						print(f"サブ写真保存エラー: {e}")
-		
-		# 同梱物写真の保存
-		if captured_photos and captured_photos.get("bundle_photos"):
-			for i, photo_data in enumerate(captured_photos.get("bundle_photos", [])):
-				if photo_data and "frame" in photo_data:
-					try:
-						frame = photo_data["frame"]
-						timestamp = photo_data.get("timestamp", "")
-						filename = f"bundle_{main_id}_{i+1}_{timestamp}.jpg"
-						filepath = images_dir / filename
-						
-						# OpenCVで画像を保存
-						import cv2
-						cv2.imwrite(str(filepath), frame)
-						saved_photo_paths["bundle_photos"].append(str(filepath))
-						print(f"同梱物写真を保存しました: {filepath}")
-					except Exception as e:
-						print(f"同梱物写真保存エラー: {e}")
-		
-		# 保存されたパスをデバッグ出力
-		print(f"保存された写真パス: {saved_photo_paths}")
-		
 		try:
+			print(f"save_lost_item called with form_data: {form_data.keys()}")
+			from datetime import datetime as _dt
+			import os
+			current_year = _dt.now().year % 100
+			choice = form_data.get("finder_type") or "占有者拾得"
+			main_id = generate_main_id(choice, current_year)
+			
+			# 撮影データの処理（register_form.py の collect() メソッドから "captured_photos" というキーで渡される）
+			captured_photos = form_data.get("captured_photos", {})
+			saved_photo_paths = {"main_photos": [], "sub_photos": [], "bundle_photos": []}
+			
+			# 画像保存ディレクトリの作成
+			images_dir = Path(__file__).parent / "images"
+			images_dir.mkdir(exist_ok=True)
+			
+			print(f"captured_photos: {captured_photos}")
+			
+			# メイン写真の保存
+			if captured_photos and captured_photos.get("main_photos"):
+				for i, photo_data in enumerate(captured_photos.get("main_photos", [])):
+					if photo_data and "frame" in photo_data:
+						try:
+							frame = photo_data["frame"]
+							timestamp = photo_data.get("timestamp", "")
+							filename = f"main_{main_id}_{i+1}_{timestamp}.jpg"
+							filepath = images_dir / filename
+							
+							# OpenCVで画像を保存
+							import cv2
+							cv2.imwrite(str(filepath), frame)
+							saved_photo_paths["main_photos"].append(str(filepath))
+							print(f"メイン写真を保存しました: {filepath}")
+						except Exception as e:
+							print(f"メイン写真保存エラー: {e}")
+			
+			# サブ写真の保存
+			if captured_photos and captured_photos.get("sub_photos"):
+				for i, photo_data in enumerate(captured_photos.get("sub_photos", [])):
+					if photo_data and "frame" in photo_data:
+						try:
+							frame = photo_data["frame"]
+							timestamp = photo_data.get("timestamp", "")
+							filename = f"sub_{main_id}_{i+1}_{timestamp}.jpg"
+							filepath = images_dir / filename
+							
+							# OpenCVで画像を保存
+							import cv2
+							cv2.imwrite(str(filepath), frame)
+							saved_photo_paths["sub_photos"].append(str(filepath))
+							print(f"サブ写真を保存しました: {filepath}")
+						except Exception as e:
+							print(f"サブ写真保存エラー: {e}")
+			
+			# 同梱物写真の保存
+			if captured_photos and captured_photos.get("bundle_photos"):
+				for i, photo_data in enumerate(captured_photos.get("bundle_photos", [])):
+					if photo_data and "frame" in photo_data:
+						try:
+							frame = photo_data["frame"]
+							timestamp = photo_data.get("timestamp", "")
+							filename = f"bundle_{main_id}_{i+1}_{timestamp}.jpg"
+							filepath = images_dir / filename
+							
+							# OpenCVで画像を保存
+							import cv2
+							cv2.imwrite(str(filepath), frame)
+							saved_photo_paths["bundle_photos"].append(str(filepath))
+							print(f"同梱物写真を保存しました: {filepath}")
+						except Exception as e:
+							print(f"同梱物写真保存エラー: {e}")
+			
+			# 保存されたパスをデバッグ出力
+			print(f"保存された写真パス: {saved_photo_paths}")
+			
 			conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
 			cur = conn.cursor()
+			
+			# lost_itemsテーブルが存在するかチェックし、存在しない場合は作成
+			cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='lost_items'")
+			if not cur.fetchone():
+				cur.execute("""
+					CREATE TABLE IF NOT EXISTS lost_items (
+						id INTEGER PRIMARY KEY AUTOINCREMENT,
+						main_id TEXT,
+						current_year INTEGER,
+						choice_finder TEXT,
+						notify TEXT,
+						get_item TEXT,
+						get_item_hour INTEGER,
+						get_item_minute INTEGER,
+						recep_item TEXT,
+						recep_item_hour INTEGER,
+						recep_item_minute INTEGER,
+						recep_manager TEXT,
+						find_area TEXT,
+						find_area_police TEXT,
+						finder_name TEXT,
+						finder_age INTEGER,
+						finder_sex TEXT,
+						finder_post TEXT,
+						finder_address TEXT,
+						finder_tel1 TEXT,
+						finder_tel2 TEXT,
+						finder_affiliation TEXT,
+						item_class_L TEXT,
+						item_class_M TEXT,
+						item_class_S TEXT,
+						item_feature TEXT,
+						item_color TEXT,
+						item_storage TEXT,
+						item_storage_place TEXT,
+						item_maker TEXT,
+						item_expiration TEXT,
+						item_num INTEGER,
+						item_unit TEXT,
+						item_value INTEGER,
+						item_money TEXT,
+						item_remarks TEXT,
+						item_image TEXT,
+						item_situation TEXT,
+						refund_situation TEXT,
+						created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+					)
+				""")
+				conn.commit()
+				print("lost_itemsテーブルを作成しました")
+			
 			sql = '''
 				INSERT INTO lost_items (
 					main_id, current_year, choice_finder, notify,
@@ -344,13 +435,31 @@ def main(page: ft.Page):
 			image_json = json.dumps(saved_photo_paths, ensure_ascii=False) if saved_photo_paths else "{}"
 			print(f"データベースに保存するJSONデータ: {image_json}")
 			
+			# 時刻データの変換（"時"、"分"を削除して数値に変換）
+			get_hour = form_data.get("get_hour", "0")
+			get_min = form_data.get("get_min", "0")
+			recep_hour = form_data.get("recep_hour", "0")
+			recep_min = form_data.get("recep_min", "0")
+			
+			# 数値に変換
+			try:
+				get_hour_int = int(get_hour.replace("時", "")) if get_hour else 0
+				get_min_int = int(get_min.replace("分", "")) if get_min else 0
+				recep_hour_int = int(recep_hour.replace("時", "")) if recep_hour else 0
+				recep_min_int = int(recep_min.replace("分", "")) if recep_min else 0
+			except:
+				get_hour_int = 0
+				get_min_int = 0
+				recep_hour_int = 0
+				recep_min_int = 0
+			
 			data = (
 				main_id, current_year, choice, "",
-				form_data.get("get_date"), int(form_data.get("get_hour") or 0), int(form_data.get("get_min") or 0),
-				form_data.get("recep_date"), int(form_data.get("recep_hour") or 0), int(form_data.get("recep_min") or 0),
+				form_data.get("get_date"), get_hour_int, get_min_int,
+				form_data.get("recep_date"), recep_hour_int, recep_min_int,
 				None,
 				form_data.get("find_place"), None,
-				form_data.get("finder_name"),  # 修正: finder_nameを直接使用
+				form_data.get("finder_name"),
 				None,
 				form_data.get("gender"), form_data.get("postal_code"),
 				form_data.get("address"), form_data.get("tel1"), form_data.get("tel2"),
@@ -359,7 +468,7 @@ def main(page: ft.Page):
 				form_data.get("item_class_S"), form_data.get("feature"), form_data.get("color"),
 				form_data.get("storage_place"), None, None,
 				None, 1, "個",
-				0, 0, "",
+				0, "", "",
 				image_json,
 				"保管中", "未",
 			)
@@ -369,54 +478,156 @@ def main(page: ft.Page):
 			
 			# 成功メッセージを表示
 			print(f"拾得物を登録しました (ID: {main_id})")
+			
+			# ページに成功メッセージを表示
+			if page:
+				page.snack_bar = ft.SnackBar(
+					content=ft.Text("拾得物を登録しました", color=ft.colors.WHITE),
+					bgcolor=ft.colors.GREEN_700
+				)
+				page.snack_bar.open = True
+				page.update()
 				
 		except Exception as e:
 			print(f"データベース保存エラー: {e}")
+			import traceback
+			traceback.print_exc()
+			if page:
+				page.snack_bar = ft.SnackBar(
+					content=ft.Text(f"エラー: {str(e)}", color=ft.colors.WHITE),
+					bgcolor=ft.colors.RED_700
+				)
+				page.snack_bar.open = True
+				page.update()
 			raise e
 
 	def save_notfound_item_to_db(form_data: dict):
-		conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
-		cursor = conn.cursor()
-		
-		sql = '''
-			INSERT INTO notfound (
-				lost_item, lost_item_hour, lost_item_minute,
-				recep_item, recep_item_hour, recep_item_minute,
-				recep_manager, lost_area, lost_name, lost_age,
-				lost_sex, lost_post, lost_address, lost_tel1, lost_tel2,
-				item_value, item_feature, item_color, item_maker,
-				item_expiration, item_num, item_unit, item_price,
-				item_money, item_remarks, item_class_L, item_class_M,
-				item_class_S, card_company, card_tel, card_name,
-				card_person, card_contact_date, card_return_date,
-				card_contact_hour, card_contact_minute, card_manager,
-				item_situation
-			) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		'''
-		
-		data = (
-			form_data.get("lost_date"), form_data.get("lost_hour"), form_data.get("lost_min"),
-			form_data.get("recep_date"), form_data.get("recep_hour"), form_data.get("recep_min"),
-			form_data.get("recep_manager"), form_data.get("lost_area"), form_data.get("lost_name"), form_data.get("lost_age"),
-			form_data.get("lost_sex"), form_data.get("lost_post"), form_data.get("lost_address"), form_data.get("lost_tel1"), form_data.get("lost_tel2"),
-			form_data.get("item_value"), form_data.get("item_feature"), form_data.get("item_color"), form_data.get("item_maker"),
-			form_data.get("item_expiration"), form_data.get("item_num"), form_data.get("item_unit"), form_data.get("item_price"),
-			form_data.get("item_money"), form_data.get("item_remarks"), form_data.get("item_class_L"), form_data.get("item_class_M"),
-			form_data.get("item_class_S"), form_data.get("card_company"), form_data.get("card_tel"), form_data.get("card_name"),
-			form_data.get("card_person"), form_data.get("card_contact_date"), form_data.get("card_return_date"),
-			form_data.get("card_contact_hour"), form_data.get("card_contact_min"), form_data.get("card_manager"),
-			"未対応"
-		)
-		
-		cursor.execute(sql, data)
-		conn.commit()
-		conn.close()
-		
-		# 成功メッセージを表示
-		if page:
-			page.snack_bar.content = ft.Text("遺失物を登録しました")
-			page.snack_bar.open = True
-			page.go("/")
+		try:
+			print(f"save_notfound_item_to_db called with form_data: {form_data.keys()}")
+			conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
+			cursor = conn.cursor()
+			
+			# notfoundテーブルが存在するかチェックし、存在しない場合は作成
+			cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='notfound'")
+			if not cursor.fetchone():
+				cursor.execute("""
+					CREATE TABLE IF NOT EXISTS notfound (
+						id INTEGER PRIMARY KEY AUTOINCREMENT,
+						lost_item TEXT,
+						lost_item_hour INTEGER,
+						lost_item_minute INTEGER,
+						recep_item TEXT,
+						recep_item_hour INTEGER,
+						recep_item_minute INTEGER,
+						recep_manager TEXT,
+						lost_area TEXT,
+						lost_name TEXT,
+						lost_age INTEGER,
+						lost_sex TEXT,
+						lost_post TEXT,
+						lost_address TEXT,
+						lost_tel1 TEXT,
+						lost_tel2 TEXT,
+						item_value INTEGER,
+						item_feature TEXT,
+						item_color TEXT,
+						item_maker TEXT,
+						item_expiration TEXT,
+						item_num INTEGER,
+						item_unit TEXT,
+						item_price INTEGER,
+						item_money TEXT,
+						item_remarks TEXT,
+						item_class_L TEXT,
+						item_class_M TEXT,
+						item_class_S TEXT,
+						card_company TEXT,
+						card_tel TEXT,
+						card_name TEXT,
+						card_person TEXT,
+						card_contact_date TEXT,
+						card_return_date TEXT,
+						card_contact_hour INTEGER,
+						card_contact_minute INTEGER,
+						card_manager TEXT,
+						item_situation TEXT,
+						created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+					)
+				""")
+				conn.commit()
+				print("notfoundテーブルを作成しました")
+			
+			sql = '''
+				INSERT INTO notfound (
+					lost_item, lost_item_hour, lost_item_minute,
+					recep_item, recep_item_hour, recep_item_minute,
+					recep_manager, lost_area, lost_name, lost_age,
+					lost_sex, lost_post, lost_address, lost_tel1, lost_tel2,
+					item_value, item_feature, item_color, item_maker,
+					item_expiration, item_num, item_unit, item_price,
+					item_money, item_remarks, item_class_L, item_class_M,
+					item_class_S, card_company, card_tel, card_name,
+					card_person, card_contact_date, card_return_date,
+					card_contact_hour, card_contact_minute, card_manager,
+					item_situation
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			'''
+			
+			# 時刻データの変換
+			lost_hour = form_data.get("lost_hour", "0")
+			lost_min = form_data.get("lost_min", "0")
+			recep_hour = form_data.get("recep_hour", "0")
+			recep_min = form_data.get("recep_min", "0")
+			
+			try:
+				lost_hour_int = int(lost_hour.replace("時", "")) if lost_hour else 0
+				lost_min_int = int(lost_min.replace("分", "")) if lost_min else 0
+				recep_hour_int = int(recep_hour.replace("時", "")) if recep_hour else 0
+				recep_min_int = int(recep_min.replace("分", "")) if recep_min else 0
+			except:
+				lost_hour_int = 0
+				lost_min_int = 0
+				recep_hour_int = 0
+				recep_min_int = 0
+			
+			data = (
+				form_data.get("lost_date"), lost_hour_int, lost_min_int,
+				form_data.get("recep_date"), recep_hour_int, recep_min_int,
+				form_data.get("recep_staff"), form_data.get("lost_place"), form_data.get("customer_name"), None,
+				None, None, form_data.get("customer_address"), form_data.get("customer_tel"), None,
+				0, form_data.get("item_info"), None, None,
+				None, 1, "個", 0,
+				"", form_data.get("remarks"), None, None,
+				None, None, None, None,
+				None, None, None,
+				0, 0, None,
+				"未対応"
+			)
+			
+			cursor.execute(sql, data)
+			conn.commit()
+			conn.close()
+			
+			# 成功メッセージを表示
+			if page:
+				page.snack_bar = ft.SnackBar(
+					content=ft.Text("遺失物を登録しました", color=ft.colors.WHITE),
+					bgcolor=ft.colors.GREEN_700
+				)
+				page.snack_bar.open = True
+				page.update()
+		except Exception as e:
+			print(f"遺失物登録エラー: {e}")
+			import traceback
+			traceback.print_exc()
+			if page:
+				page.snack_bar = ft.SnackBar(
+					content=ft.Text(f"エラー: {str(e)}", color=ft.colors.WHITE),
+					bgcolor=ft.colors.RED_700
+				)
+				page.snack_bar.open = True
+				page.update()
+			raise e
 
 	def save_refund_item_to_db(form_data: dict):
 		conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
@@ -470,9 +681,9 @@ def main(page: ft.Page):
 		print(f"route_change: {page.route} - current_user: {current_user.get('username') if current_user else 'None'}")
 		page.views.clear()
 		
-		# ログインが必要なページのチェック
+		# ログインが必要なページのチェック（開発中のため無効化）
 		login_required_routes = ["/register", "/register-form", "/notfound", "/notfound-list", "/refund", "/police", "/search", "/settings", "/statistics"]
-		if page.route in login_required_routes and not current_user:
+		if False and page.route in login_required_routes and not current_user:  # 開発中はログインチェックを無効化
 			print(f"ログインが必要なページにアクセス: {page.route}")
 			# まずホーム画面を表示
 			page.views.append(
@@ -950,14 +1161,16 @@ def main(page: ft.Page):
 	# 初期表示（route_changeでレイアウトが構築される）
 	page.go(page.route or "/")
 	
-	# 初期表示時にセットアップまたはログインをチェック
-	if current_user is None:
-		if check_initial_setup_needed():
-			print("初回セットアップが必要です")
-			show_initial_setup_dialog()
-		else:
-			print("ログインが必要です")
-			show_login_dialog()
+	# 初期表示時にセットアップまたはログインをチェック（開発中のため無効化）
+	# 開発中はダミーユーザーが設定されているため、セットアップ・ログインチェックをスキップ
+	print("開発モード: ログイン認証をバイパス中")
+	# if current_user is None:
+	#     if check_initial_setup_needed():
+	#         print("初回セットアップが必要です")
+	#         show_initial_setup_dialog()
+	#     else:
+	#         print("ログインが必要です")
+	#         show_login_dialog()
 
 
 if __name__ == "__main__":

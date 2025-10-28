@@ -1,8 +1,31 @@
 import flet as ft
 from datetime import datetime, date
+import sqlite3
+from pathlib import Path
 
 MINUTES_15 = ["00", "15", "30", "45"]
 HOURS = [f"{h:02d}" for h in range(0, 24)]
+
+# データベースパス
+DB_PATH = Path(__file__).parent.parent / "lostitem.db"
+
+def get_find_places():
+	"""設定からの拾得場所一覧を取得"""
+	try:
+		conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
+		cur = conn.cursor()
+		cur.execute("SELECT value FROM settings WHERE key = 'find_places'")
+		result = cur.fetchone()
+		conn.close()
+		
+		if result and result[0]:
+			import json
+			places = json.loads(result[0])
+			return places if isinstance(places, list) else []
+		return []
+	except Exception as e:
+		print(f"拾得場所読み込みエラー: {e}")
+		return []
 
 def nearest_15min(dt: datetime):
 	"""15分刻みに丸める"""
@@ -27,6 +50,11 @@ class NotFoundRegistrationView(ft.UserControl):
 		
 		# エラーメッセージ表示用
 		self.error_banner = None
+		
+		# 遺失場所のプルダウン関連
+		self.lost_place_dropdown = None
+		self.lost_place_custom = None
+		self.lost_place_custom_icon = None
 	
 	def build(self):
 		return self.create_form_view()
@@ -119,26 +147,51 @@ class NotFoundRegistrationView(ft.UserControl):
 		)
 		self.customer_tel_icon = ft.Container(width=24, height=24)
 		
-		self.lost_place = ft.TextField(
+		# 遺失場所（手入力）
+		self.lost_place_custom = ft.TextField(
 			hint_text="例: 2階エントランス",
 			width=300,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
-			on_change=lambda e: self._validate_lost_place(e)
+			on_change=lambda e: self._validate_lost_place(e),
+			visible=True  # デフォルトは手入力表示
 		)
-		self.lost_place_icon = ft.Container(width=24, height=24)
+		self.lost_place_custom_icon = ft.Container(width=24, height=24, visible=True)
 		
-		self.item_info = ft.TextField(
-			hint_text="例: 黒い財布、ルイヴィトン",
+		# 遺失場所（プルダウンから選択）
+		find_places = get_find_places()
+		self.lost_place_dropdown = ft.Dropdown(
+			hint_text="設定から登録してください",
+			options=[],  # 初期状態は空
+			width=300,
+			focused_color=ft.colors.BLUE,
+			bgcolor=ft.colors.WHITE,
+			on_change=lambda e: self._validate_lost_place_dropdown(e),
+			visible=False  # デフォルトは非表示
+		)
+		self.lost_place_icon = ft.Container(width=24, height=24, visible=False)
+		
+		# 金品情報を品名と内容に分割
+		self.valuables_name = ft.TextField(
+			hint_text="例: 財布、スマートフォン、現金",
+			width=200,
+			focused_color=ft.colors.BLUE,
+			bgcolor=ft.colors.WHITE,
+			on_change=lambda e: self._validate_valuables_name(e)
+		)
+		self.valuables_name_icon = ft.Container(width=24, height=24)
+		
+		self.valuables_content = ft.TextField(
+			hint_text="例: 黒い革製、iPhone 14、1万円札3枚",
 			multiline=True,
 			min_lines=2,
 			max_lines=3,
-			width=400,
+			width=300,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
-			on_change=lambda e: self._validate_item_info(e)
+			on_change=lambda e: self._validate_valuables_content(e)
 		)
-		self.item_info_icon = ft.Container(width=24, height=24)
+		self.valuables_content_icon = ft.Container(width=24, height=24)
 		
 		self.recep_staff = ft.TextField(
 			hint_text="例: 田中",
@@ -196,13 +249,14 @@ class NotFoundRegistrationView(ft.UserControl):
 		# 基本情報セクション
 		basic_section = ft.Container(
 			content=ft.Column([
-				ft.Text("基本情報", size=18, weight=ft.FontWeight.BOLD),
+				ft.Text("お客様情報", size=18, weight=ft.FontWeight.BOLD),
 				
 				# お客様ご氏名（必須）
 				ft.Column([
 					self.create_required_label("お客様ご氏名"),
 					ft.Row([
 						self.customer_name,
+						ft.Text("様", size=14, weight=ft.FontWeight.BOLD),
 						self.customer_name_icon
 					], spacing=10),
 					self.create_error_text("customer_name")
@@ -265,7 +319,16 @@ class NotFoundRegistrationView(ft.UserControl):
 				ft.Column([
 					self.create_required_label("遺失場所"),
 					ft.Row([
-						self.lost_place,
+						self.lost_place_custom,  # 手入力フィールド（デフォルト表示）
+						ft.IconButton(
+							icon=ft.icons.ARROW_DROP_DOWN,
+							tooltip="プルダウンから選択する",
+							on_click=lambda e: self._toggle_lost_place_custom(e)
+						),
+						self.lost_place_custom_icon
+					], spacing=10),
+					ft.Row([
+						self.lost_place_dropdown,  # ドロップダウンで遺失場所を選択
 						self.lost_place_icon
 					], spacing=10),
 					self.create_error_text("lost_place")
@@ -275,10 +338,19 @@ class NotFoundRegistrationView(ft.UserControl):
 				ft.Column([
 					self.create_required_label("金品情報"),
 					ft.Row([
-						self.item_info,
-						self.item_info_icon
-					], spacing=10),
-					self.create_error_text("item_info")
+						ft.Column([
+							ft.Text("品名", size=12, weight=ft.FontWeight.BOLD),
+							self.valuables_name,
+							self.valuables_name_icon
+						], spacing=5),
+						ft.Column([
+							ft.Text("内容", size=12, weight=ft.FontWeight.BOLD),
+							self.valuables_content,
+							self.valuables_content_icon
+						], spacing=5)
+					], spacing=20),
+					self.create_error_text("valuables_name"),
+					self.create_error_text("valuables_content")
 				], spacing=5),
 				
 			], spacing=15),
@@ -327,18 +399,16 @@ class NotFoundRegistrationView(ft.UserControl):
 					self.create_error_text("recep_staff")
 				], spacing=5),
 				
+				# 備考（任意）
+				ft.Column([
+					ft.Text("備考", size=14, weight=ft.FontWeight.BOLD),
+					self.remarks
+				], spacing=5),
+				
 			], spacing=15),
 			**section_style
 		)
 		
-		# 備考セクション（任意）
-		remarks_section = ft.Container(
-			content=ft.Column([
-				ft.Text("備考", size=18, weight=ft.FontWeight.BOLD),
-				self.remarks
-			], spacing=10),
-			**section_style
-		)
 		
 		# ボタン行
 		button_row = ft.Container(
@@ -379,17 +449,22 @@ class NotFoundRegistrationView(ft.UserControl):
 			ft.Text("遺失物登録", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_700),
 			ft.Divider(),
 			
-			# 基本情報
-			basic_section,
+			# お客様情報と受付情報を横並びに配置
+			ft.Row([
+				# お客様情報（左側）
+				ft.Container(
+					content=basic_section,
+					expand=1  # 左側の比率
+				),
+				# 受付情報（右側）
+				ft.Container(
+					content=recep_section,
+					expand=1  # 右側の比率
+				),
+			], spacing=15, expand=True, alignment=ft.MainAxisAlignment.START),
 			
-			# 遺失情報
+			# 遺失情報（下部に全幅で配置）
 			lost_section,
-			
-			# 受付情報
-			recep_section,
-			
-			# 備考
-			remarks_section,
 			
 			# ボタン
 			button_row
@@ -516,46 +591,107 @@ class NotFoundRegistrationView(ft.UserControl):
 			self.error_texts["customer_tel"].visible = False
 		self.update()
 	
+	def _toggle_lost_place_custom(self, e):
+		"""遺失場所の手入力切り替え"""
+		# 現在のモードを反転
+		current_mode_is_custom = self.lost_place_custom.visible
+		
+		# モードを切り替え
+		self.lost_place_dropdown.visible = current_mode_is_custom
+		self.lost_place_custom.visible = not current_mode_is_custom
+		self.lost_place_custom_icon.visible = not current_mode_is_custom
+		self.lost_place_icon.visible = current_mode_is_custom
+		
+		# バリデーションをリセット
+		if current_mode_is_custom:
+			# 手入力モードからプルダウンモードへ
+			self.lost_place_custom.value = ""
+			self.lost_place_custom_icon.content = None
+			self.lost_place_icon.content = None
+		else:
+			# プルダウンモードから手入力モードへ
+			self.lost_place_dropdown.value = None
+			self.lost_place_icon.content = None
+			self.lost_place_custom_icon.content = None
+		
+		self.update()
+
 	def _validate_lost_place(self, e):
-		"""遺失場所のバリデーション"""
+		"""遺失場所（手入力）のバリデーション"""
 		value = e.control.value
 		is_valid = bool(value and value.strip())
 		self.validation_states["lost_place"] = is_valid
 		
 		if is_valid:
-			self.lost_place_icon.content = ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN, size=24)
-			self.lost_place.border_color = ft.colors.GREEN
+			self.lost_place_custom_icon.content = ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN, size=24)
+			self.lost_place_custom.border_color = ft.colors.GREEN
 			self.error_texts["lost_place"].visible = False
 		elif value:
-			self.lost_place_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
-			self.lost_place.border_color = ft.colors.RED
+			self.lost_place_custom_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+			self.lost_place_custom.border_color = ft.colors.RED
 			self.error_texts["lost_place"].value = "遺失場所を入力してください"
 			self.error_texts["lost_place"].visible = True
 		else:
-			self.lost_place_icon.content = None
-			self.lost_place.border_color = None
+			self.lost_place_custom_icon.content = None
+			self.lost_place_custom.border_color = None
 			self.error_texts["lost_place"].visible = False
 		self.update()
 	
-	def _validate_item_info(self, e):
-		"""金品情報のバリデーション"""
+	def _validate_lost_place_dropdown(self, e):
+		"""遺失場所（プルダウン）のバリデーション"""
 		value = e.control.value
-		is_valid = bool(value and value.strip())
-		self.validation_states["item_info"] = is_valid
+		is_valid = bool(value)
+		self.validation_states["lost_place"] = is_valid
 		
 		if is_valid:
-			self.item_info_icon.content = ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN, size=24)
-			self.item_info.border_color = ft.colors.GREEN
-			self.error_texts["item_info"].visible = False
-		elif value:
-			self.item_info_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
-			self.item_info.border_color = ft.colors.RED
-			self.error_texts["item_info"].value = "金品情報を入力してください"
-			self.error_texts["item_info"].visible = True
+			self.lost_place_icon.content = ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN, size=24)
+			self.lost_place_dropdown.border_color = ft.colors.GREEN
+			self.error_texts["lost_place"].visible = False
 		else:
-			self.item_info_icon.content = None
-			self.item_info.border_color = None
-			self.error_texts["item_info"].visible = False
+			self.lost_place_icon.content = None
+			self.lost_place_dropdown.border_color = None
+		self.update()
+	
+	def _validate_valuables_name(self, e):
+		"""金品品名のバリデーション"""
+		value = e.control.value
+		is_valid = bool(value and value.strip())
+		self.validation_states["valuables_name"] = is_valid
+		
+		if is_valid:
+			self.valuables_name_icon.content = ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN, size=24)
+			self.valuables_name.border_color = ft.colors.GREEN
+			self.error_texts["valuables_name"].visible = False
+		elif value:
+			self.valuables_name_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+			self.valuables_name.border_color = ft.colors.RED
+			self.error_texts["valuables_name"].value = "品名を入力してください"
+			self.error_texts["valuables_name"].visible = True
+		else:
+			self.valuables_name_icon.content = None
+			self.valuables_name.border_color = None
+			self.error_texts["valuables_name"].visible = False
+		self.update()
+	
+	def _validate_valuables_content(self, e):
+		"""金品内容のバリデーション"""
+		value = e.control.value
+		is_valid = bool(value and value.strip())
+		self.validation_states["valuables_content"] = is_valid
+		
+		if is_valid:
+			self.valuables_content_icon.content = ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN, size=24)
+			self.valuables_content.border_color = ft.colors.GREEN
+			self.error_texts["valuables_content"].visible = False
+		elif value:
+			self.valuables_content_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+			self.valuables_content.border_color = ft.colors.RED
+			self.error_texts["valuables_content"].value = "内容を入力してください"
+			self.error_texts["valuables_content"].visible = True
+		else:
+			self.valuables_content_icon.content = None
+			self.valuables_content.border_color = None
+			self.error_texts["valuables_content"].visible = False
 		self.update()
 	
 	def _validate_recep_staff(self, e):
@@ -604,16 +740,39 @@ class NotFoundRegistrationView(ft.UserControl):
 			self.error_texts["lost_date"].visible = True
 			has_error = True
 		
-		if not self.lost_place.value or not self.lost_place.value.strip():
-			self.lost_place_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
-			self.error_texts["lost_place"].value = "遺失場所を入力してください"
-			self.error_texts["lost_place"].visible = True
+		# 遺失場所のバリデーション（手入力またはプルダウン）
+		lost_place_value = None
+		if self.lost_place_custom.visible:
+			# 手入力モード
+			lost_place_value = self.lost_place_custom.value
+			if not lost_place_value or not lost_place_value.strip():
+				self.lost_place_custom_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+				self.lost_place_custom.border_color = ft.colors.RED
+				self.error_texts["lost_place"].value = "遺失場所を入力してください"
+				self.error_texts["lost_place"].visible = True
+				has_error = True
+		else:
+			# プルダウンモード
+			lost_place_value = self.lost_place_dropdown.value
+			if not lost_place_value:
+				self.lost_place_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+				self.lost_place_dropdown.border_color = ft.colors.RED
+				self.error_texts["lost_place"].value = "遺失場所を選択してください"
+				self.error_texts["lost_place"].visible = True
+				has_error = True
+		
+		if not self.valuables_name.value or not self.valuables_name.value.strip():
+			self.valuables_name_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+			self.valuables_name.border_color = ft.colors.RED
+			self.error_texts["valuables_name"].value = "品名を入力してください"
+			self.error_texts["valuables_name"].visible = True
 			has_error = True
 		
-		if not self.item_info.value or not self.item_info.value.strip():
-			self.item_info_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
-			self.error_texts["item_info"].value = "金品情報を入力してください"
-			self.error_texts["item_info"].visible = True
+		if not self.valuables_content.value or not self.valuables_content.value.strip():
+			self.valuables_content_icon.content = ft.Icon(ft.icons.CANCEL, color=ft.colors.RED, size=24)
+			self.valuables_content.border_color = ft.colors.RED
+			self.error_texts["valuables_content"].value = "内容を入力してください"
+			self.error_texts["valuables_content"].visible = True
 			has_error = True
 		
 		if not self.recep_date_value or not self.recep_date_field.value:
@@ -644,17 +803,81 @@ class NotFoundRegistrationView(ft.UserControl):
 			data = self.collect()
 			self.on_submit(data)
 			
-			# 登録成功メッセージを表示
+			# 登録成功後にマッチング確認ダイアログを表示
+			self.show_matching_dialog()
+
+	def show_matching_dialog(self):
+		"""マッチング確認ダイアログを表示"""
+		def on_matching_click():
+			# マッチング画面へ遷移（後日実装）
 			if self.page:
+				self.page.dialog.open = False
+				self.page.update()
 				self.page.snack_bar = ft.SnackBar(
-					content=ft.Text("遺失物の登録が完了しました", color=ft.colors.WHITE),
-					bgcolor=ft.colors.GREEN_700
+					content=ft.Text("マッチング機能は後日対応予定です", color=ft.colors.WHITE),
+					bgcolor=ft.colors.ORANGE_700
 				)
 				self.page.snack_bar.open = True
+				self.page.go("/")
+
+		def on_home_click():
+			# ホームへ戻る
+			if self.page:
+				self.page.dialog.open = False
 				self.page.update()
+				self.page.go("/")
+
+		# ダイアログを作成
+		dialog = ft.AlertDialog(
+			title=ft.Text("遺失物登録完了", size=18, weight=ft.FontWeight.BOLD, color=ft.colors.GREEN_700),
+			content=ft.Container(
+				content=ft.Column([
+					ft.Icon(ft.icons.CHECK_CIRCLE, color=ft.colors.GREEN_700, size=48),
+					ft.Container(height=10),
+					ft.Text("遺失物の登録が完了しました。", size=16, text_align=ft.TextAlign.CENTER),
+					ft.Container(height=10),
+					ft.Text("拾得物とのマッチングを確認しますか？", size=14, text_align=ft.TextAlign.CENTER, color=ft.colors.GREY_700)
+				], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+				width=350,
+				height=200,
+				alignment=ft.alignment.center
+			),
+			actions=[
+				ft.Row([
+					ft.TextButton(
+						"ホームに戻る",
+						on_click=lambda e: on_home_click(),
+						style=ft.ButtonStyle(color=ft.colors.GREY_700)
+					),
+					ft.Container(expand=True),
+					ft.ElevatedButton(
+						"マッチング確認",
+						on_click=lambda e: on_matching_click(),
+						style=ft.ButtonStyle(
+							bgcolor=ft.colors.BLUE_700,
+							color=ft.colors.WHITE
+						),
+						icon=ft.icons.SEARCH
+					)
+				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+			],
+			actions_alignment=ft.MainAxisAlignment.CENTER
+		)
+		
+		if self.page:
+			self.page.dialog = dialog
+			dialog.open = True
+			self.page.update()
 	
 	def collect(self):
 		"""入力データを収集"""
+		# 遺失場所の値を取得（手入力またはプルダウン）
+		lost_place_value = ""
+		if self.lost_place_custom.visible:
+			lost_place_value = self.lost_place_custom.value or ""
+		else:
+			lost_place_value = self.lost_place_dropdown.value or ""
+		
 		return {
 			"customer_name": self.customer_name.value,
 			"customer_tel": self.customer_tel.value,
@@ -662,8 +885,9 @@ class NotFoundRegistrationView(ft.UserControl):
 			"lost_date": self.lost_date_value,
 			"lost_hour": self.lost_hour.value,
 			"lost_min": self.lost_min.value,
-			"lost_place": self.lost_place.value,
-			"item_info": self.item_info.value,
+			"lost_place": lost_place_value,
+			"valuables_name": self.valuables_name.value,
+			"valuables_content": self.valuables_content.value,
 			"recep_date": self.recep_date_value,
 			"recep_hour": self.recep_hour.value,
 			"recep_min": self.recep_min.value,
@@ -687,5 +911,19 @@ class NotFoundRegistrationView(ft.UserControl):
 				self.page.overlay.append(self.recep_date)
 				self.page.update()
 				self._date_pickers_added = True
+			
+			# プルダウンデータを更新
+			self.refresh_dropdown_data()
 		except Exception:
 			pass
+	
+	def refresh_dropdown_data(self):
+		"""プルダウンのデータを設定から再読み込みして更新"""
+		try:
+			# 遺失場所データを再読み込み
+			find_places = get_find_places()
+			if hasattr(self, 'lost_place_dropdown') and self.lost_place_dropdown:
+				self.lost_place_dropdown.options = [ft.dropdown.Option(place) for place in find_places]
+				self.lost_place_dropdown.update()
+		except Exception as e:
+			print(f"プルダウンデータ更新エラー: {e}")
