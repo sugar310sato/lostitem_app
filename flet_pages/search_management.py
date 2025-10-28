@@ -71,99 +71,147 @@ class SearchManagementView(ft.UserControl):
     
     def create_search_view(self):
         """検索画面を作成"""
-        # 検索フィルター部分（上1/4）
+        # 検索フィルター部分（折りたたみ可能）
         search_filters = self.create_search_filters()
         
+        # 検索フィルターコンテナ（初期状態は展開、検索後は収納）
+        self.filter_container = ft.Container(
+            content=search_filters,
+            padding=20,
+            bgcolor=ft.colors.GREY_50,
+            border_radius=12,
+            border=ft.border.all(1, ft.colors.GREY_300),
+            animate=ft.animation.Animation(300, "easeInOut"),
+            visible=True,
+        )
+        
+        # フィルター展開/収納ボタン
+        self.filter_toggle_button = ft.IconButton(
+            icon=ft.icons.FILTER_ALT,
+            tooltip="検索フィルター",
+            icon_color=ft.colors.BLUE_700,
+            bgcolor=ft.colors.BLUE_50,
+            on_click=self.toggle_search_filter,
+        )
+        
         # 表示モード切り替えボタン
-        view_mode_buttons = ft.Row([
+        self.view_mode_buttons = ft.Row([
             ft.ElevatedButton(
-                "サムネイル表示",
+                "サムネイル",
                 icon=ft.icons.GRID_VIEW,
                 on_click=lambda e: self.switch_view_mode("thumbnail"),
-                bgcolor=ft.colors.BLUE_500 if self.current_view_mode == "thumbnail" else ft.colors.GREY_300
+                bgcolor=ft.colors.BLUE_500 if self.current_view_mode == "thumbnail" else ft.colors.GREY_300,
+                color=ft.colors.WHITE,
+                height=36,
             ),
             ft.ElevatedButton(
-                "リスト表示",
+                "リスト",
                 icon=ft.icons.LIST,
                 on_click=lambda e: self.switch_view_mode("list"),
-                bgcolor=ft.colors.BLUE_500 if self.current_view_mode == "list" else ft.colors.GREY_300
+                bgcolor=ft.colors.BLUE_500 if self.current_view_mode == "list" else ft.colors.GREY_300,
+                color=ft.colors.WHITE,
+                height=36,
             )
         ], spacing=10)
         
-        # 検索結果表示部分（下3/4）
+        # 検索結果表示部分
         results_container = self.create_results_container()
         
         return ft.Column([
-            ft.Text("拾得物検索", size=24, weight=ft.FontWeight.BOLD),
-            ft.Divider(),
-            # 検索フィルター（上1/4）
+            # ヘッダー
+            ft.Row([
+                ft.Text("拾得物検索", size=28, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_900),
+                ft.Container(expand=True),
+                self.filter_toggle_button,
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            
+            ft.Divider(height=2, color=ft.colors.GREY_400),
+            
+            # 検索フィルター（折りたたみ可能）
+            self.filter_container,
+            
+            # ツールバー
             ft.Container(
-                content=search_filters,
-                height=200,
-                padding=10,
-                bgcolor=ft.colors.GREY_100,
-                border_radius=8
+                content=ft.Row([
+                    ft.Text("検索結果", size=18, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                    ft.Container(expand=True),
+                    self.view_mode_buttons,
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                padding=ft.padding.symmetric(vertical=8),
             ),
-            ft.Divider(),
-            # 表示モード切り替え
-            view_mode_buttons,
-            ft.Divider(),
-            # 検索結果（下3/4）
+            
+            # 検索結果
             ft.Container(
                 content=results_container,
                 expand=True,
-                padding=10
+                padding=0,
             )
-        ], expand=True)
+        ], expand=True, spacing=12)
     
     def create_search_filters(self):
-        """検索フィルターを作成"""
+        """検索フィルターを作成（ゆとりあるデザイン）"""
         # 検索ワード
         self.search_word_field = ft.TextField(
             label="検索ワード",
             hint_text="特徴、メーカー、備考など",
-            width=300
+            width=400,
+            height=45,
+            border_radius=8,
         )
         
         # 日付範囲
         self.date_from_field = ft.TextField(
             label="拾得日（開始）",
             hint_text="YYYY-MM-DD",
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         self.date_to_field = ft.TextField(
             label="拾得日（終了）",
             hint_text="YYYY-MM-DD",
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         
         # 色
         self.color_dropdown = ft.Dropdown(
             label="色",
             options=[ft.dropdown.Option(x[0]) for x in COLOR],
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         
         # 分類
         self.class_l_dropdown = ft.Dropdown(
             label="分類（大）",
             options=[ft.dropdown.Option(x) for x in ITEM_CLASS_L],
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         self.class_m_dropdown = ft.Dropdown(
             label="分類（中）",
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         self.class_s_dropdown = ft.Dropdown(
             label="分類（小）",
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         
         # 保管場所
         self.storage_dropdown = ft.Dropdown(
             label="保管場所",
             options=[ft.dropdown.Option(x[0]) for x in STORAGE_PLACE],
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         
         # ステータス
@@ -175,7 +223,9 @@ class SearchManagementView(ft.UserControl):
                 ft.dropdown.Option("refunded", "返還済み")
             ],
             value="all",
-            width=150
+            width=180,
+            height=45,
+            border_radius=8,
         )
         
         # 分類の連動
@@ -200,38 +250,79 @@ class SearchManagementView(ft.UserControl):
         
         # 検索ボタン
         search_button = ft.ElevatedButton(
-            "検索",
+            "検索実行",
             icon=ft.icons.SEARCH,
             on_click=self.perform_search,
-            bgcolor=ft.colors.BLUE_500
+            bgcolor=ft.colors.BLUE_600,
+            color=ft.colors.WHITE,
+            height=45,
+            width=140,
         )
         
         # リセットボタン
         reset_button = ft.OutlinedButton(
             "リセット",
             icon=ft.icons.REFRESH,
-            on_click=self.reset_filters
+            on_click=self.reset_filters,
+            height=45,
+            width=120,
         )
         
         return ft.Column([
+            # 検索ワード行
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("キーワード検索", size=14, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                    self.search_word_field,
+                ], spacing=8),
+                padding=ft.padding.only(bottom=16),
+            ),
+            
+            # 日付範囲行
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("拾得日で絞り込み", size=14, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                    ft.Row([
+                        self.date_from_field,
+                        ft.Text("〜", size=16),
+                        self.date_to_field,
+                    ], spacing=12),
+                ], spacing=8),
+                padding=ft.padding.only(bottom=16),
+            ),
+            
+            # 分類フィルター行
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("分類で絞り込み", size=14, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                    ft.Row([
+                        self.class_l_dropdown,
+                        self.class_m_dropdown,
+                        self.class_s_dropdown,
+                    ], spacing=16, wrap=True),
+                ], spacing=8),
+                padding=ft.padding.only(bottom=16),
+            ),
+            
+            # その他のフィルター行
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("その他の条件", size=14, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                    ft.Row([
+                        self.color_dropdown,
+                        self.storage_dropdown,
+                        self.status_dropdown,
+                    ], spacing=16, wrap=True),
+                ], spacing=8),
+                padding=ft.padding.only(bottom=20),
+            ),
+            
+            # ボタン行
             ft.Row([
-                self.search_word_field,
                 search_button,
-                reset_button
-            ], spacing=10),
-            ft.Row([
-                self.date_from_field,
-                self.date_to_field,
-                self.color_dropdown,
-                self.class_l_dropdown
-            ], spacing=10),
-            ft.Row([
-                self.class_m_dropdown,
-                self.class_s_dropdown,
-                self.storage_dropdown,
-                self.status_dropdown
-            ], spacing=10)
-        ], spacing=10)
+                reset_button,
+            ], spacing=16, alignment=ft.MainAxisAlignment.END),
+        ], spacing=0)
     
     def create_results_container(self):
         """検索結果表示コンテナを作成"""
@@ -243,9 +334,24 @@ class SearchManagementView(ft.UserControl):
         )
         return self.results_container
     
+    def toggle_search_filter(self, e=None):
+        """検索フィルターの表示/非表示を切り替え"""
+        self.filter_container.visible = not self.filter_container.visible
+        self.filter_container.update()
+    
     def switch_view_mode(self, mode):
         """表示モードを切り替え"""
         self.current_view_mode = mode
+        
+        # ボタンの色を更新
+        for btn in self.view_mode_buttons.controls:
+            if isinstance(btn, ft.ElevatedButton):
+                if (mode == "thumbnail" and btn.text == "サムネイル") or (mode == "list" and btn.text == "リスト"):
+                    btn.bgcolor = ft.colors.BLUE_500
+                else:
+                    btn.bgcolor = ft.colors.GREY_300
+                btn.update()
+        
         if self.search_results:
             self.update_results_display()
         self.update()
@@ -358,6 +464,11 @@ class SearchManagementView(ft.UserControl):
             
             # 結果を表示
             self.update_results_display()
+            
+            # 検索後、フィルターを自動的に収納
+            if self.filter_container.visible:
+                self.filter_container.visible = False
+                self.filter_container.update()
             
         except Exception as e:
             self.show_error(f"検索エラー: {str(e)}")

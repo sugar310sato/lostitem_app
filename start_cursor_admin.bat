@@ -1,0 +1,3 @@
+@echo off
+echo Cursorを管理者権限で起動しています...
+powershell -Command "Start-Process 'C:\Users\%USERNAME%\AppData\Local\Programs\cursor\Cursor.exe' -Verb RunAs -ArgumentList 'C:\Users\sato\Documents\github\lostitem_app'"

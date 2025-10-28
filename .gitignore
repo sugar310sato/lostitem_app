@@ -40,6 +40,8 @@ MANIFEST
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
+# Allow flet_app.spec to be tracked
+!flet_app.spec
 *.spec
 
 # Installer logs
@@ -265,6 +267,7 @@ pyrightconfig.json
 
 # 無視するファイルの追加
 local.sqlite
+lostitem.db
 config.py
 *jpg
 *pdf
@@ -272,3 +275,21 @@ model.pth
 test.py
 migrations
 open_clip_pytorch_model.bin
+
+# データディレクトリ
+data/database/*.db
+data/database/*.db-*
+data/images/**/*
+data/logs/**/*
+data/backups/**/*
+data/config/user_settings.json
+
+# データディレクトリ構造は保持
+!data/database/.gitkeep
+!data/images/.gitkeep
+!data/logs/.gitkeep
+!data/backups/.gitkeep
+
+# ビルド成果物
+installer/*.exe
+dist/*
