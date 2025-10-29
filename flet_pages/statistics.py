@@ -157,7 +157,7 @@ class StatisticsView(ft.UserControl):
             stats['return_rate'] = 0
         
         # 遺失物件数
-        cur.execute("SELECT COUNT(*) FROM notfound")
+        cur.execute("SELECT COUNT(*) FROM notfound_items")
         stats['notfound_items'] = cur.fetchone()[0]
         
         return stats

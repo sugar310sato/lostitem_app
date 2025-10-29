@@ -131,7 +131,7 @@ class NotFoundRegistrationView(ft.UserControl):
 		# 必須項目
 		self.customer_name = ft.TextField(
 			hint_text="例: 山田太郎",
-			width=300,
+			width=350,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
 			on_change=lambda e: self._validate_customer_name(e)
@@ -140,7 +140,7 @@ class NotFoundRegistrationView(ft.UserControl):
 		
 		self.customer_tel = ft.TextField(
 			hint_text="例: 090-1234-5678",
-			width=300,
+			width=350,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
 			on_change=lambda e: self._validate_customer_tel(e)
@@ -150,7 +150,7 @@ class NotFoundRegistrationView(ft.UserControl):
 		# 遺失場所（手入力）
 		self.lost_place_custom = ft.TextField(
 			hint_text="例: 2階エントランス",
-			width=300,
+			width=500,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
 			on_change=lambda e: self._validate_lost_place(e),
@@ -163,7 +163,7 @@ class NotFoundRegistrationView(ft.UserControl):
 		self.lost_place_dropdown = ft.Dropdown(
 			hint_text="設定から登録してください",
 			options=[],  # 初期状態は空
-			width=300,
+			width=500,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
 			on_change=lambda e: self._validate_lost_place_dropdown(e),
@@ -174,7 +174,7 @@ class NotFoundRegistrationView(ft.UserControl):
 		# 金品情報を品名と内容に分割
 		self.valuables_name = ft.TextField(
 			hint_text="例: 財布、スマートフォン、現金",
-			expand=True,  # レスポンシブ対応
+			width=450,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
 			on_change=lambda e: self._validate_valuables_name(e)
@@ -186,7 +186,7 @@ class NotFoundRegistrationView(ft.UserControl):
 			multiline=True,
 			min_lines=2,
 			max_lines=3,
-			expand=True,  # レスポンシブ対応
+			width=450,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE,
 			on_change=lambda e: self._validate_valuables_content(e)
@@ -208,7 +208,7 @@ class NotFoundRegistrationView(ft.UserControl):
 			multiline=True,
 			min_lines=2,
 			max_lines=3,
-			expand=True,  # レスポンシブ対応
+			width=350,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE
 		)
@@ -218,7 +218,7 @@ class NotFoundRegistrationView(ft.UserControl):
 			multiline=True,
 			min_lines=2,
 			max_lines=4,
-			expand=True,  # レスポンシブ対応
+			width=350,
 			focused_color=ft.colors.BLUE,
 			bgcolor=ft.colors.WHITE
 		)
@@ -275,10 +275,7 @@ class NotFoundRegistrationView(ft.UserControl):
 				# ご住所（任意）
 				ft.Column([
 					ft.Text("ご住所", size=14, weight=ft.FontWeight.BOLD),
-					ft.Container(
-						content=self.customer_address,
-						expand=True
-					)
+					self.customer_address
 				], spacing=5),
 				
 			], spacing=15),
@@ -340,34 +337,20 @@ class NotFoundRegistrationView(ft.UserControl):
 				# 金品情報（必須）
 				ft.Column([
 					self.create_required_label("金品情報"),
-					ft.Column([
-						# 品名
-						ft.Row([
-							ft.Container(
-								content=ft.Text("品名", size=12, weight=ft.FontWeight.BOLD),
-								width=60
-							),
-							ft.Container(
-								content=self.valuables_name,
-								expand=True
-							),
-							self.valuables_name_icon
-						], spacing=10),
-						self.create_error_text("valuables_name"),
-						# 内容
-						ft.Row([
-							ft.Container(
-								content=ft.Text("内容", size=12, weight=ft.FontWeight.BOLD),
-								width=60
-							),
-							ft.Container(
-								content=self.valuables_content,
-								expand=True
-							),
-							self.valuables_content_icon
-						], spacing=10),
-						self.create_error_text("valuables_content")
-					], spacing=10)
+					# 品名
+					ft.Row([
+						ft.Text("品名", size=12, weight=ft.FontWeight.BOLD, width=60),
+						self.valuables_name,
+						self.valuables_name_icon
+					], spacing=10),
+					self.create_error_text("valuables_name"),
+					# 内容
+					ft.Row([
+						ft.Text("内容", size=12, weight=ft.FontWeight.BOLD, width=60),
+						self.valuables_content,
+						self.valuables_content_icon
+					], spacing=10),
+					self.create_error_text("valuables_content")
 				], spacing=5),
 				
 			], spacing=15),
@@ -419,10 +402,7 @@ class NotFoundRegistrationView(ft.UserControl):
 				# 備考（任意）
 				ft.Column([
 					ft.Text("備考", size=14, weight=ft.FontWeight.BOLD),
-					ft.Container(
-						content=self.remarks,
-						expand=True
-					)
+					self.remarks
 				], spacing=5),
 				
 			], spacing=15),
@@ -470,24 +450,20 @@ class NotFoundRegistrationView(ft.UserControl):
 			ft.Divider(),
 			
 			# お客様情報と受付情報を横並びに配置
-			ft.Container(
-				content=ft.Row([
-					# お客様情報（左側）
-					ft.Container(
-						content=basic_section,
-						expand=1,  # レスポンシブ対応
-						padding=ft.padding.only(right=10)
-					),
-					# 受付情報（右側）
-					ft.Container(
-						content=recep_section,
-						expand=1,  # レスポンシブ対応
-						padding=ft.padding.only(left=10)
-					),
-				], spacing=0, alignment=ft.MainAxisAlignment.START),
-				expand=True,
-				alignment=ft.alignment.top_left
-			),
+			ft.Row([
+				# お客様情報（左側）
+				ft.Container(
+					content=basic_section,
+					width=480,
+					padding=ft.padding.only(right=10)
+				),
+				# 受付情報（右側）
+				ft.Container(
+					content=recep_section,
+					width=480,
+					padding=ft.padding.only(left=10)
+				),
+			], spacing=20, alignment=ft.MainAxisAlignment.START),
 			
 			# 遺失情報（下部に全幅で配置）
 			lost_section,
@@ -496,15 +472,14 @@ class NotFoundRegistrationView(ft.UserControl):
 			button_row
 		], 
 		scroll=ft.ScrollMode.AUTO,
-		spacing=15,
-		expand=True
+		spacing=15
 		)
 		
 		return ft.Container(
 			content=form_content,
 			padding=20,
 			bgcolor=ft.colors.GREY_100,
-			expand=True,
+			width=1000,
 			alignment=ft.alignment.top_center
 		)
 	

@@ -29,6 +29,118 @@ current_user = {
 
 DB_PATH = Path(__file__).parent / "lostitem.db"
 
+def initialize_database():
+	"""データベースの初期化 - 必要なテーブルをすべて作成"""
+	try:
+		conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
+		cur = conn.cursor()
+		
+		print("データベース初期化開始...")
+		
+		# usersテーブル
+		cur.execute("""
+			CREATE TABLE IF NOT EXISTS users (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				username TEXT UNIQUE NOT NULL,
+				password_hash TEXT NOT NULL,
+				role TEXT DEFAULT 'user',
+				store_name TEXT DEFAULT '未設定',
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		""")
+		
+		# lost_itemsテーブル（拾得物）
+		cur.execute("""
+			CREATE TABLE IF NOT EXISTS lost_items (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				main_id TEXT NOT NULL,
+				current_year INTEGER NOT NULL,
+				choice_finder TEXT NOT NULL,
+				notify TEXT,
+				get_item DATE,
+				get_item_hour INTEGER,
+				get_item_minute INTEGER,
+				recep_item DATE,
+				recep_item_hour INTEGER,
+				recep_item_minute INTEGER,
+				recep_manager TEXT,
+				find_area TEXT,
+				find_area_police TEXT,
+				own_waiver TEXT,
+				finder_name TEXT,
+				own_name_note TEXT,
+				finder_age INTEGER,
+				finder_sex TEXT,
+				finder_post TEXT,
+				finder_address TEXT,
+				finder_tel1 TEXT,
+				finder_tel2 TEXT,
+				item_class_L TEXT,
+				item_class_M TEXT,
+				item_class_S TEXT,
+				item_value INTEGER,
+				item_feature TEXT,
+				item_color TEXT,
+				item_storage TEXT,
+				item_storage_place TEXT,
+				item_maker TEXT,
+				item_expiration DATE,
+				item_num INTEGER,
+				item_unit TEXT,
+				item_plice TEXT,
+				item_money INTEGER,
+				item_remarks TEXT,
+				item_image TEXT,
+				finder_affiliation TEXT,
+				item_situation TEXT DEFAULT '保管中',
+				refund_situation TEXT DEFAULT '未',
+				card_campany TEXT,
+				card_tel TEXT,
+				card_name TEXT,
+				card_person TEXT,
+				thirdparty_waiver TEXT,
+				thirdparty_name_note TEXT,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		""")
+		
+		# notfound_itemsテーブル（遺失物）
+		cur.execute("""
+			CREATE TABLE IF NOT EXISTS notfound_items (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				name TEXT NOT NULL,
+				phone TEXT,
+				lost_date TEXT,
+				location TEXT,
+				item TEXT,
+				status TEXT DEFAULT '連絡待ち',
+				contact_date TEXT,
+				return_date TEXT,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		""")
+		
+		# settingsテーブル（各種設定）
+		cur.execute("""
+			CREATE TABLE IF NOT EXISTS settings (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				key TEXT UNIQUE NOT NULL,
+				value TEXT,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		""")
+		
+		conn.commit()
+		conn.close()
+		print("データベース初期化完了")
+		
+	except Exception as e:
+		print(f"データベース初期化エラー: {e}")
+		import traceback
+		traceback.print_exc()
+
 def check_initial_setup_needed():
 	"""初回セットアップが必要かどうかをチェック"""
 	try:
@@ -174,6 +286,9 @@ def main(page: ft.Page):
 	page.padding = 10
 	page.transitions = [ft.PageTransitionTheme.NONE]
 	page.snack_bar = ft.SnackBar(ft.Text("未実装です"))
+	
+	# データベースの初期化
+	initialize_database()
 	
 	# データベース構造を更新
 	add_store_name_column()
@@ -507,101 +622,61 @@ def main(page: ft.Page):
 			conn = sqlite3.connect(str(DB_PATH), timeout=10.0)
 			cursor = conn.cursor()
 			
-			# notfoundテーブルが存在するかチェックし、存在しない場合は作成
-			cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='notfound'")
+			# notfound_itemsテーブルが存在するかチェックし、存在しない場合は作成
+			cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='notfound_items'")
 			if not cursor.fetchone():
 				cursor.execute("""
-					CREATE TABLE IF NOT EXISTS notfound (
+					CREATE TABLE IF NOT EXISTS notfound_items (
 						id INTEGER PRIMARY KEY AUTOINCREMENT,
-						lost_item TEXT,
-						lost_item_hour INTEGER,
-						lost_item_minute INTEGER,
-						recep_item TEXT,
-						recep_item_hour INTEGER,
-						recep_item_minute INTEGER,
-						recep_manager TEXT,
-						lost_area TEXT,
-						lost_name TEXT,
-						lost_age INTEGER,
-						lost_sex TEXT,
-						lost_post TEXT,
-						lost_address TEXT,
-						lost_tel1 TEXT,
-						lost_tel2 TEXT,
-						item_value INTEGER,
-						item_feature TEXT,
-						item_color TEXT,
-						item_maker TEXT,
-						item_expiration TEXT,
-						item_num INTEGER,
-						item_unit TEXT,
-						item_price INTEGER,
-						item_money TEXT,
-						item_remarks TEXT,
-						item_class_L TEXT,
-						item_class_M TEXT,
-						item_class_S TEXT,
-						card_company TEXT,
-						card_tel TEXT,
-						card_name TEXT,
-						card_person TEXT,
-						card_contact_date TEXT,
-						card_return_date TEXT,
-						card_contact_hour INTEGER,
-						card_contact_minute INTEGER,
-						card_manager TEXT,
-						item_situation TEXT,
-						created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+						name TEXT NOT NULL,
+						phone TEXT,
+						lost_date TEXT,
+						location TEXT,
+						item TEXT,
+						status TEXT DEFAULT '連絡待ち',
+						contact_date TEXT,
+						return_date TEXT,
+						created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+						updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 					)
 				""")
 				conn.commit()
-				print("notfoundテーブルを作成しました")
+				print("notfound_itemsテーブルを作成しました")
+			
+			# 遺失日時の結合
+			lost_date_str = form_data.get("lost_date", "")
+			lost_hour = form_data.get("lost_hour", "00")
+			lost_min = form_data.get("lost_min", "00")
+			
+			# 時刻データの正規化
+			try:
+				lost_hour_clean = lost_hour.replace("時", "") if lost_hour else "00"
+				lost_min_clean = lost_min.replace("分", "") if lost_min else "00"
+				if lost_date_str:
+					lost_datetime = f"{lost_date_str} {lost_hour_clean.zfill(2)}:{lost_min_clean.zfill(2)}:00"
+				else:
+					lost_datetime = ""
+			except:
+				lost_datetime = lost_date_str
 			
 			sql = '''
-				INSERT INTO notfound (
-					lost_item, lost_item_hour, lost_item_minute,
-					recep_item, recep_item_hour, recep_item_minute,
-					recep_manager, lost_area, lost_name, lost_age,
-					lost_sex, lost_post, lost_address, lost_tel1, lost_tel2,
-					item_value, item_feature, item_color, item_maker,
-					item_expiration, item_num, item_unit, item_price,
-					item_money, item_remarks, item_class_L, item_class_M,
-					item_class_S, card_company, card_tel, card_name,
-					card_person, card_contact_date, card_return_date,
-					card_contact_hour, card_contact_minute, card_manager,
-					item_situation
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+				INSERT INTO notfound_items (
+					name, phone, lost_date, location, item, status
+				) VALUES (?, ?, ?, ?, ?, ?)
 			'''
 			
-			# 時刻データの変換
-			lost_hour = form_data.get("lost_hour", "0")
-			lost_min = form_data.get("lost_min", "0")
-			recep_hour = form_data.get("recep_hour", "0")
-			recep_min = form_data.get("recep_min", "0")
-			
-			try:
-				lost_hour_int = int(lost_hour.replace("時", "")) if lost_hour else 0
-				lost_min_int = int(lost_min.replace("分", "")) if lost_min else 0
-				recep_hour_int = int(recep_hour.replace("時", "")) if recep_hour else 0
-				recep_min_int = int(recep_min.replace("分", "")) if recep_min else 0
-			except:
-				lost_hour_int = 0
-				lost_min_int = 0
-				recep_hour_int = 0
-				recep_min_int = 0
+			# 品物情報の結合（貴重品名 + 内容）
+			valuables_name = form_data.get("valuables_name", "")
+			valuables_content = form_data.get("valuables_content", "")
+			item_description = f"{valuables_name} - {valuables_content}".strip(" -")
 			
 			data = (
-				form_data.get("lost_date"), lost_hour_int, lost_min_int,
-				form_data.get("recep_date"), recep_hour_int, recep_min_int,
-				form_data.get("recep_staff"), form_data.get("lost_place"), form_data.get("customer_name"), None,
-				None, None, form_data.get("customer_address"), form_data.get("customer_tel"), None,
-				0, form_data.get("item_info"), None, None,
-				None, 1, "個", 0,
-				"", form_data.get("remarks"), None, None,
-				None, None, None, None,
-				None, None, None,
-				0, 0, None,
-				"未対応"
+				form_data.get("customer_name", ""),      # name
+				form_data.get("customer_tel", ""),       # phone
+				lost_datetime,                            # lost_date
+				form_data.get("lost_place", ""),         # location
+				item_description,                         # item
+				"連絡待ち"                                # status (デフォルト)
 			)
 			
 			cursor.execute(sql, data)
